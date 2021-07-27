@@ -2,17 +2,16 @@ package platinpython.particlegenerator.util.registries;
 
 import java.util.function.Supplier;
 
-import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.RegistryObject;
+import platinpython.particlegenerator.block.ParticleGeneratorBlock;
 import platinpython.particlegenerator.util.RegistryHandler;
 
 public class BlockRegistry {
-	public static final RegistryObject<Block> PARTICLE_GENERATOR = register("particle_generator", () -> new Block(Properties.copy(Blocks.STONE).noOcclusion()));
+	public static final RegistryObject<Block> PARTICLE_GENERATOR = register("particle_generator", ParticleGeneratorBlock::new);
 
 	public static void register() {
 	}
@@ -23,7 +22,7 @@ public class BlockRegistry {
 
 	private static <T extends Block> RegistryObject<T> register(String name, Supplier<T> block) {
 		RegistryObject<T> ret = registerNoItem(name, block);
-		RegistryHandler.ITEMS.register(name, () -> new BlockItem(ret.get(), new Item.Properties().tab(ItemGroup.TAB_REDSTONE).stacksTo(128)));
+		RegistryHandler.ITEMS.register(name, () -> new BlockItem(ret.get(), new Item.Properties().tab(ItemGroup.TAB_REDSTONE)));
 		return ret;
 	}
 }
