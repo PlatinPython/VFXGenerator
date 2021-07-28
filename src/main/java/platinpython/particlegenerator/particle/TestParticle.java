@@ -9,18 +9,26 @@ public class TestParticle extends SpriteTexturedParticle {
 	public TestParticle(ClientWorld clientWorld, double x, double y, double z, TextureAtlasSprite sprite) {
 		super(clientWorld, x, y, z);
 		this.setSprite(sprite);
-		this.yd = 1f;
-		this.xd = 5f;
+
+		// Random testing stuff
+		this.yd = 0.5f;
+		this.xd = 0.5f;
 		this.gravity = 0.2F;
-		this.lifetime = 100;
+		this.lifetime = 200;
 		this.hasPhysics = true;
+		this.quadSize = 1.0f;
+		this.scale(0.5f);
+		this.rCol = 0f;
+		this.gCol = 0f;
 	}
 
+	@Override
 	public IParticleRenderType getRenderType() {
-		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+		return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
 	}
 
-	public float getQuadSize(float p_217561_1_) {
-		return 0.5F;
+	@Override
+	public boolean shouldCull() {
+		return false;
 	}
 }
