@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import platinpython.vfxgenerator.VFXGenerator;
-import platinpython.vfxgenerator.particle.TestParticle;
+import platinpython.vfxgenerator.client.particle.VFXParticle;
 
 @EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ClientUtils {
@@ -18,15 +18,14 @@ public class ClientUtils {
 	@SubscribeEvent
 	public static void onTextureStich(TextureStitchEvent.Pre event) {
 		if(event.getMap().location().equals(AtlasTexture.LOCATION_PARTICLES)) {
-			event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/test"));
+			event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/circle"));
+			event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/square"));
 		}
 	}
 
-	public static void addParticle(Vector3d pos) {
+	public static void addParticle(String spriteLocation, int color, int lifetime, float size, Vector3d pos, Vector3d motion, float gravity, boolean collision) {
 		Minecraft minecraft = Minecraft.getInstance();
-		TestParticle particle = new TestParticle(minecraft.level, pos.x, pos.y, pos.z, minecraft.particleEngine.textureAtlas.getSprite(
-//				new ResourceLocation("particle/smoke_0")));
-				new ResourceLocation(VFXGenerator.MOD_ID, "particle/test")));
+		VFXParticle particle = new VFXParticle(minecraft.level, minecraft.particleEngine.textureAtlas.getSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + spriteLocation)), color, lifetime, size, pos, motion, gravity, collision);
 		minecraft.particleEngine.add(particle);
 	}
 }
