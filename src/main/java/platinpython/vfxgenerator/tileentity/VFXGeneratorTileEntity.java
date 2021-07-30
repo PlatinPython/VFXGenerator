@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
-public class ParticleGeneratorTileEntity extends TileEntity implements ITickableTileEntity {
-	public ParticleGeneratorTileEntity() {
-		super(TileEntityRegistry.PARTICLE_GENERATOR.get());
+public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileEntity {
+	public VFXGeneratorTileEntity() {
+		super(TileEntityRegistry.VFX_GENERATOR.get());
 	}
 
 	@Override

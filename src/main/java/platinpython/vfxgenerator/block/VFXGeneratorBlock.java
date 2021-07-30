@@ -25,6 +25,6 @@ public class VFXGeneratorBlock extends Block {
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return TileEntityRegistry.PARTICLE_GENERATOR.get().create();
+		return TileEntityRegistry.VFX_GENERATOR.get().create();
 	}
 }
