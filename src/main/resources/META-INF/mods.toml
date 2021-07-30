@@ -4,24 +4,24 @@ license="MIT"
 # issueTrackerURL="https://github.com/PlatinPython/RGBBlocks/issues"
 
 [[mods]]
-  modId="particlegenerator"
+  modId="vfxgenerator"
   version="${file.jarVersion}"
-  displayName="Particle Generator"
+  displayName="VFX Generator"
   authors="PlatinPython"
-  description="Adds a block that can generate custom particles."
+  description="Adds a block that can generate custom visual effects (particles, beams)."
   # logoFile="logo.png"
   # logoBlur=true
   # credits="Thanks TobiBenzi for the logo and some textures"
   # displayURL="https://www.curseforge.com/minecraft/mc-mods/rgb-blocks-forge"
 
-[[dependencies.particlegenerator]]
+[[dependencies.vfxgenerator]]
   modId="forge"
   mandatory=true
   versionRange="[34,)"
   ordering="NONE"
   side="BOTH"
 
-[[dependencies.particlegenerator]]
+[[dependencies.vfxgenerator]]
   modId="minecraft"
   mandatory=true
   versionRange="[1.16.3,)"

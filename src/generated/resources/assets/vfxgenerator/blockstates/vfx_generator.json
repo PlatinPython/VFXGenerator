@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "vfxgenerator:block/vfx_generator"
+    }
+  }
+}

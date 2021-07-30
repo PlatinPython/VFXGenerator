@@ -14,8 +14,8 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = "${minecraft_version}-${mod_version}"
-group = 'platinpython.particlegenerator'
-archivesBaseName = 'Particle Generator'
+group = 'platinpython.vfxgenerator'
+archivesBaseName = 'VFX Generator'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
@@ -36,7 +36,7 @@ minecraft {
             args '--username', 'Player###'
 
             mods {
-                particlegenerator {
+                vfxgenerator {
                     source sourceSets.main
                 }
             }
@@ -50,7 +50,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                particlegenerator {
+                vfxgenerator {
                     source sourceSets.main
                 }
             }
@@ -63,10 +63,10 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'particlegenerator', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'vfxgenerator', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                particlegenerator {
+                vfxgenerator {
                     source sourceSets.main
                 }
             }
@@ -83,7 +83,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-            "Specification-Title": "particlegenerator",
+            "Specification-Title": "vfxgenerator",
             "Specification-Vendor": "PlatinPython",
             "Specification-Version": "1",
             "Implementation-Title": project.name,
