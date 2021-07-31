@@ -13,5 +13,11 @@ public class ModLanguageProvider extends LanguageProvider {
 	@Override
 	protected void addTranslations() {
 		add(BlockRegistry.VFX_GENERATOR.get(), "VFX Generator");
+		
+		addGui("dataSaved", "Contents Saved.");
+	}
+	
+	private void addGui(String suffix, String text) {
+		add("gui." + VFXGenerator.MOD_ID + "." + suffix, text);
 	}
 }

@@ -20,7 +20,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 	public String particleSelected = "circle";
 	public boolean particleUseHSB = false;
 	public int particleRGBColorBot = 0xFF000000;
-	public int particleRGBColorTop = 0xFF000000;
+	public int particleRGBColorTop = 0xFFFFFFFF;
 	public float[] particleHSBColorBot = { 0F, 0F, 0F };
 	public float[] particleHSBColorTop = { 0F, 0F, 0F };
 	public int particleLifetimeBot = 100;
@@ -81,7 +81,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		}
 	}
 
-	private CompoundNBT saveToTag(CompoundNBT tag) {
+	public CompoundNBT saveToTag(CompoundNBT tag) {
 		CompoundNBT particleTag = new CompoundNBT();
 		particleTag.putBoolean("enabled", particleEnabled);
 		particleTag.putString("selected", particleSelected);
@@ -117,7 +117,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		return tag;
 	}
 
-	private void loadFromTag(CompoundNBT tag) {
+	public void loadFromTag(CompoundNBT tag) {
 		CompoundNBT particleTag = tag.getCompound("particleData");
 		particleEnabled = particleTag.getBoolean("enabled");
 		particleSelected = particleTag.getString("selected");

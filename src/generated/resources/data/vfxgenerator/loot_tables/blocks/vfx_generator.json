@@ -15,5 +15,25 @@
         }
       ]
     }
+  ],
+  "functions": [
+    {
+      "function": "minecraft:copy_state",
+      "block": "vfxgenerator:vfx_generator",
+      "properties": [
+        "inverted"
+      ]
+    },
+    {
+      "function": "minecraft:copy_nbt",
+      "source": "block_entity",
+      "ops": [
+        {
+          "source": "particleData",
+          "target": "particleData",
+          "op": "replace"
+        }
+      ]
+    }
   ]
 }

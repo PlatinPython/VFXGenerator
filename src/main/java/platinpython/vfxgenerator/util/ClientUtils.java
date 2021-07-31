@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,5 +34,9 @@ public class ClientUtils {
 
 	public static void openVFXGeneratorScreen(VFXGeneratorTileEntity tileEntity) {
 		Minecraft.getInstance().setScreen(new VFXGeneratorScreen(tileEntity));
+	}
+	
+	public static TranslationTextComponent getGuiTranslationTextComponent(String suffix) {
+		return new TranslationTextComponent("gui." + VFXGenerator.MOD_ID + "." + suffix);
 	}
 }

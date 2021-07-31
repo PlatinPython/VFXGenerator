@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Rarity;
 import net.minecraftforge.fml.RegistryObject;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.util.RegistryHandler;
@@ -22,7 +23,7 @@ public class BlockRegistry {
 
 	private static <T extends Block> RegistryObject<T> register(String name, Supplier<T> block) {
 		RegistryObject<T> ret = registerNoItem(name, block);
-		RegistryHandler.ITEMS.register(name, () -> new BlockItem(ret.get(), new Item.Properties().tab(ItemGroup.TAB_REDSTONE)));
+		RegistryHandler.ITEMS.register(name, () -> new BlockItem(ret.get(), new Item.Properties().tab(ItemGroup.TAB_REDSTONE).rarity(Rarity.RARE)));
 		return ret;
 	}
 }

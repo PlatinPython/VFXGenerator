@@ -1,44 +1,100 @@
 package platinpython.vfxgenerator.block;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.IWaterLoggable;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
-public class VFXGeneratorBlock extends Block {
+public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	public static BooleanProperty INVERTED = BlockStateProperties.INVERTED;
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
+	public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	private static final VoxelShape NORTH_AABB = Block.box(0D, 0D, 0D, 16D, 0D, 0D);
+	private static final VoxelShape EAST_AABB = Block.box(16D, 0D, 1D, 16D, 0D, 15D);
+	private static final VoxelShape SOUTH_AABB = Block.box(16D, 0D, 16D, 0D, 0D, 16D);
+	private static final VoxelShape WEST_AABB = Block.box(0D, 0D, 15D, 0D, 0D, 1D);
+	private static final VoxelShape SIDE_AABB = Block.box(8D, 1D, 8D, 8D, 15D, 8D);
+	private static final VoxelShape AABB = VoxelShapes.or(NORTH_AABB.move(0D, 1D, 0D), EAST_AABB.move(0D, 1D, 0D), SOUTH_AABB.move(0D, 1D, 0D), WEST_AABB.move(0D, 1D, 0D), SIDE_AABB.move(0.5D, 0D, -0.5D), SIDE_AABB.move(0.5D, 0D, 0.5D), SIDE_AABB.move(-0.5D, 0D, 0.5D), SIDE_AABB.move(-0.5D, 0D, -0.5D), NORTH_AABB, EAST_AABB, SOUTH_AABB, WEST_AABB);
 
 	public VFXGeneratorBlock() {
 		super(Properties.copy(Blocks.STONE).noOcclusion());
+		this.registerDefaultState(this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE).setValue(WATERLOGGED, Boolean.FALSE));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(INVERTED, POWERED);
+		builder.add(INVERTED, POWERED, WATERLOGGED);
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, IBlockReader level, List<ITextComponent> tooltip, ITooltipFlag flag) {
+		if (stack.getTagElement("particleData") != null) {
+			tooltip.add(ClientUtils.getGuiTranslationTextComponent("dataSaved"));
+		}
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
+		return VoxelShapes.block();
+	}
+
+	@Override
+	public VoxelShape getVisualShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+		return VoxelShapes.empty();
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		context.getItemInHand();
-		return this.defaultBlockState().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos())));
+		FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
+		return this.defaultBlockState().setValue(INVERTED, context.getItemInHand().getOrCreateTag().getBoolean("inverted")).setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos()))).setValue(WATERLOGGED, Boolean.valueOf(fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8));
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld level, BlockPos currentPos, BlockPos facingPos) {
+		if (state.getValue(WATERLOGGED)) {
+			level.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+		}
+		return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
@@ -94,5 +150,32 @@ public class VFXGeneratorBlock extends Block {
 			}
 		}
 		return ActionResultType.PASS;
+	}
+
+	@Override
+	public void setPlacedBy(World level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		if (stack.getTagElement("particleData") != null) {
+			TileEntity tileEntity = level.getBlockEntity(pos);
+			if (tileEntity instanceof VFXGeneratorTileEntity) {
+				((VFXGeneratorTileEntity) tileEntity).loadFromTag(stack.getOrCreateTag());
+			}
+		}
+	}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+		ItemStack stack = new ItemStack(this);
+		if (player.isShiftKeyDown()) {
+			CompoundNBT tag = stack.getOrCreateTag();
+			CompoundNBT blockStateTag = new CompoundNBT();
+			blockStateTag.putString("inverted", state.getValue(INVERTED).toString());
+			tag.put("BlockStateTag", blockStateTag);
+			stack.setTag(tag);
+			TileEntity tileEntity = world.getBlockEntity(pos);
+			if (tileEntity instanceof VFXGeneratorTileEntity) {
+				stack.setTag(((VFXGeneratorTileEntity) tileEntity).saveToTag(tag));
+			}
+		}
+		return stack;
 	}
 }

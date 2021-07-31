@@ -19,8 +19,12 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTable.Builder;
 import net.minecraft.loot.LootTableManager;
 import net.minecraft.loot.ValidationTracker;
+import net.minecraft.loot.functions.CopyBlockState;
+import net.minecraft.loot.functions.CopyNbt;
+import net.minecraft.loot.functions.CopyNbt.Source;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
+import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.util.RegistryHandler;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
 
@@ -42,7 +46,7 @@ public class ModLootTableProvider extends LootTableProvider {
 	public class Blocks extends BlockLootTables {
 		@Override
 		protected void addTables() {
-			dropSelf(BlockRegistry.VFX_GENERATOR.get());
+			this.add(BlockRegistry.VFX_GENERATOR.get(), createSingleItemTable(BlockRegistry.VFX_GENERATOR.get()).apply(CopyBlockState.copyState(BlockRegistry.VFX_GENERATOR.get()).copy(VFXGeneratorBlock.INVERTED)).apply(CopyNbt.copyData(Source.BLOCK_ENTITY).copy("particleData", "particleData")));
 		}
 		
 		@Override

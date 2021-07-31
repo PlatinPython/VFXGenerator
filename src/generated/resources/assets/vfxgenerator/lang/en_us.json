@@ -1,3 +1,4 @@
 {
-  "block.vfxgenerator.vfx_generator": "VFX Generator"
+  "block.vfxgenerator.vfx_generator": "VFX Generator",
+  "gui.vfxgenerator.dataSaved": "Contents Saved."
 }
