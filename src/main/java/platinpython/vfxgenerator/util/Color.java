@@ -154,10 +154,17 @@ public class Color {
 		return components;
 	}
 	
-	public static int getRandomColor(Random random, int color1, int color2) {
-		int r = (int) ((random.nextFloat() * ((color2 >> 16 & 0xFF) - (color1 >> 16 & 0xFF))) + (color1 >> 16 & 0xFF));
-		int g = (int) ((random.nextFloat() * ((color2 >> 8 & 0xFF) - (color1 >> 8 & 0xFF))) + (color1 >> 8 & 0xFF));
-		int b = (int) ((random.nextFloat() * ((color2 >> 0 & 0xFF) - (color1 >> 0 & 0xFF))) + (color1 >> 0 & 0xFF));
+	public static int getRandomRGBColor(Random random, int color1, int color2) {
+		int r = Math.round((random.nextFloat() * ((color2 >> 16 & 0xFF) - (color1 >> 16 & 0xFF))) + (color1 >> 16 & 0xFF));
+		int g = Math.round((random.nextFloat() * ((color2 >> 8 & 0xFF) - (color1 >> 8 & 0xFF))) + (color1 >> 8 & 0xFF));
+		int b = Math.round((random.nextFloat() * ((color2 >> 0 & 0xFF) - (color1 >> 0 & 0xFF))) + (color1 >> 0 & 0xFF));
 		return 0xff000000 | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0);
+	}
+	
+	public static int getRandomHSBColor(Random random, float[] hsb1, float[] hsb2) {
+		float hue = random.nextFloat() * (hsb2[0] - hsb1[0]) + hsb1[0];
+		float saturation = random.nextFloat() * (hsb2[1] - hsb1[1]) + hsb1[1];
+		float brightness = random.nextFloat() * (hsb2[2] - hsb1[2]) + hsb1[2];
+		return HSBtoRGB(hue, saturation, brightness);
 	}
 }

@@ -10,14 +10,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import platinpython.vfxgenerator.VFXGenerator;
+import platinpython.vfxgenerator.client.gui.screen.VFXGeneratorScreen;
 import platinpython.vfxgenerator.client.particle.VFXParticle;
+import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
 
 @EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ClientUtils {
 	@SuppressWarnings("deprecation")
 	@SubscribeEvent
 	public static void onTextureStich(TextureStitchEvent.Pre event) {
-		if(event.getMap().location().equals(AtlasTexture.LOCATION_PARTICLES)) {
+		if (event.getMap().location().equals(AtlasTexture.LOCATION_PARTICLES)) {
 			event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/circle"));
 			event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/square"));
 		}
@@ -27,5 +29,9 @@ public class ClientUtils {
 		Minecraft minecraft = Minecraft.getInstance();
 		VFXParticle particle = new VFXParticle(minecraft.level, minecraft.particleEngine.textureAtlas.getSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + spriteLocation)), color, lifetime, size, pos, motion, gravity, collision);
 		minecraft.particleEngine.add(particle);
+	}
+
+	public static void openVFXGeneratorScreen(VFXGeneratorTileEntity tileEntity) {
+		Minecraft.getInstance().setScreen(new VFXGeneratorScreen(tileEntity));
 	}
 }
