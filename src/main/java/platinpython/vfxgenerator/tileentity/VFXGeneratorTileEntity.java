@@ -22,24 +22,24 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 	public int particleRGBColorBot = 0xFF000000;
 	public int particleRGBColorTop = 0xFFFFFFFF;
 	public float[] particleHSBColorBot = { 0F, 0F, 0F };
-	public float[] particleHSBColorTop = { 0F, 0F, 0F };
-	public int particleLifetimeBot = 100;
-	public int particleLifetimeTop = 100;
-	public float particleSizeBot = 5F;
-	public float particleSizeTop = 5F;
-	public float particleSpawnXBot = 0F;
-	public float particleSpawnXTop = 0F;
+	public float[] particleHSBColorTop = { 1F, 1F, 1F };
+	public int particleLifetimeBot = 20;
+	public int particleLifetimeTop = 80;
+	public float particleSizeBot = 1F;
+	public float particleSizeTop = 3F;
+	public float particleSpawnXBot = -1F;
+	public float particleSpawnXTop = 1F;
 	public float particleSpawnYBot = 0F;
 	public float particleSpawnYTop = 0F;
-	public float particleSpawnZBot = 0F;
-	public float particleSpawnZTop = 0F;
-	public float particleMotionXBot = 0F;
-	public float particleMotionXTop = 0F;
-	public float particleMotionYBot = 0F;
-	public float particleMotionYTop = 0F;
-	public float particleMotionZBot = 0F;
-	public float particleMotionZTop = 0F;
-	public int particleDelay = 1;
+	public float particleSpawnZBot = -1F;
+	public float particleSpawnZTop = 1F;
+	public float particleMotionXBot = -0.1F;
+	public float particleMotionXTop = 0.1F;
+	public float particleMotionYBot = 0.1F;
+	public float particleMotionYTop = 0.1F;
+	public float particleMotionZBot = -0.1F;
+	public float particleMotionZTop = 0.1F;
+	public int particleDelay = 5;
 	public float particleGravity = 0F;
 	public boolean particleCollision = false;
 
@@ -52,7 +52,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		if ((this.getBlockState().getValue(VFXGeneratorBlock.INVERTED) && !this.getBlockState().getValue(VFXGeneratorBlock.POWERED)) || (!this.getBlockState().getValue(VFXGeneratorBlock.INVERTED) && this.getBlockState().getValue(VFXGeneratorBlock.POWERED))) {
 			World world = this.getLevel();
 			if (world.isClientSide && this.particleEnabled) {
-				if (world.getGameTime() % (particleDelay + 2) == 0) {
+				if (world.getGameTime() % (particleDelay + 1) == 0) {
 					Random random = world.getRandom();
 
 					int color = 0xFF000000;

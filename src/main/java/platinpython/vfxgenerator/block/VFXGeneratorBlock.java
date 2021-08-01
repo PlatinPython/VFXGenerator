@@ -42,12 +42,7 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	public static BooleanProperty INVERTED = BlockStateProperties.INVERTED;
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-	private static final VoxelShape NORTH_AABB = Block.box(0D, 0D, 0D, 16D, 0D, 0D);
-	private static final VoxelShape EAST_AABB = Block.box(16D, 0D, 1D, 16D, 0D, 15D);
-	private static final VoxelShape SOUTH_AABB = Block.box(16D, 0D, 16D, 0D, 0D, 16D);
-	private static final VoxelShape WEST_AABB = Block.box(0D, 0D, 15D, 0D, 0D, 1D);
-	private static final VoxelShape SIDE_AABB = Block.box(8D, 1D, 8D, 8D, 15D, 8D);
-	private static final VoxelShape AABB = VoxelShapes.or(NORTH_AABB.move(0D, 1D, 0D), EAST_AABB.move(0D, 1D, 0D), SOUTH_AABB.move(0D, 1D, 0D), WEST_AABB.move(0D, 1D, 0D), SIDE_AABB.move(0.5D, 0D, -0.5D), SIDE_AABB.move(0.5D, 0D, 0.5D), SIDE_AABB.move(-0.5D, 0D, 0.5D), SIDE_AABB.move(-0.5D, 0D, -0.5D), NORTH_AABB, EAST_AABB, SOUTH_AABB, WEST_AABB);
+	private static final VoxelShape COLLISION_SHAPE = VoxelShapes.box(0.01D, 0.01D, 0.01D, 0.99D, 0.99D, 0.99D);
 
 	public VFXGeneratorBlock() {
 		super(Properties.copy(Blocks.STONE).noOcclusion());
@@ -67,13 +62,8 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
-		return VoxelShapes.block();
-	}
-
-	@Override
-	public VoxelShape getVisualShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-		return VoxelShapes.empty();
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
+		return COLLISION_SHAPE;
 	}
 
 	@Override
@@ -82,19 +72,17 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 		return this.defaultBlockState().setValue(INVERTED, context.getItemInHand().getOrCreateTag().getBoolean("inverted")).setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos()))).setValue(WATERLOGGED, Boolean.valueOf(fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld level, BlockPos currentPos, BlockPos facingPos) {
 		if (state.getValue(WATERLOGGED)) {
 			level.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 		}
-		return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+		return state;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
 	}
 
 	@Override
@@ -165,16 +153,14 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 		ItemStack stack = new ItemStack(this);
-		if (player.isShiftKeyDown()) {
-			CompoundNBT tag = stack.getOrCreateTag();
-			CompoundNBT blockStateTag = new CompoundNBT();
-			blockStateTag.putString("inverted", state.getValue(INVERTED).toString());
-			tag.put("BlockStateTag", blockStateTag);
-			stack.setTag(tag);
-			TileEntity tileEntity = world.getBlockEntity(pos);
-			if (tileEntity instanceof VFXGeneratorTileEntity) {
-				stack.setTag(((VFXGeneratorTileEntity) tileEntity).saveToTag(tag));
-			}
+		CompoundNBT tag = stack.getOrCreateTag();
+		CompoundNBT blockStateTag = new CompoundNBT();
+		blockStateTag.putString("inverted", state.getValue(INVERTED).toString());
+		tag.put("BlockStateTag", blockStateTag);
+		stack.setTag(tag);
+		TileEntity tileEntity = world.getBlockEntity(pos);
+		if (tileEntity instanceof VFXGeneratorTileEntity) {
+			stack.setTag(((VFXGeneratorTileEntity) tileEntity).saveToTag(tag));
 		}
 		return stack;
 	}

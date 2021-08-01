@@ -21,12 +21,17 @@ public class VFXParticle extends SpriteTexturedParticle {
 		this.gCol = (color >> 8 & 0xFF) / 255f;
 		this.bCol = (color >> 0 & 0xFF) / 255f;
 		this.lifetime = lifetime;
-		this.quadSize = size / 10;
+		this.setSize(size);
 		this.xd = motion.x;
 		this.yd = motion.y;
 		this.zd = motion.z;
 		this.gravity = gravity;
 		this.hasPhysics = collision;
+	}
+
+	public void setSize(float size) {
+		this.quadSize = size / 10;
+		this.setSize(size / 10, size / 10);
 	}
 
 	@Override
