@@ -42,7 +42,7 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	public static BooleanProperty INVERTED = BlockStateProperties.INVERTED;
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-	private static final VoxelShape COLLISION_SHAPE = VoxelShapes.or(VoxelShapes.box(0.01D, 0.01D, 0.01D, 0.99D, 0.99D, 0.99D), VoxelShapes.box(0D, 0.99D, 0D, 1D, 1D, 1D));
+	private static final VoxelShape COLLISION_SHAPE = VoxelShapes.box(0D, 0.01D, 0D, 1D, 1D, 1D);
 
 	public VFXGeneratorBlock() {
 		super(Properties.copy(Blocks.STONE).noOcclusion());
