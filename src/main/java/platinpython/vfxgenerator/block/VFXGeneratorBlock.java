@@ -65,7 +65,7 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
 		return COLLISION_SHAPE;
 	}
-	
+
 	@Override
 	public VoxelShape getBlockSupportShape(BlockState state, IBlockReader reader, BlockPos pos) {
 		return VoxelShapes.empty();
@@ -74,7 +74,7 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-		return this.defaultBlockState().setValue(INVERTED, context.getItemInHand().getOrCreateTag().getBoolean("inverted")).setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos()))).setValue(WATERLOGGED, Boolean.valueOf(fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8));
+		return this.defaultBlockState().setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos()))).setValue(WATERLOGGED, Boolean.valueOf(fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8));
 	}
 
 	@Override
