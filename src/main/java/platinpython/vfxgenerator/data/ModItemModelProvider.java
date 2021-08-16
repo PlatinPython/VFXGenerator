@@ -13,6 +13,6 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		withExistingParent(BlockRegistry.VFX_GENERATOR.getId().getPath(), modLoc(BLOCK_FOLDER + "/vfx_generator"));
+		withExistingParent(BlockRegistry.VFX_GENERATOR.getId().getPath(), modLoc(BLOCK_FOLDER + "/vfx_generator_off"));
 	}
 }

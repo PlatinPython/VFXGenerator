@@ -3,7 +3,7 @@
 		"generator_glass": "vfxgenerator:block/generator_glass",
 		"frame": "minecraft:block/smooth_stone",
 		"end_rod": "minecraft:block/end_rod",
-		"redstone": "minecraft:block/redstone_block",
+		"redstone": "vfxgenerator:block/redstone_block_off",
 		"particle": "minecraft:block/smooth_stone"
 	},
 	"elements": [
@@ -147,7 +147,7 @@
 				"east": {"uv": [2, 14, 14, 16], "texture": "#frame"},
 				"south": {"uv": [6, 5, 8, 7], "texture": "#frame"},
 				"west": {"uv": [2, 13, 14, 15], "texture": "#frame"},
-				"up": {"uv": [2, 2, 14, 4], "texture": "#frame"},
+				"up": {"uv": [2, 2, 4, 14], "texture": "#frame"},
 				"down": {"uv": [14, 2, 16, 14], "texture": "#frame"}
 			}
 		},
