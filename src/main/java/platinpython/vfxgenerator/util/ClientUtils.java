@@ -26,16 +26,16 @@ public class ClientUtils {
 		}
 	}
 
-	public static void addParticle(String spriteLocation, int color, int lifetime, float size, Vector3d pos, Vector3d motion, float gravity, boolean collision) {
+	public static void addParticle(String spriteName, int color, int lifetime, float size, Vector3d pos, Vector3d motion, float gravity, boolean collision) {
 		Minecraft minecraft = Minecraft.getInstance();
-		VFXParticle particle = new VFXParticle(minecraft.level, minecraft.particleEngine.textureAtlas.getSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + spriteLocation)), color, lifetime, size, pos, motion, gravity, collision);
+		VFXParticle particle = new VFXParticle(minecraft.level, minecraft.particleEngine.textureAtlas.getSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + spriteName)), color, lifetime, size, pos, motion, gravity, collision);
 		minecraft.particleEngine.add(particle);
 	}
-
+	
 	public static void openVFXGeneratorScreen(VFXGeneratorTileEntity tileEntity) {
 		Minecraft.getInstance().setScreen(new VFXGeneratorScreen(tileEntity));
 	}
-	
+
 	public static TranslationTextComponent getGuiTranslationTextComponent(String suffix) {
 		return new TranslationTextComponent("gui." + VFXGenerator.MOD_ID + "." + suffix);
 	}

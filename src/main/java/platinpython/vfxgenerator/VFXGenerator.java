@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import platinpython.vfxgenerator.data.DataGatherer;
 import platinpython.vfxgenerator.util.RegistryHandler;
+import platinpython.vfxgenerator.util.network.NetworkHandler;
 
 @Mod(VFXGenerator.MOD_ID)
 public class VFXGenerator {
@@ -18,5 +19,7 @@ public class VFXGenerator {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(DataGatherer::onGatherData);
 
 		RegistryHandler.register();
+
+		NetworkHandler.register();
 	}
 }

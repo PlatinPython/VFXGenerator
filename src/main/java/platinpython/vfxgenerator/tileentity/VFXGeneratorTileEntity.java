@@ -131,33 +131,62 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		particleEnabled = particleTag.getBoolean("enabled");
 		particleSelected = particleTag.getString("selected");
 		particleUseHSB = particleTag.getBoolean("useHSB");
-		particleRGBColorBot = MathHelper.clamp(particleTag.getInt("RGBColorBot"), 0xFF000000, getParticleRGBColorTop());
-		particleRGBColorTop = MathHelper.clamp(particleTag.getInt("RGBColorTop"), getParticleRGBColorBot(), 0xFFFFFFFF);
-		particleHSBColorBot[0] = MathHelper.clamp(particleTag.getFloat("hueBot"), 0F, getParticleHSBColorTop()[0]);
-		particleHSBColorBot[1] = MathHelper.clamp(particleTag.getFloat("saturationBot"), 0F, getParticleHSBColorTop()[1]);
-		particleHSBColorBot[2] = MathHelper.clamp(particleTag.getFloat("brightnessBot"), 0F, getParticleHSBColorTop()[2]);
-		particleHSBColorTop[0] = MathHelper.clamp(particleTag.getFloat("hueTop"), getParticleHSBColorBot()[0], 1F);
-		particleHSBColorTop[1] = MathHelper.clamp(particleTag.getFloat("saturationTop"), getParticleHSBColorBot()[1], 1F);
-		particleHSBColorTop[2] = MathHelper.clamp(particleTag.getFloat("brightnessTop"), getParticleHSBColorBot()[2], 1F);
-		particleLifetimeBot = MathHelper.clamp(particleTag.getInt("lifetimeBot"), ParticleConstants.MIN_LIFETIME, getParticleLifetimeTop());
-		particleLifetimeTop = MathHelper.clamp(particleTag.getInt("lifetimeTop"), getParticleLifetimeBot(), ParticleConstants.MAX_LIFETIME);
-		particleSizeBot = MathHelper.clamp(particleTag.getFloat("sizeBot"), ParticleConstants.MIN_SIZE, getParticleSizeTop());
-		particleSizeTop = MathHelper.clamp(particleTag.getFloat("sizeTop"), getParticleSizeBot(), ParticleConstants.MAX_SIZE);
-		particleSpawnXBot = MathHelper.clamp(particleTag.getFloat("spawnXBot"), ParticleConstants.MIN_SPAWN, getParticleSpawnXTop());
-		particleSpawnXTop = MathHelper.clamp(particleTag.getFloat("spawnXTop"), getParticleSpawnXBot(), ParticleConstants.MAX_SPAWN);
-		particleSpawnYBot = MathHelper.clamp(particleTag.getFloat("spawnYBot"), ParticleConstants.MIN_SPAWN, getParticleSpawnYTop());
-		particleSpawnYTop = MathHelper.clamp(particleTag.getFloat("spawnYTop"), getParticleSpawnYBot(), ParticleConstants.MAX_SPAWN);
-		particleSpawnZBot = MathHelper.clamp(particleTag.getFloat("spawnZBot"), ParticleConstants.MIN_SPAWN, getParticleSpawnZTop());
-		particleSpawnZTop = MathHelper.clamp(particleTag.getFloat("spawnZTop"), getParticleSpawnZBot(), ParticleConstants.MAX_SPAWN);
-		particleMotionXBot = MathHelper.clamp(particleTag.getFloat("motionXBot"), ParticleConstants.MIN_MOTION, getParticleMotionXTop());
-		particleMotionXTop = MathHelper.clamp(particleTag.getFloat("motionXTop"), getParticleMotionXBot(), ParticleConstants.MAX_MOTION);
-		particleMotionYBot = MathHelper.clamp(particleTag.getFloat("motionYBot"), ParticleConstants.MIN_MOTION, getParticleMotionYTop());
-		particleMotionYTop = MathHelper.clamp(particleTag.getFloat("motionYTop"), getParticleMotionYBot(), ParticleConstants.MAX_MOTION);
-		particleMotionZBot = MathHelper.clamp(particleTag.getFloat("motionZBot"), ParticleConstants.MIN_MOTION, getParticleMotionZTop());
-		particleMotionZTop = MathHelper.clamp(particleTag.getFloat("motionZTop"), getParticleMotionZBot(), ParticleConstants.MAX_MOTION);
+		particleRGBColorBot = MathHelper.clamp(particleTag.getInt("RGBColorBot"), 0xFF000000, 0xFFFFFFFF);
+		particleRGBColorTop = MathHelper.clamp(particleTag.getInt("RGBColorTop"), 0xFF000000, 0xFFFFFFFF);
+		particleHSBColorBot[0] = MathHelper.clamp(particleTag.getFloat("hueBot"), 0F, 1F);
+		particleHSBColorBot[1] = MathHelper.clamp(particleTag.getFloat("saturationBot"), 0F, 1F);
+		particleHSBColorBot[2] = MathHelper.clamp(particleTag.getFloat("brightnessBot"), 0F, 1F);
+		particleHSBColorTop[0] = MathHelper.clamp(particleTag.getFloat("hueTop"), 0F, 1F);
+		particleHSBColorTop[1] = MathHelper.clamp(particleTag.getFloat("saturationTop"), 0F, 1F);
+		particleHSBColorTop[2] = MathHelper.clamp(particleTag.getFloat("brightnessTop"), 0F, 1F);
+		particleLifetimeBot = MathHelper.clamp(particleTag.getInt("lifetimeBot"), ParticleConstants.MIN_LIFETIME, ParticleConstants.MAX_LIFETIME);
+		particleLifetimeTop = MathHelper.clamp(particleTag.getInt("lifetimeTop"), ParticleConstants.MIN_LIFETIME, ParticleConstants.MAX_LIFETIME);
+		particleSizeBot = MathHelper.clamp(particleTag.getFloat("sizeBot"), ParticleConstants.MIN_SIZE, ParticleConstants.MAX_SIZE);
+		particleSizeTop = MathHelper.clamp(particleTag.getFloat("sizeTop"), ParticleConstants.MIN_SIZE, ParticleConstants.MAX_SIZE);
+		particleSpawnXBot = MathHelper.clamp(particleTag.getFloat("spawnXBot"), ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN);
+		particleSpawnXTop = MathHelper.clamp(particleTag.getFloat("spawnXTop"), ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN);
+		particleSpawnYBot = MathHelper.clamp(particleTag.getFloat("spawnYBot"), ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN);
+		particleSpawnYTop = MathHelper.clamp(particleTag.getFloat("spawnYTop"), ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN);
+		particleSpawnZBot = MathHelper.clamp(particleTag.getFloat("spawnZBot"), ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN);
+		particleSpawnZTop = MathHelper.clamp(particleTag.getFloat("spawnZTop"), ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN);
+		particleMotionXBot = MathHelper.clamp(particleTag.getFloat("motionXBot"), ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION);
+		particleMotionXTop = MathHelper.clamp(particleTag.getFloat("motionXTop"), ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION);
+		particleMotionYBot = MathHelper.clamp(particleTag.getFloat("motionYBot"), ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION);
+		particleMotionYTop = MathHelper.clamp(particleTag.getFloat("motionYTop"), ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION);
+		particleMotionZBot = MathHelper.clamp(particleTag.getFloat("motionZBot"), ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION);
+		particleMotionZTop = MathHelper.clamp(particleTag.getFloat("motionZTop"), ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION);
 		particleDelay = MathHelper.clamp(particleTag.getInt("delay"), ParticleConstants.MIN_DELAY, ParticleConstants.MAX_DELAY);
 		particleGravity = MathHelper.clamp(particleTag.getFloat("gravity"), ParticleConstants.MIN_GRAVITY, ParticleConstants.MAX_GRAVITY);
 		particleCollision = particleTag.getBoolean("collision");
+
+		ensureParticleDataOrder();
+	}
+
+	private void ensureParticleDataOrder() {
+		particleRGBColorBot = MathHelper.clamp(getParticleRGBColorBot(), 0xFF000000, getParticleRGBColorTop());
+		particleRGBColorTop = MathHelper.clamp(getParticleRGBColorTop(), getParticleRGBColorBot(), 0xFFFFFFFF);
+		particleHSBColorBot[0] = MathHelper.clamp(getParticleHSBColorBot()[0], 0F, getParticleHSBColorTop()[0]);
+		particleHSBColorBot[1] = MathHelper.clamp(getParticleHSBColorBot()[1], 0F, getParticleHSBColorTop()[1]);
+		particleHSBColorBot[2] = MathHelper.clamp(getParticleHSBColorBot()[2], 0F, getParticleHSBColorTop()[2]);
+		particleHSBColorTop[0] = MathHelper.clamp(getParticleHSBColorTop()[0], getParticleHSBColorBot()[0], 1F);
+		particleHSBColorTop[1] = MathHelper.clamp(getParticleHSBColorTop()[1], getParticleHSBColorBot()[1], 1F);
+		particleHSBColorTop[2] = MathHelper.clamp(getParticleHSBColorTop()[2], getParticleHSBColorBot()[2], 1F);
+		particleLifetimeBot = MathHelper.clamp(getParticleLifetimeBot(), ParticleConstants.MIN_LIFETIME, getParticleLifetimeTop());
+		particleLifetimeTop = MathHelper.clamp(getParticleLifetimeTop(), getParticleLifetimeBot(), ParticleConstants.MAX_LIFETIME);
+		particleSizeBot = MathHelper.clamp(getParticleSizeBot(), ParticleConstants.MIN_SIZE, getParticleSizeTop());
+		particleSizeTop = MathHelper.clamp(getParticleSizeTop(), getParticleSizeBot(), ParticleConstants.MAX_SIZE);
+		particleSpawnXBot = MathHelper.clamp(getParticleSpawnXBot(), ParticleConstants.MIN_SPAWN, getParticleSpawnXTop());
+		particleSpawnXTop = MathHelper.clamp(getParticleSpawnXTop(), getParticleSpawnXBot(), ParticleConstants.MAX_SPAWN);
+		particleSpawnYBot = MathHelper.clamp(getParticleSpawnYBot(), ParticleConstants.MIN_SPAWN, getParticleSpawnYTop());
+		particleSpawnYTop = MathHelper.clamp(getParticleSpawnYTop(), getParticleSpawnYBot(), ParticleConstants.MAX_SPAWN);
+		particleSpawnZBot = MathHelper.clamp(getParticleSpawnZBot(), ParticleConstants.MIN_SPAWN, getParticleSpawnZTop());
+		particleSpawnZTop = MathHelper.clamp(getParticleSpawnZTop(), getParticleSpawnZBot(), ParticleConstants.MAX_SPAWN);
+		particleMotionXBot = MathHelper.clamp(getParticleMotionXBot(), ParticleConstants.MIN_MOTION, getParticleMotionXTop());
+		particleMotionXTop = MathHelper.clamp(getParticleMotionXTop(), getParticleMotionXBot(), ParticleConstants.MAX_MOTION);
+		particleMotionYBot = MathHelper.clamp(getParticleMotionYBot(), ParticleConstants.MIN_MOTION, getParticleMotionYTop());
+		particleMotionYTop = MathHelper.clamp(getParticleMotionYTop(), getParticleMotionYBot(), ParticleConstants.MAX_MOTION);
+		particleMotionZBot = MathHelper.clamp(getParticleMotionZBot(), ParticleConstants.MIN_MOTION, getParticleMotionZTop());
+		particleMotionZTop = MathHelper.clamp(getParticleMotionZTop(), getParticleMotionZBot(), ParticleConstants.MAX_MOTION);
 	}
 
 	@Override
