@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -24,6 +25,10 @@ public class ClientUtils {
 	@SubscribeEvent
 	public static void init(FMLClientSetupEvent event) {
 		RenderTypeLookup.setRenderLayer(BlockRegistry.VFX_GENERATOR.get(), RenderType.cutout());
+
+		event.enqueueWork(() -> {
+			ItemModelsProperties.register(BlockRegistry.VFX_GENERATOR.get().asItem(), new ResourceLocation(VFXGenerator.MOD_ID, "inverted"), (stack, world, entity) -> Boolean.valueOf(stack.getOrCreateTagElement("BlockStateTag").getString("inverted")) ? 1F : 0F);
+		});
 	}
 
 	@SuppressWarnings("deprecation")

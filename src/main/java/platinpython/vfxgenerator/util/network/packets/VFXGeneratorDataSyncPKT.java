@@ -34,6 +34,7 @@ public class VFXGeneratorDataSyncPKT {
 				TileEntity tileEntity = context.get().getSender().getLevel().getBlockEntity(message.pos);
 				if (tileEntity instanceof VFXGeneratorTileEntity) {
 					((VFXGeneratorTileEntity) tileEntity).loadFromTag(message.tag);
+					tileEntity.setChanged();
 				}
 				context.get().getSender().getLevel().sendBlockUpdated(message.pos, context.get().getSender().getLevel().getBlockState(message.pos), context.get().getSender().getLevel().getBlockState(message.pos), BlockFlags.DEFAULT);
 			});
