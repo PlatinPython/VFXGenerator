@@ -54,7 +54,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		if ((this.getBlockState().getValue(VFXGeneratorBlock.INVERTED) && !this.getBlockState().getValue(VFXGeneratorBlock.POWERED)) || (!this.getBlockState().getValue(VFXGeneratorBlock.INVERTED) && this.getBlockState().getValue(VFXGeneratorBlock.POWERED))) {
 			World world = this.getLevel();
 			if (world.isClientSide && this.particleEnabled) {
-				if (world.getGameTime() % (particleDelay + 1) == 0) {
+				if (world.getGameTime() % particleDelay == 0) {
 					Random random = world.getRandom();
 
 					int color = 0xFF000000;

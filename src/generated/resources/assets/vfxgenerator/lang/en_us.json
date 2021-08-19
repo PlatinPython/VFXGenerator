@@ -1,4 +1,27 @@
 {
   "block.vfxgenerator.vfx_generator": "VFX Generator",
-  "gui.vfxgenerator.dataSaved": "Contents Saved."
+  "gui.vfxgenerator.blue": "Blue",
+  "gui.vfxgenerator.brightness": "Brightness",
+  "gui.vfxgenerator.dataSaved": "Contents Saved.",
+  "gui.vfxgenerator.disabled": "Disabled",
+  "gui.vfxgenerator.enabled": "Enabled",
+  "gui.vfxgenerator.green": "Green",
+  "gui.vfxgenerator.hue": "Hue",
+  "gui.vfxgenerator.particle": "Particle",
+  "gui.vfxgenerator.particleCollision": "Collision",
+  "gui.vfxgenerator.particleDelay": "Delay",
+  "gui.vfxgenerator.particleGravity": "Gravity",
+  "gui.vfxgenerator.particleLifetime": "Lifetime",
+  "gui.vfxgenerator.particleMotionX": "X Motion",
+  "gui.vfxgenerator.particleMotionY": "Y Motion",
+  "gui.vfxgenerator.particleMotionZ": "Z Motion",
+  "gui.vfxgenerator.particleSelected": "",
+  "gui.vfxgenerator.particleSize": "Size",
+  "gui.vfxgenerator.particleSpawnX": "X Position",
+  "gui.vfxgenerator.particleSpawnY": "Y Position",
+  "gui.vfxgenerator.particleSpawnZ": "Z Position",
+  "gui.vfxgenerator.red": "Red",
+  "gui.vfxgenerator.saturation": "Saturation",
+  "gui.vfxgenerator.useHSB": "HSB Selected",
+  "gui.vfxgenerator.useRGB": "RGB Selected"
 }
