@@ -4,6 +4,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
+import platinpython.vfxgenerator.util.registries.ItemRegistry;
 
 public class ModLanguageProvider extends LanguageProvider {
 	public ModLanguageProvider(DataGenerator gen) {
@@ -12,6 +13,8 @@ public class ModLanguageProvider extends LanguageProvider {
 
 	@Override
 	protected void addTranslations() {
+		add(ItemRegistry.VFX_GENERATOR_CORE.get(), "VFX Generator Core");
+		
 		add(BlockRegistry.VFX_GENERATOR.get(), "VFX Generator");
 		
 		addGui("dataSaved", "Contents Saved.");

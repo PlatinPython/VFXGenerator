@@ -1,13 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "###",
-    "# #",
-    "###"
+    " S ",
+    "SCS",
+    " S "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:stone"
+    "C": {
+      "item": "vfxgenerator:vfx_generator_core"
+    },
+    "S": {
+      "item": "minecraft:smooth_stone"
     }
   },
   "result": {

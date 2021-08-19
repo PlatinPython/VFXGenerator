@@ -23,5 +23,6 @@
   "gui.vfxgenerator.red": "Red",
   "gui.vfxgenerator.saturation": "Saturation",
   "gui.vfxgenerator.useHSB": "HSB Selected",
-  "gui.vfxgenerator.useRGB": "RGB Selected"
+  "gui.vfxgenerator.useRGB": "RGB Selected",
+  "item.vfxgenerator.vfx_generator_core": "VFX Generator Core"
 }

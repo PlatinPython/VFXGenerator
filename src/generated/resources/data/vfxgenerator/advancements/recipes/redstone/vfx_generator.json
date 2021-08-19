@@ -6,12 +6,12 @@
     ]
   },
   "criteria": {
-    "has_stone": {
+    "has_vfx_generator_core": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:stone"
+            "item": "vfxgenerator:vfx_generator_core"
           }
         ]
       }
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "has_stone",
+      "has_vfx_generator_core",
       "has_the_recipe"
     ]
   ]
