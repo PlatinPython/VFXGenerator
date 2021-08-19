@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ERE",
+    "RGR",
+    "ERE"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:end_rod"
+    },
+    "R": {
+      "tag": "forge:storage_blocks/redstone"
+    },
+    "G": {
+      "tag": "forge:glass"
+    }
+  },
+  "result": {
+    "item": "vfxgenerator:vfx_generator_core"
+  }
+}

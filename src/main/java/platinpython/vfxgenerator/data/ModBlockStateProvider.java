@@ -16,7 +16,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 	@Override
 	protected void registerStatesAndModels() {
-//		simpleBlock(BlockRegistry.VFX_GENERATOR.get(), models().getExistingFile(modLoc(ModelProvider.BLOCK_FOLDER + "/vfx_generator")));
 		getVariantBuilder(BlockRegistry.VFX_GENERATOR.get()).forAllStatesExcept((state) -> {
 			if (state.getValue(VFXGeneratorBlock.INVERTED)) {
 				if (state.getValue(VFXGeneratorBlock.POWERED)) {

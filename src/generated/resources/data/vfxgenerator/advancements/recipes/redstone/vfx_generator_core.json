@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vfxgenerator:vfx_generator"
+      "vfxgenerator:vfx_generator_core"
     ]
   },
   "criteria": {
-    "has_vfx_generator_core": {
+    "has_end_rod": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "vfxgenerator:vfx_generator_core"
+            "item": "minecraft:end_rod"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vfxgenerator:vfx_generator"
+        "recipe": "vfxgenerator:vfx_generator_core"
       }
     }
   },
   "requirements": [
     [
-      "has_vfx_generator_core",
+      "has_end_rod",
       "has_the_recipe"
     ]
   ]
