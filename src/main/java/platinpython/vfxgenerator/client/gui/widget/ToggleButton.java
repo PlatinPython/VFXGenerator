@@ -1,0 +1,41 @@
+package platinpython.vfxgenerator.client.gui.widget;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import net.minecraft.util.text.ITextComponent;
+import platinpython.vfxgenerator.util.Util.VoidFunction;
+
+public class ToggleButton extends UpdateableWidget {
+	private final ITextComponent displayTextFalse;
+	private final ITextComponent displayTextTrue;
+
+	private final Consumer<Boolean> setValueFunction;
+	private final Supplier<Boolean> valueSupplier;
+
+	public ToggleButton(int x, int y, int width, int height, ITextComponent displayTextFalse, ITextComponent displayTextTrue, Consumer<Boolean> setValueFunction, Supplier<Boolean> valueSupplier, VoidFunction applyValueFunction) {
+		super(x, y, width, height, displayTextFalse, applyValueFunction);
+		this.displayTextFalse = displayTextFalse;
+		this.displayTextTrue = displayTextTrue;
+		this.setValueFunction = setValueFunction;
+		this.valueSupplier = valueSupplier;
+		this.updateMessage();
+	}
+
+	@Override
+	public void onClick(double mouseX, double mouseY) {
+		this.setValueFunction.accept(!this.valueSupplier.get());
+		this.updateMessage();
+		this.applyValue();
+	}
+
+	@Override
+	public void updateValue() {
+		this.updateMessage();
+	}
+
+	@Override
+	protected void updateMessage() {
+		this.setMessage(valueSupplier.get() ? displayTextTrue : displayTextFalse);
+	}
+}

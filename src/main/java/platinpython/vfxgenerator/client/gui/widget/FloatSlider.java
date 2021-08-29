@@ -48,12 +48,18 @@ public class FloatSlider extends UpdateableWidget {
 		return 0;
 	}
 
+	private int getYImageNoDisabled(boolean isHovered) {
+		if (!this.active)
+			return 1;
+		return isHovered ? 2 : 1;
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void renderBg(MatrixStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)), this.y, 0, 46 + super.getYImage(isHovered()) * 20, 4, this.height);
-		this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + super.getYImage(isHovered()) * 20, 4, this.height);
+		this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isHovered()) * 20, 4, this.height);
+		this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isHovered()) * 20, 4, this.height);
 	}
 
 	@Override

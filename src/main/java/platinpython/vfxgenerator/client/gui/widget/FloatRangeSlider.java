@@ -60,6 +60,12 @@ public class FloatRangeSlider extends UpdateableWidget {
 		return 0;
 	}
 
+	private int getYImageNoDisabled(boolean isHovered) {
+		if (!this.active)
+			return 1;
+		return isHovered ? 2 : 1;
+	}
+
 	public boolean isLeftHovered(int mouseX) {
 		return this.isHovered() && mouseX < (this.x + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
 	}
@@ -73,10 +79,10 @@ public class FloatRangeSlider extends UpdateableWidget {
 	protected void renderBg(MatrixStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GuiUtils.drawContinuousTexturedBox(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y + 3, 0, 66, ((int) (this.rightSliderValue * (double) (this.width - 8))) - ((int) (this.leftSliderValue * (double) (this.width - 8))), this.height - 6, 200, 20, 2, 2, 2, 2, this.getBlitOffset());
-		this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0, 46 + super.getYImage(isLeftHovered(mouseX)) * 20, 4, this.height);
-		this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + super.getYImage(isLeftHovered(mouseX)) * 20, 4, this.height);
-		this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0, 46 + super.getYImage(isRightHovered(mouseX)) * 20, 4, this.height);
-		this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + super.getYImage(isRightHovered(mouseX)) * 20, 4, this.height);
+		this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height);
+		this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height);
+		this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height);
+		this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height);
 	}
 
 	private boolean isLeftSelected;

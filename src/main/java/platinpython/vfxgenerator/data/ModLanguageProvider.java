@@ -14,35 +14,44 @@ public class ModLanguageProvider extends LanguageProvider {
 	@Override
 	protected void addTranslations() {
 		add(ItemRegistry.VFX_GENERATOR_CORE.get(), "VFX Generator Core");
-		
+
 		add(BlockRegistry.VFX_GENERATOR.get(), "VFX Generator");
-		
+
 		addGui("dataSaved", "Contents Saved.");
-		
+
+		addGui("particle", "Particle");
+
 		addGui("enabled", "Enabled");
 		addGui("disabled", "Disabled");
-		addGui("useRGB", "RGB Selected");
-		addGui("useHSB", "HSB Selected");
+
+		addGui("useRGB", "Use RGB");
+		addGui("useHSB", "Use HSB");
+
 		addGui("red", "Red");
 		addGui("green", "Green");
 		addGui("blue", "Blue");
+
 		addGui("hue", "Hue");
 		addGui("saturation", "Saturation");
 		addGui("brightness", "Brightness");
-		
-		addGui("particle", "Particle");
-		addGui("particleSelected", "");
-		addGui("particleLifetime", "Lifetime");
-		addGui("particleSize", "Size");
-		addGui("particleSpawnX", "X Position");
-		addGui("particleSpawnY", "Y Position");
-		addGui("particleSpawnZ", "Z Position");
-		addGui("particleMotionX", "X Motion");
-		addGui("particleMotionY", "Y Motion");
-		addGui("particleMotionZ", "Z Motion");
-		addGui("particleDelay", "Delay");
-		addGui("particleGravity", "Gravity");
-		addGui("particleCollision", "Collision");
+
+		addGui("spawnX", "X Position");
+		addGui("spawnY", "Y Position");
+		addGui("spawnZ", "Z Position");
+
+		addGui("motionX", "X Motion");
+		addGui("motionY", "Y Motion");
+		addGui("motionZ", "Z Motion");
+
+		addGui("lifetime", "Lifetime");
+
+		addGui("size", "Size");
+
+		addGui("delay", "Delay");
+
+		addGui("gravity", "Gravity");
+
+		addGui("collision", "Collision");
 	}
 
 	private void addGui(String suffix, String text) {

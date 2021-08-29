@@ -7,7 +7,7 @@ import platinpython.vfxgenerator.util.Util.VoidFunction;
 public abstract class UpdateableWidget extends Widget {
 	protected final VoidFunction applyValueFunction;
 
-	protected ITextComponent displayText;
+	protected final ITextComponent displayText;
 
 	public UpdateableWidget(int x, int y, int width, int height, ITextComponent displayText, VoidFunction applyValueFunction) {
 		super(x, y, width, height, displayText);
