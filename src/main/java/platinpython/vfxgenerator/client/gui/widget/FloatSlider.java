@@ -13,17 +13,23 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import platinpython.vfxgenerator.client.gui.screen.VFXGeneratorScreen.VoidFunction;
+import platinpython.vfxgenerator.util.Util;
+import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 public class FloatSlider extends UpdateableWidget {
 	private double sliderValue;
+	private final double minValue, maxValue;
+	private final float stepSize;
 	private final DecimalFormat format;
 
 	private final Consumer<Float> setValueFunction;
 	private final Supplier<Float> valueSupplier;
 
 	public FloatSlider(int x, int y, int width, int height, ITextComponent displayText, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
-		super(x, y, width, height, displayText, minValue, maxValue, stepSize, applyValueFunction);
+		super(x, y, width, height, displayText, applyValueFunction);
+		this.minValue = minValue;
+		this.maxValue = maxValue;
+		this.stepSize = stepSize;
 		this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 && Float.toString(this.stepSize).split("\\.")[1].equals("0") ? new DecimalFormat("0") : new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
 		this.setValueFunction = setValueFunction;
 		this.valueSupplier = valueSupplier;
@@ -31,7 +37,7 @@ public class FloatSlider extends UpdateableWidget {
 	}
 
 	private void setupSliderValues(double value) {
-		this.sliderValue = this.clamp(value);
+		this.sliderValue = Util.clamp(value, this.minValue, this.maxValue, this.stepSize);
 		this.setValueFunction.accept((float) this.getSliderValue());
 		this.applyValue();
 		this.updateMessage();
@@ -53,7 +59,7 @@ public class FloatSlider extends UpdateableWidget {
 	@Override
 	public void updateValue() {
 		if (this.valueSupplier.get() != this.getSliderValue()) {
-			this.sliderValue = this.clamp(this.valueSupplier.get());
+			this.sliderValue = Util.clamp(this.valueSupplier.get(), this.minValue, this.maxValue, this.stepSize);
 		}
 		this.updateMessage();
 	}
@@ -74,7 +80,7 @@ public class FloatSlider extends UpdateableWidget {
 
 	private void setSliderValue(double value) {
 		double d0 = this.sliderValue;
-		this.sliderValue = this.toValue(value);
+		this.sliderValue = Util.toValue(value, this.minValue, this.maxValue, this.stepSize);
 		if (d0 != this.sliderValue) {
 			this.setValueFunction.accept((float) this.getSliderValue());
 			this.applyValue();

@@ -17,10 +17,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-import platinpython.vfxgenerator.client.gui.screen.VFXGeneratorScreen.VoidFunction;
+import platinpython.vfxgenerator.util.Util;
+import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 public class FloatRangeSlider extends UpdateableWidget {
 	private double leftSliderValue, rightSliderValue;
+	private final double minValue, maxValue;
+	private final float stepSize;
 	private final DecimalFormat format;
 
 	private final Consumer<Float> setLeftValueFunction;
@@ -29,7 +32,10 @@ public class FloatRangeSlider extends UpdateableWidget {
 	private final Supplier<Float> rightValueSupplier;
 
 	public FloatRangeSlider(int x, int y, int width, int height, ITextComponent displayText, double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction, Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier, Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
-		super(x, y, width, height, displayText, minValue, maxValue, stepSize, applyValueFunction);
+		super(x, y, width, height, displayText, applyValueFunction);
+		this.minValue = minValue;
+		this.maxValue = maxValue;
+		this.stepSize = stepSize;
 		this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 && Float.toString(this.stepSize).split("\\.")[1].equals("0") ? new DecimalFormat("0") : new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
 		this.setLeftValueFunction = setLeftValueFunction;
 		this.setRightValueFunction = setRightValueFunction;
@@ -39,10 +45,10 @@ public class FloatRangeSlider extends UpdateableWidget {
 	}
 
 	private void setupSliderValues(double leftValue, double rightValue) {
-		this.leftSliderValue = this.clamp(leftValue);
-		this.rightSliderValue = this.clamp(rightValue);
-		this.leftSliderValue = this.toValue(MathHelper.clamp(this.leftSliderValue, 0D, this.rightSliderValue));
-		this.rightSliderValue = this.toValue(MathHelper.clamp(this.rightSliderValue, this.leftSliderValue, 1D));
+		this.leftSliderValue = Util.clamp(leftValue, this.minValue, this.maxValue, this.stepSize);
+		this.rightSliderValue = Util.clamp(rightValue, this.minValue, this.maxValue, this.stepSize);
+		this.leftSliderValue = Util.toValue(MathHelper.clamp(this.leftSliderValue, 0D, this.rightSliderValue), this.minValue, this.maxValue, this.stepSize);
+		this.rightSliderValue = Util.toValue(MathHelper.clamp(this.rightSliderValue, this.leftSliderValue, 1D), this.minValue, this.maxValue, this.stepSize);
 		this.setLeftValueFunction.accept((float) this.getLeftSliderValue());
 		this.setRightValueFunction.accept((float) this.getRightSliderValue());
 		this.applyValue();
@@ -114,13 +120,13 @@ public class FloatRangeSlider extends UpdateableWidget {
 		if (flag || keyCode == GLFW.GLFW_KEY_RIGHT) {
 			if (flag) {
 				if (this.leftSliderValue != 0D) {
-					this.setLeftSliderValue(this.clamp(this.getLeftSliderValue() - this.stepSize));
-					this.setRightSliderValue(this.clamp(this.getRightSliderValue() - this.stepSize));
+					this.setLeftSliderValue(Util.clamp((this.getLeftSliderValue() - this.stepSize), this.minValue, this.maxValue, this.stepSize));
+					this.setRightSliderValue(Util.clamp((this.getRightSliderValue() - this.stepSize), this.minValue, this.maxValue, this.stepSize));
 				}
 			} else {
 				if (this.rightSliderValue != 1D) {
-					this.setRightSliderValue(this.clamp(this.getRightSliderValue() + this.stepSize));
-					this.setLeftSliderValue(this.clamp(this.getLeftSliderValue() + this.stepSize));
+					this.setRightSliderValue(Util.clamp((this.getRightSliderValue() + this.stepSize), this.minValue, this.maxValue, this.stepSize));
+					this.setLeftSliderValue(Util.clamp((this.getLeftSliderValue() + this.stepSize), this.minValue, this.maxValue, this.stepSize));
 				}
 			}
 		}
@@ -130,17 +136,17 @@ public class FloatRangeSlider extends UpdateableWidget {
 	@Override
 	public void updateValue() {
 		if (this.leftValueSupplier.get() != this.getLeftSliderValue()) {
-			this.leftSliderValue = this.clamp(this.leftValueSupplier.get());
+			this.leftSliderValue = Util.clamp(this.leftValueSupplier.get(), this.minValue, this.maxValue, this.stepSize);
 		}
 		if (this.rightValueSupplier.get() != this.getRightSliderValue()) {
-			this.rightSliderValue = this.clamp(this.rightValueSupplier.get());
+			this.rightSliderValue = Util.clamp(this.rightValueSupplier.get(), this.minValue, this.maxValue, this.stepSize);
 		}
 		this.updateMessage();
 	}
 
 	private void setLeftSliderValue(double value) {
 		double d0 = this.leftSliderValue;
-		this.leftSliderValue = this.toValue(MathHelper.clamp(value, 0.0D, this.rightSliderValue));
+		this.leftSliderValue = Util.toValue(MathHelper.clamp(value, 0.0D, this.rightSliderValue), this.minValue, this.maxValue, this.stepSize);
 		if (d0 != this.leftSliderValue) {
 			this.setLeftValueFunction.accept((float) this.getLeftSliderValue());
 			this.applyValue();
@@ -155,7 +161,7 @@ public class FloatRangeSlider extends UpdateableWidget {
 
 	private void setRightSliderValue(double value) {
 		double d0 = this.rightSliderValue;
-		this.rightSliderValue = this.toValue(MathHelper.clamp(value, this.leftSliderValue, 1.0D));
+		this.rightSliderValue = Util.toValue(MathHelper.clamp(value, this.leftSliderValue, 1.0D), this.minValue, this.maxValue, this.stepSize);
 		if (d0 != this.rightSliderValue) {
 			this.setRightValueFunction.accept((float) this.getRightSliderValue());
 			this.applyValue();

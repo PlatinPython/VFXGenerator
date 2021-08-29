@@ -59,9 +59,4 @@ public class VFXGeneratorScreen extends Screen {
 	private final void sendToServer() {
 		NetworkHandler.INSTANCE.sendToServer(new VFXGeneratorDataSyncPKT(this.tileEntity.saveToTag(new CompoundNBT()), this.tileEntity.getBlockPos()));
 	}
-
-	@FunctionalInterface
-	public interface VoidFunction {
-		void apply();
-	}
 }
