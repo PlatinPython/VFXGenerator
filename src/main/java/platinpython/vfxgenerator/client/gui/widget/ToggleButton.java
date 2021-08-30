@@ -14,12 +14,19 @@ public class ToggleButton extends UpdateableWidget {
 	private final Supplier<Boolean> valueSupplier;
 
 	public ToggleButton(int x, int y, int width, int height, ITextComponent displayTextFalse, ITextComponent displayTextTrue, Consumer<Boolean> setValueFunction, Supplier<Boolean> valueSupplier, VoidFunction applyValueFunction) {
-		super(x, y, width, height, displayTextFalse, applyValueFunction);
+		super(x, y, width, height, applyValueFunction);
 		this.displayTextFalse = displayTextFalse;
 		this.displayTextTrue = displayTextTrue;
 		this.setValueFunction = setValueFunction;
 		this.valueSupplier = valueSupplier;
 		this.updateMessage();
+	}
+
+	@Override
+	protected int getYImage(boolean pIsHovered) {
+		if (!this.active)
+			return 1;
+		return isHovered ? 2 : 1;
 	}
 
 	@Override

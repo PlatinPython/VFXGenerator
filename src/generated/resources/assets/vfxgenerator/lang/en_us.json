@@ -21,6 +21,7 @@
   "gui.vfxgenerator.spawnX": "X Position",
   "gui.vfxgenerator.spawnY": "Y Position",
   "gui.vfxgenerator.spawnZ": "Z Position",
+  "gui.vfxgenerator.ticks": "Ticks",
   "gui.vfxgenerator.useHSB": "Use HSB",
   "gui.vfxgenerator.useRGB": "Use RGB",
   "item.vfxgenerator.vfx_generator_core": "VFX Generator Core"

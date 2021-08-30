@@ -26,17 +26,22 @@ public class FloatRangeSlider extends UpdateableWidget {
 	private final float stepSize;
 	private final DecimalFormat format;
 
+	private final ITextComponent prefix;
+	private final ITextComponent suffix;
+
 	private final Consumer<Float> setLeftValueFunction;
 	private final Consumer<Float> setRightValueFunction;
 	private final Supplier<Float> leftValueSupplier;
 	private final Supplier<Float> rightValueSupplier;
 
-	public FloatRangeSlider(int x, int y, int width, int height, ITextComponent displayText, double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction, Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier, Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
-		super(x, y, width, height, displayText, applyValueFunction);
+	public FloatRangeSlider(int x, int y, int width, int height, ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction, Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier, Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
+		super(x, y, width, height, applyValueFunction);
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.stepSize = stepSize;
 		this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 && Float.toString(this.stepSize).split("\\.")[1].equals("0") ? new DecimalFormat("0") : new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
+		this.prefix = prefix;
+		this.suffix = suffix;
 		this.setLeftValueFunction = setLeftValueFunction;
 		this.setRightValueFunction = setRightValueFunction;
 		this.leftValueSupplier = leftValueSupplier;
@@ -79,10 +84,17 @@ public class FloatRangeSlider extends UpdateableWidget {
 	protected void renderBg(MatrixStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GuiUtils.drawContinuousTexturedBox(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y + 3, 0, 66, ((int) (this.rightSliderValue * (double) (this.width - 8))) - ((int) (this.leftSliderValue * (double) (this.width - 8))), this.height - 6, 200, 20, 2, 2, 2, 2, this.getBlitOffset());
-		this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height);
-		this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height);
-		this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height);
-		this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height);
+		if (isLeftHovered(mouseX)) {
+			this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height);
+			this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height);
+			this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height);
+			this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height);
+		} else {
+			this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height);
+			this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height);
+			this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height);
+			this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height);
+		}
 	}
 
 	private boolean isLeftSelected;
@@ -191,7 +203,7 @@ public class FloatRangeSlider extends UpdateableWidget {
 
 	@Override
 	protected void updateMessage() {
-		setMessage(new StringTextComponent("").append(displayText).append(": ").append(format.format(getLeftSliderValue())).append(" - ").append(format.format(getRightSliderValue())));
+		setMessage(new StringTextComponent("").append(prefix).append(": ").append(format.format(getLeftSliderValue())).append(suffix.getString().isEmpty() ? "" : " ").append(suffix).append(" - ").append(format.format(getRightSliderValue())).append(suffix.getString().isEmpty() ? "" : " ").append(suffix));
 	}
 
 	@Override

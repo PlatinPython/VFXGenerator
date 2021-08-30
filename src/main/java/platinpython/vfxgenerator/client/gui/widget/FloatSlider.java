@@ -21,16 +21,21 @@ public class FloatSlider extends UpdateableWidget {
 	private final double minValue, maxValue;
 	private final float stepSize;
 	private final DecimalFormat format;
+	
+	private final ITextComponent prefix;
+	private final ITextComponent suffix;
 
 	private final Consumer<Float> setValueFunction;
 	private final Supplier<Float> valueSupplier;
 
-	public FloatSlider(int x, int y, int width, int height, ITextComponent displayText, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
-		super(x, y, width, height, displayText, applyValueFunction);
+	public FloatSlider(int x, int y, int width, int height, ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
+		super(x, y, width, height, applyValueFunction);
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.stepSize = stepSize;
 		this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 && Float.toString(this.stepSize).split("\\.")[1].equals("0") ? new DecimalFormat("0") : new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
+		this.prefix = prefix;
+		this.suffix = suffix;
 		this.setValueFunction = setValueFunction;
 		this.valueSupplier = valueSupplier;
 		this.setupSliderValues(this.valueSupplier.get());
@@ -110,7 +115,7 @@ public class FloatSlider extends UpdateableWidget {
 
 	@Override
 	protected void updateMessage() {
-		setMessage(new StringTextComponent("").append(displayText).append(": ").append(format.format(getSliderValue())));
+		setMessage(new StringTextComponent("").append(prefix).append(": ").append(format.format(getSliderValue())).append(suffix.getString().isEmpty() ? "" : " ").append(suffix));
 	}
 
 	@Override

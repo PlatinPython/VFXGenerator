@@ -23,16 +23,16 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 		this.addEntry(VFXGeneratorOptionsListEntry.addToggleButton(this.width, displayTextFalse, displayTextTrue, setValueFunction, valueSupplier, applyValueFunction));
 	}
 
-	public void addSlider(ITextComponent displayText, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
-		this.addEntry(VFXGeneratorOptionsListEntry.addSlider(this.width, displayText, minValue, maxValue, stepSize, setValueFunction, valueSupplier, applyValueFunction));
+	public void addSlider(ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
+		this.addEntry(VFXGeneratorOptionsListEntry.addSlider(this.width, prefix, suffix, minValue, maxValue, stepSize, setValueFunction, valueSupplier, applyValueFunction));
 	}
 
-	public void addRangeSlider(ITextComponent displayText, double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction, Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier, Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
-		this.addEntry(VFXGeneratorOptionsListEntry.addRangeSlider(this.width, displayText, minValue, maxValue, stepSize, setLeftValueFunction, setRightValueFunction, leftValueSupplier, rightValueSupplier, applyValueFunction));
+	public void addRangeSlider(ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction, Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier, Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
+		this.addEntry(VFXGeneratorOptionsListEntry.addRangeSlider(this.width, prefix, suffix, minValue, maxValue, stepSize, setLeftValueFunction, setRightValueFunction, leftValueSupplier, rightValueSupplier, applyValueFunction));
 	}
 
-	public void addToggleableRangeSlider(float stepSize, ITextComponent displayTextFirst, double minValueFirst, double maxValueFirst, Consumer<Float> setLeftValueFunctionFirst, Consumer<Float> setRightValueFunctionFirst, Supplier<Float> leftValueSupplierFirst, Supplier<Float> rightValueSupplierFirst, ITextComponent displayTextSecond, double minValueSecond, double maxValueSecond, Consumer<Float> setLeftValueFunctionSecond, Consumer<Float> setRightValueFunctionSecond, Supplier<Float> leftValueSupplierSecond, Supplier<Float> rightValueSupplierSecond, VoidFunction applyValueFunction, Supplier<Boolean> toggleValueSupplier) {
-		this.addEntry(ToggleableVFXGeneratorOptionsListEntry.addToggleableRangeSlider(this.width, stepSize, displayTextFirst, minValueFirst, maxValueFirst, setLeftValueFunctionFirst, setRightValueFunctionFirst, leftValueSupplierFirst, rightValueSupplierFirst, displayTextSecond, minValueSecond, maxValueSecond, setLeftValueFunctionSecond, setRightValueFunctionSecond, leftValueSupplierSecond, rightValueSupplierSecond, applyValueFunction, toggleValueSupplier));
+	public void addToggleableRangeSlider(float stepSize, ITextComponent prefixFirst, ITextComponent suffixFirst, double minValueFirst, double maxValueFirst, Consumer<Float> setLeftValueFunctionFirst, Consumer<Float> setRightValueFunctionFirst, Supplier<Float> leftValueSupplierFirst, Supplier<Float> rightValueSupplierFirst, ITextComponent prefixSecond, ITextComponent suffixSecond, double minValueSecond, double maxValueSecond, Consumer<Float> setLeftValueFunctionSecond, Consumer<Float> setRightValueFunctionSecond, Supplier<Float> leftValueSupplierSecond, Supplier<Float> rightValueSupplierSecond, VoidFunction applyValueFunction, Supplier<Boolean> toggleValueSupplier) {
+		this.addEntry(ToggleableVFXGeneratorOptionsListEntry.addToggleableRangeSlider(this.width, stepSize, prefixFirst, suffixFirst, minValueFirst, maxValueFirst, setLeftValueFunctionFirst, setRightValueFunctionFirst, leftValueSupplierFirst, rightValueSupplierFirst, prefixSecond, suffixSecond, minValueSecond, maxValueSecond, setLeftValueFunctionSecond, setRightValueFunctionSecond, leftValueSupplierSecond, rightValueSupplierSecond, applyValueFunction, toggleValueSupplier));
 	}
 
 	public int getRowWidth() {
@@ -54,12 +54,12 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 			return new VFXGeneratorOptionsListEntry(new ToggleButton(guiWidth / 2 - 155, 0, 310, 20, displayTextFalse, displayTextTrue, setValueFunction, valueSupplier, applyValueFunction));
 		}
 
-		public static VFXGeneratorOptionsListEntry addSlider(int guiWidth, ITextComponent displayText, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
-			return new VFXGeneratorOptionsListEntry(new FloatSlider(guiWidth / 2 - 155, 0, 310, 20, displayText, minValue, maxValue, stepSize, setValueFunction, valueSupplier, applyValueFunction));
+		public static VFXGeneratorOptionsListEntry addSlider(int guiWidth, ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
+			return new VFXGeneratorOptionsListEntry(new FloatSlider(guiWidth / 2 - 155, 0, 310, 20, prefix, suffix, minValue, maxValue, stepSize, setValueFunction, valueSupplier, applyValueFunction));
 		}
 
-		public static VFXGeneratorOptionsListEntry addRangeSlider(int guiWidth, ITextComponent displayText, double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction, Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier, Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
-			return new VFXGeneratorOptionsListEntry(new FloatRangeSlider(guiWidth / 2 - 155, 0, 310, 20, displayText, minValue, maxValue, stepSize, setLeftValueFunction, setRightValueFunction, leftValueSupplier, rightValueSupplier, applyValueFunction));
+		public static VFXGeneratorOptionsListEntry addRangeSlider(int guiWidth, ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction, Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier, Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
+			return new VFXGeneratorOptionsListEntry(new FloatRangeSlider(guiWidth / 2 - 155, 0, 310, 20, prefix, suffix, minValue, maxValue, stepSize, setLeftValueFunction, setRightValueFunction, leftValueSupplier, rightValueSupplier, applyValueFunction));
 		}
 
 		@Override
@@ -96,8 +96,8 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 			this.updateValue();
 		}
 
-		public static ToggleableVFXGeneratorOptionsListEntry addToggleableRangeSlider(int guiWidth, float stepSize, ITextComponent displayTextFirst, double minValueFirst, double maxValueFirst, Consumer<Float> setLeftValueFunctionFirst, Consumer<Float> setRightValueFunctionFirst, Supplier<Float> leftValueSupplierFirst, Supplier<Float> rightValueSupplierFirst, ITextComponent displayTextSecond, double minValueSecond, double maxValueSecond, Consumer<Float> setLeftValueFunctionSecond, Consumer<Float> setRightValueFunctionSecond, Supplier<Float> leftValueSupplierSecond, Supplier<Float> rightValueSupplierSecond, VoidFunction applyValueFunction, Supplier<Boolean> toggleValueSupplier) {
-			return new ToggleableVFXGeneratorOptionsListEntry(new FloatRangeSlider(guiWidth / 2 - 155, 0, 310, 20, displayTextFirst, minValueFirst, maxValueFirst, stepSize, setLeftValueFunctionFirst, setRightValueFunctionFirst, leftValueSupplierFirst, rightValueSupplierFirst, applyValueFunction), new FloatRangeSlider(guiWidth / 2 - 155, 0, 310, 20, displayTextSecond, minValueSecond, maxValueSecond, stepSize, setLeftValueFunctionSecond, setRightValueFunctionSecond, leftValueSupplierSecond, rightValueSupplierSecond, applyValueFunction), toggleValueSupplier);
+		public static ToggleableVFXGeneratorOptionsListEntry addToggleableRangeSlider(int guiWidth, float stepSize, ITextComponent prefixFirst, ITextComponent suffixFirst, double minValueFirst, double maxValueFirst, Consumer<Float> setLeftValueFunctionFirst, Consumer<Float> setRightValueFunctionFirst, Supplier<Float> leftValueSupplierFirst, Supplier<Float> rightValueSupplierFirst, ITextComponent prefixSecond, ITextComponent suffixSecond, double minValueSecond, double maxValueSecond, Consumer<Float> setLeftValueFunctionSecond, Consumer<Float> setRightValueFunctionSecond, Supplier<Float> leftValueSupplierSecond, Supplier<Float> rightValueSupplierSecond, VoidFunction applyValueFunction, Supplier<Boolean> toggleValueSupplier) {
+			return new ToggleableVFXGeneratorOptionsListEntry(new FloatRangeSlider(guiWidth / 2 - 155, 0, 310, 20, prefixFirst, suffixFirst, minValueFirst, maxValueFirst, stepSize, setLeftValueFunctionFirst, setRightValueFunctionFirst, leftValueSupplierFirst, rightValueSupplierFirst, applyValueFunction), new FloatRangeSlider(guiWidth / 2 - 155, 0, 310, 20, prefixSecond, suffixSecond, minValueSecond, maxValueSecond, stepSize, setLeftValueFunctionSecond, setRightValueFunctionSecond, leftValueSupplierSecond, rightValueSupplierSecond, applyValueFunction), toggleValueSupplier);
 		}
 
 		@Override

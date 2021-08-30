@@ -52,6 +52,8 @@ public class ModLanguageProvider extends LanguageProvider {
 		addGui("gravity", "Gravity");
 
 		addGui("collision", "Collision");
+		
+		addGui("ticks", "Ticks");
 	}
 
 	private void addGui(String suffix, String text) {
