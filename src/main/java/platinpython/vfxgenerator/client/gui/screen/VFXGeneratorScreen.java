@@ -4,11 +4,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import platinpython.vfxgenerator.client.gui.widget.ToggleButton;
 import platinpython.vfxgenerator.client.gui.widget.VFXGeneratorOptionsList;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
 import platinpython.vfxgenerator.util.ClientUtils;
@@ -30,10 +30,12 @@ public class VFXGeneratorScreen extends Screen {
 	@Override
 	protected void init() {
 		// START For testing
-		Button button = new Button(this.width / 2 - 40, 10, 80, 20, ClientUtils.getGuiTranslationTextComponent("particle"), (buton) -> {
-			this.tileEntity.setParticleEnabled(!this.tileEntity.isParticleEnabled());
-			this.sendToServer();
-		});
+//		Button button = new Button(this.width / 2 - 40, 10, 80, 20, ClientUtils.getGuiTranslationTextComponent("particle"), (buton) -> {
+//			this.tileEntity.setParticleEnabled(!this.tileEntity.isParticleEnabled());
+//			this.sendToServer();
+//		});
+//		addButton(button);
+		ToggleButton button = new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.tileEntity::setParticleEnabled, this.tileEntity::isParticleEnabled, this::sendToServer);
 		addButton(button);
 		// END For testing
 

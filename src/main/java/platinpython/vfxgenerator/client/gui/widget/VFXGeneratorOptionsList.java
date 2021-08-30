@@ -55,7 +55,7 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 		}
 
 		public static VFXGeneratorOptionsListEntry addToggleButton(int guiWidth, ITextComponent displayTextFalse, ITextComponent displayTextTrue, Consumer<Boolean> setValueFunction, Supplier<Boolean> valueSupplier, VoidFunction applyValueFunction) {
-			return new VFXGeneratorOptionsListEntry(new ToggleButton(guiWidth / 2 - 155, 0, 310, 20, displayTextFalse, displayTextTrue, setValueFunction, valueSupplier, applyValueFunction));
+			return new VFXGeneratorOptionsListEntry(new ToggleTextButton(guiWidth / 2 - 155, 0, 310, 20, displayTextFalse, displayTextTrue, setValueFunction, valueSupplier, applyValueFunction));
 		}
 
 		public static VFXGeneratorOptionsListEntry addMultipleChoiceButton(int guiWidth, ImmutableList<String> options, Consumer<String> setValueFunction, Supplier<String> valueSupplier, VoidFunction applyValueFunction) {
