@@ -23,6 +23,10 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 		this.addEntry(VFXGeneratorOptionsListEntry.addToggleButton(this.width, displayTextFalse, displayTextTrue, setValueFunction, valueSupplier, applyValueFunction));
 	}
 
+	public void addMultipleChoiceButton(ImmutableList<String> options, Consumer<String> setValueFunction, Supplier<String> valueSupplier, VoidFunction applyValueFunction) {
+		this.addEntry(VFXGeneratorOptionsListEntry.addMultipleChoiceButton(this.width, options, setValueFunction, valueSupplier, applyValueFunction));
+	}
+
 	public void addSlider(ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
 		this.addEntry(VFXGeneratorOptionsListEntry.addSlider(this.width, prefix, suffix, minValue, maxValue, stepSize, setValueFunction, valueSupplier, applyValueFunction));
 	}
@@ -52,6 +56,10 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 
 		public static VFXGeneratorOptionsListEntry addToggleButton(int guiWidth, ITextComponent displayTextFalse, ITextComponent displayTextTrue, Consumer<Boolean> setValueFunction, Supplier<Boolean> valueSupplier, VoidFunction applyValueFunction) {
 			return new VFXGeneratorOptionsListEntry(new ToggleButton(guiWidth / 2 - 155, 0, 310, 20, displayTextFalse, displayTextTrue, setValueFunction, valueSupplier, applyValueFunction));
+		}
+
+		public static VFXGeneratorOptionsListEntry addMultipleChoiceButton(int guiWidth, ImmutableList<String> options, Consumer<String> setValueFunction, Supplier<String> valueSupplier, VoidFunction applyValueFunction) {
+			return new VFXGeneratorOptionsListEntry(new MultipleStringChoiceButton(guiWidth / 2 - 155, 0, 310, 20, options, setValueFunction, valueSupplier, applyValueFunction));
 		}
 
 		public static VFXGeneratorOptionsListEntry addSlider(int guiWidth, ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {

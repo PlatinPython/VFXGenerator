@@ -1,7 +1,10 @@
 package platinpython.vfxgenerator.util;
 
+import com.google.common.collect.ImmutableList;
+
 public final class Constants {
 	public static final class ParticleConstants {
+		public static final ImmutableList<String> PARTICLE_OPTIONS = ImmutableList.of("circle", "square");
 		public static final int MIN_LIFETIME = 0;
 		public static final int MAX_LIFETIME = 200;
 		public static final float MIN_SIZE = 0F;

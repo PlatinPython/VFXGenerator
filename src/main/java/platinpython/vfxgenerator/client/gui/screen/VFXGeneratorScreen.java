@@ -39,6 +39,8 @@ public class VFXGeneratorScreen extends Screen {
 
 		this.particleOptionsList = new VFXGeneratorOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
 
+		this.particleOptionsList.addMultipleChoiceButton(ParticleConstants.PARTICLE_OPTIONS, this.tileEntity::setParticleSelected, this.tileEntity::getParticleSelected, this::sendToServer);
+
 		this.particleOptionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("useHSB"), ClientUtils.getGuiTranslationTextComponent("useRGB"), this.tileEntity::setParticleUseHSB, this.tileEntity::isParticleUseHSB, this::sendToServer);
 
 		this.particleOptionsList.addToggleableRangeSlider(1F, ClientUtils.getGuiTranslationTextComponent("red"), StringTextComponent.EMPTY, 0F, 255F, (value) -> {

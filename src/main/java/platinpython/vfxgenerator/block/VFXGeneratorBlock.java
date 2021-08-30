@@ -177,8 +177,8 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if(!state.is(newState.getBlock()))
-		NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new VFXGeneratorDestroyParticlesPKT(Vector3d.atCenterOf(pos)));
+		if (!state.is(newState.getBlock()))
+			NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new VFXGeneratorDestroyParticlesPKT(Vector3d.atCenterOf(pos)));
 		super.onRemove(state, level, pos, newState, isMoving);
 	}
 }

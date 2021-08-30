@@ -18,6 +18,7 @@ import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.client.gui.screen.VFXGeneratorScreen;
 import platinpython.vfxgenerator.client.particle.VFXParticle;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
+import platinpython.vfxgenerator.util.Constants.ParticleConstants;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
 
 @EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
@@ -35,8 +36,7 @@ public class ClientUtils {
 	@SubscribeEvent
 	public static void onTextureStich(TextureStitchEvent.Pre event) {
 		if (event.getMap().location().equals(AtlasTexture.LOCATION_PARTICLES)) {
-			event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/circle"));
-			event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/square"));
+			ParticleConstants.PARTICLE_OPTIONS.forEach((option) -> event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + option)));
 		}
 	}
 
