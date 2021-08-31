@@ -32,11 +32,11 @@ public class VFXGeneratorDestroyParticlesPKT {
 				if (context.get().getDirection().getOriginationSide().isServer()) {
 					Random random = new Random();
 					for (int i = 0; i < 100; i++) {
-						double motionX = -.1F + (random.nextFloat() * (.1F - -.1F));
-						double motionY = -.1F + (random.nextFloat() * (.1F - -.1F));
-						double motionZ = -.1F + (random.nextFloat() * (.1F - -.1F));
+						double motionX = (random.nextFloat() * (.2F)) - .1F;
+						double motionY = (random.nextFloat() * (.2F)) - .1F;
+						double motionZ = (random.nextFloat() * (.2F)) - .1F;
 						Vector3d motion = new Vector3d(motionX, motionY, motionZ);
-						ClientUtils.addParticle("circle", Color.getRandomHSBColor(random, new float[] { 0F, 1F, 1F }, new float[] { 1F, 1F, 1F }), Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F, false);
+						ClientUtils.addParticle("circle", Color.HSBtoRGB(random.nextFloat(), 1F, 1F), Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F, false);
 					}
 				}
 			});

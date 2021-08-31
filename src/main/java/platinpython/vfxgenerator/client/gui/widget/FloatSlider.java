@@ -21,7 +21,7 @@ public class FloatSlider extends UpdateableWidget {
 	private final double minValue, maxValue;
 	private final float stepSize;
 	private final DecimalFormat format;
-	
+
 	private final ITextComponent prefix;
 	private final ITextComponent suffix;
 

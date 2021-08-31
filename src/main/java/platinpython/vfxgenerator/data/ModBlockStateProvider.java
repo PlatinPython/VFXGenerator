@@ -17,21 +17,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 	@Override
 	protected void registerStatesAndModels() {
-		getVariantBuilder(BlockRegistry.VFX_GENERATOR.get()).forAllStatesExcept((state) -> {
-			if (state.getValue(VFXGeneratorBlock.INVERTED)) {
-				if (state.getValue(VFXGeneratorBlock.POWERED)) {
-					return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(ModelProvider.BLOCK_FOLDER + "/vfx_generator_on_inverted"))).build();
-				} else {
-					return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(ModelProvider.BLOCK_FOLDER + "/vfx_generator_off_inverted"))).build();
-				}
-			} else {
-				if (state.getValue(VFXGeneratorBlock.POWERED)) {
-					return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(ModelProvider.BLOCK_FOLDER + "/vfx_generator_on"))).build();
-				} else {
-					return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(ModelProvider.BLOCK_FOLDER + "/vfx_generator_off"))).build();
-				}
-			}
-		}, VFXGeneratorBlock.WATERLOGGED);
+		getVariantBuilder(BlockRegistry.VFX_GENERATOR.get()).forAllStates((state) -> {
+			return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(ModelProvider.BLOCK_FOLDER + "/vfx_generator_" + (state.getValue(VFXGeneratorBlock.POWERED) ? "on" : "off") + (state.getValue(VFXGeneratorBlock.INVERTED) ? "_inverted" : "")))).build();
+		});
 
 		itemModels().withExistingParent(BlockRegistry.VFX_GENERATOR.getId().getPath(), modLoc(ModelProvider.BLOCK_FOLDER + "/vfx_generator_off")).override().predicate(new ResourceLocation(VFXGenerator.MOD_ID, "inverted"), 1F).model(models().getExistingFile(modLoc(ModelProvider.BLOCK_FOLDER + "/vfx_generator_off_inverted"))).end();
 	}

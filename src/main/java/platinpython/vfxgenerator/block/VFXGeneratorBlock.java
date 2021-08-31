@@ -10,29 +10,23 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -45,17 +39,15 @@ import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-	private static final VoxelShape COLLISION_SHAPE = VoxelShapes.box(0D, 0.01D, 0D, 1D, 1D, 1D);
 
 	public VFXGeneratorBlock() {
 		super(Properties.copy(Blocks.STONE).noOcclusion());
-		this.registerDefaultState(this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE).setValue(WATERLOGGED, Boolean.FALSE));
+		this.registerDefaultState(this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(INVERTED, POWERED, WATERLOGGED);
+		builder.add(INVERTED, POWERED);
 	}
 
 	@Override
@@ -66,32 +58,13 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
-		return COLLISION_SHAPE;
-	}
-
-	@Override
 	public VoxelShape getBlockSupportShape(BlockState state, IBlockReader reader, BlockPos pos) {
 		return VoxelShapes.empty();
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-		return this.defaultBlockState().setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos()))).setValue(WATERLOGGED, Boolean.valueOf(fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8));
-	}
-
-	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld level, BlockPos currentPos, BlockPos facingPos) {
-		if (state.getValue(WATERLOGGED)) {
-			level.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-		}
-		return state;
-	}
-
-	@Override
-	public FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
+		return this.defaultBlockState().setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos())));
 	}
 
 	@Override
@@ -177,7 +150,7 @@ public class VFXGeneratorBlock extends Block implements IWaterLoggable {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.is(newState.getBlock()))
+		if (!level.isClientSide && !state.is(newState.getBlock()))
 			NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new VFXGeneratorDestroyParticlesPKT(Vector3d.atCenterOf(pos)));
 		super.onRemove(state, level, pos, newState, isMoving);
 	}

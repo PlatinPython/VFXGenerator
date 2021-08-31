@@ -48,7 +48,7 @@ public class ModLootTableProvider extends LootTableProvider {
 		protected void addTables() {
 			this.add(BlockRegistry.VFX_GENERATOR.get(), createSingleItemTable(BlockRegistry.VFX_GENERATOR.get()).apply(CopyBlockState.copyState(BlockRegistry.VFX_GENERATOR.get()).copy(VFXGeneratorBlock.INVERTED)).apply(CopyNbt.copyData(Source.BLOCK_ENTITY).copy("particleData", "particleData")));
 		}
-		
+
 		@Override
 		protected Iterable<Block> getKnownBlocks() {
 			return RegistryHandler.BLOCKS.getEntries().stream().map(RegistryObject::get)::iterator;

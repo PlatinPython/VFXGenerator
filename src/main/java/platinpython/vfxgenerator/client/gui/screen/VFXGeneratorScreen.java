@@ -29,15 +29,8 @@ public class VFXGeneratorScreen extends Screen {
 
 	@Override
 	protected void init() {
-		// START For testing
-//		Button button = new Button(this.width / 2 - 40, 10, 80, 20, ClientUtils.getGuiTranslationTextComponent("particle"), (buton) -> {
-//			this.tileEntity.setParticleEnabled(!this.tileEntity.isParticleEnabled());
-//			this.sendToServer();
-//		});
-//		addButton(button);
 		ToggleButton button = new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.tileEntity::setParticleEnabled, this.tileEntity::isParticleEnabled, this::sendToServer);
 		addButton(button);
-		// END For testing
 
 		this.particleOptionsList = new VFXGeneratorOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
 
