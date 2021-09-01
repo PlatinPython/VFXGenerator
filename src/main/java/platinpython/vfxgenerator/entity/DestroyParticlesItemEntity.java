@@ -37,7 +37,7 @@ public class DestroyParticlesItemEntity extends ItemEntity {
 				NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.noArg(), new VFXGeneratorDestroyParticlesPKT(this.position()));
 			}
 
-			return false;
+			return true;
 		}
 	}
 }

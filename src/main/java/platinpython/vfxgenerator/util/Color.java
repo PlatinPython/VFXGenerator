@@ -10,7 +10,7 @@ public class Color {
 	}
 
 	public Color(int r, int g, int b, int a) {
-		value = ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0);
+		value = ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
 		testColorValueRange(r, g, b, a);
 	}
 
@@ -52,7 +52,7 @@ public class Color {
 	}
 
 	public int getBlue() {
-		return (getRGB() >> 0) & 0xFF;
+		return getRGB() & 0xFF;
 	}
 
 	public int getRGB() {
@@ -141,7 +141,7 @@ public class Color {
 				break;
 			}
 		}
-		return 0xff000000 | (r << 16) | (g << 8) | (b << 0);
+		return 0xff000000 | (r << 16) | (g << 8) | b;
 	}
 
 	public static Color getHSBColor(float h, float s, float b) {
@@ -159,8 +159,8 @@ public class Color {
 	public static int getRandomRGBColor(Random random, int color1, int color2) {
 		int r = Math.round((random.nextFloat() * ((color2 >> 16 & 0xFF) - (color1 >> 16 & 0xFF))) + (color1 >> 16 & 0xFF));
 		int g = Math.round((random.nextFloat() * ((color2 >> 8 & 0xFF) - (color1 >> 8 & 0xFF))) + (color1 >> 8 & 0xFF));
-		int b = Math.round((random.nextFloat() * ((color2 >> 0 & 0xFF) - (color1 >> 0 & 0xFF))) + (color1 >> 0 & 0xFF));
-		return 0xff000000 | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0);
+		int b = Math.round((random.nextFloat() * ((color2 & 0xFF) - (color1 & 0xFF))) + (color1 & 0xFF));
+		return 0xff000000 | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | b & 0xFF;
 	}
 
 	public static int getRandomHSBColor(Random random, float[] hsb1, float[] hsb2) {
