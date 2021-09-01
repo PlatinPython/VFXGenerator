@@ -112,7 +112,7 @@ public class VFXGeneratorScreen extends Screen {
 
 		this.particleOptionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("lifetime"), ClientUtils.getGuiTranslationTextComponent("ticks"), ParticleConstants.MIN_LIFETIME, ParticleConstants.MAX_LIFETIME, 1F, (value) -> this.tileEntity.setParticleLifetimeBot(value.intValue()), (value) -> this.tileEntity.setParticleLifetimeTop(value.intValue()), () -> (float) this.tileEntity.getParticleLifetimeBot(), () -> (float) this.tileEntity.getParticleLifetimeTop(), this::sendToServer);
 
-		this.particleOptionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("size"), StringTextComponent.EMPTY, ParticleConstants.MIN_SIZE, ParticleConstants.MAX_SIZE, .5F, this.tileEntity::setParticleSizeBot, this.tileEntity::setParticleSizeTop, this.tileEntity::getParticleSizeBot, this.tileEntity::getParticleSizeTop, this::sendToServer);
+		this.particleOptionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("size"), StringTextComponent.EMPTY, ParticleConstants.MIN_SIZE, ParticleConstants.MAX_SIZE, .1F, this.tileEntity::setParticleSizeBot, this.tileEntity::setParticleSizeTop, this.tileEntity::getParticleSizeBot, this.tileEntity::getParticleSizeTop, this::sendToServer);
 
 		this.particleOptionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnX"), StringTextComponent.EMPTY, ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN, .1F, this.tileEntity::setParticleSpawnXBot, this.tileEntity::setParticleSpawnXTop, this.tileEntity::getParticleSpawnXBot, this.tileEntity::getParticleSpawnXTop, this::sendToServer);
 
