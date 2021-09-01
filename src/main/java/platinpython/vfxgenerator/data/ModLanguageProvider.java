@@ -24,8 +24,8 @@ public class ModLanguageProvider extends LanguageProvider {
 		addGui("enabled", "Enabled");
 		addGui("disabled", "Disabled");
 
-		addGui("useRGB", "Use RGB");
-		addGui("useHSB", "Use HSB");
+		addGui("rgb", "RGB");
+		addGui("hsb", "HSB");
 
 		addGui("red", "Red");
 		addGui("green", "Green");
