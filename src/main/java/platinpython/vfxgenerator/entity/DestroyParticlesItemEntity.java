@@ -34,7 +34,7 @@ public class DestroyParticlesItemEntity extends ItemEntity {
 			this.health = (int) (this.health - amount);
 			if (this.health <= 0) {
 				this.remove();
-				NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new VFXGeneratorDestroyParticlesPKT(this.position()));
+				NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.noArg(), new VFXGeneratorDestroyParticlesPKT(this.position()));
 			}
 
 			return false;

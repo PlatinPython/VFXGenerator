@@ -38,77 +38,77 @@ public class VFXGeneratorScreen extends Screen {
 
 		this.particleOptionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("rgb"), ClientUtils.getGuiTranslationTextComponent("hsb"), this.tileEntity::setParticleUseHSB, this.tileEntity::isParticleUseHSB, this::sendToServer);
 
-		this.particleOptionsList.addToggleableRangeSlider(1F, ClientUtils.getGuiTranslationTextComponent("red"), StringTextComponent.EMPTY, 0F, 255F, (value) -> {
+		this.particleOptionsList.getToggleableRangeSliderBuilder().applyValueFunction(this::sendToServer).toggleValueSupplier(this.tileEntity::isParticleUseHSB).prefixFirst(ClientUtils.getGuiTranslationTextComponent("red")).minValueFirst(0F).maxValueFirst(255F).setLeftValueFunctionFirst((value) -> {
 			Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
 			Color newColor = new Color(value.intValue(), oldColor.getGreen(), oldColor.getBlue());
 			this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
-		}, (value) -> {
+		}).setRightValueFunctionFirst((value) -> {
 			Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
 			Color newColor = new Color(value.intValue(), oldColor.getGreen(), oldColor.getBlue());
 			this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
-		}, () -> {
+		}).leftValueSupplierFirst(() -> {
 			return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getRed();
-		}, () -> {
+		}).rightValueSupplierFirst(() -> {
 			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getRed();
-		}, ClientUtils.getGuiTranslationTextComponent("hue"), new StringTextComponent("°"), 0F, 360F, (value) -> {
+		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("hue")).suffixSecond(new StringTextComponent("°")).minValueSecond(0F).maxValueSecond(360F).setLeftValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
 			this.tileEntity.setParticleHSBColorBot(new float[] { value / 360F, oldHsb[1], oldHsb[2] });
-		}, (value) -> {
+		}).setRightValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
 			this.tileEntity.setParticleHSBColorTop(new float[] { value / 360F, oldHsb[1], oldHsb[2] });
-		}, () -> {
+		}).leftValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorBot()[0] * 360F;
-		}, () -> {
+		}).rightValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorTop()[0] * 360F;
-		}, this::sendToServer, this.tileEntity::isParticleUseHSB);
+		}).build();
 
-		this.particleOptionsList.addToggleableRangeSlider(1F, ClientUtils.getGuiTranslationTextComponent("green"), StringTextComponent.EMPTY, 0F, 255F, (value) -> {
+		this.particleOptionsList.getToggleableRangeSliderBuilder().applyValueFunction(this::sendToServer).toggleValueSupplier(this.tileEntity::isParticleUseHSB).prefixFirst(ClientUtils.getGuiTranslationTextComponent("green")).minValueFirst(0F).maxValueFirst(255F).setLeftValueFunctionFirst((value) -> {
 			Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
 			Color newColor = new Color(oldColor.getRed(), value.intValue(), oldColor.getBlue());
 			this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
-		}, (value) -> {
+		}).setRightValueFunctionFirst((value) -> {
 			Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
 			Color newColor = new Color(oldColor.getRed(), value.intValue(), oldColor.getBlue());
 			this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
-		}, () -> {
+		}).leftValueSupplierFirst(() -> {
 			return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getGreen();
-		}, () -> {
+		}).rightValueSupplierFirst(() -> {
 			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getGreen();
-		}, ClientUtils.getGuiTranslationTextComponent("saturation"), new StringTextComponent("%"), 0F, 100F, (value) -> {
+		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("saturation")).suffixSecond(new StringTextComponent("%")).minValueSecond(0F).maxValueSecond(100F).setLeftValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
 			this.tileEntity.setParticleHSBColorBot(new float[] { oldHsb[0], value / 100F, oldHsb[2] });
-		}, (value) -> {
+		}).setRightValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
 			this.tileEntity.setParticleHSBColorTop(new float[] { oldHsb[0], value / 100F, oldHsb[2] });
-		}, () -> {
+		}).leftValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorBot()[1] * 100F;
-		}, () -> {
+		}).rightValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorTop()[1] * 100F;
-		}, this::sendToServer, this.tileEntity::isParticleUseHSB);
+		}).build();
 
-		this.particleOptionsList.addToggleableRangeSlider(1F, ClientUtils.getGuiTranslationTextComponent("blue"), StringTextComponent.EMPTY, 0F, 255F, (value) -> {
+		this.particleOptionsList.getToggleableRangeSliderBuilder().applyValueFunction(this::sendToServer).toggleValueSupplier(this.tileEntity::isParticleUseHSB).prefixFirst(ClientUtils.getGuiTranslationTextComponent("blue")).minValueFirst(0F).maxValueFirst(255F).setLeftValueFunctionFirst((value) -> {
 			Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
 			Color newColor = new Color(oldColor.getRed(), oldColor.getGreen(), value.intValue());
 			this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
-		}, (value) -> {
+		}).setRightValueFunctionFirst((value) -> {
 			Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
 			Color newColor = new Color(oldColor.getRed(), oldColor.getGreen(), value.intValue());
 			this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
-		}, () -> {
+		}).leftValueSupplierFirst(() -> {
 			return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getBlue();
-		}, () -> {
+		}).rightValueSupplierFirst(() -> {
 			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getBlue();
-		}, ClientUtils.getGuiTranslationTextComponent("brightness"), new StringTextComponent("%"), 0F, 100F, (value) -> {
+		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("brightness")).suffixSecond(new StringTextComponent("%")).minValueSecond(0F).maxValueSecond(100F).setLeftValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
 			this.tileEntity.setParticleHSBColorBot(new float[] { oldHsb[0], oldHsb[1], value / 100F });
-		}, (value) -> {
+		}).setRightValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
 			this.tileEntity.setParticleHSBColorTop(new float[] { oldHsb[0], oldHsb[1], value / 100F });
-		}, () -> {
+		}).leftValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorBot()[2] * 100F;
-		}, () -> {
+		}).rightValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorTop()[2] * 100F;
-		}, this::sendToServer, this.tileEntity::isParticleUseHSB);
+		}).build();
 
 		this.particleOptionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("lifetime"), ClientUtils.getGuiTranslationTextComponent("ticks"), ParticleConstants.MIN_LIFETIME, ParticleConstants.MAX_LIFETIME, 1F, (value) -> this.tileEntity.setParticleLifetimeBot(value.intValue()), (value) -> this.tileEntity.setParticleLifetimeTop(value.intValue()), () -> (float) this.tileEntity.getParticleLifetimeBot(), () -> (float) this.tileEntity.getParticleLifetimeTop(), this::sendToServer);
 

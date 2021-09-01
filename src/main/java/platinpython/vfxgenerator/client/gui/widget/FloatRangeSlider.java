@@ -101,11 +101,7 @@ public class FloatRangeSlider extends UpdateableWidget {
 	private boolean stopped;
 
 	private boolean getIsLeftClicked(double mouseX) {
-		if (mouseX < this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 8 || mouseX < ((this.x + this.leftSliderValue * this.width) + (this.x + this.rightSliderValue * this.width)) / 2) {
-			return true;
-		} else {
-			return false;
-		}
+		return (mouseX < this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 8 || mouseX < ((this.x + this.leftSliderValue * this.width) + (this.x + this.rightSliderValue * this.width)) / 2);
 	}
 
 	@Override

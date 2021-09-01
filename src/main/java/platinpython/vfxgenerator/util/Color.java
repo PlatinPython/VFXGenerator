@@ -137,6 +137,8 @@ public class Color {
 				g = (int) (p * 255.0f + 0.5f);
 				b = (int) (q * 255.0f + 0.5f);
 				break;
+			default:
+				break;
 			}
 		}
 		return 0xff000000 | (r << 16) | (g << 8) | (b << 0);
