@@ -1,0 +1,9 @@
+{
+  "parent": "vfxgenerator:block/vfx_generator",
+  "textures": {
+    "frame": "minecraft:block/smooth_stone",
+    "glass": "vfxgenerator:block/vfx_generator_glass",
+    "redstone": "vfxgenerator:block/redstone_rod_on",
+    "rod": "vfxgenerator:block/vfx_generator_rod_inverted"
+  }
+}
