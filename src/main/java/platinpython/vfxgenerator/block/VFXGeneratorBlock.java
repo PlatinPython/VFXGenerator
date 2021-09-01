@@ -6,7 +6,6 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.IWaterLoggable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +35,7 @@ import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDestroyParticlesPKT;
 import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
-public class VFXGeneratorBlock extends Block implements IWaterLoggable {
+public class VFXGeneratorBlock extends Block {
 	public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 

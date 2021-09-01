@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[34,)"
+loaderVersion="[35,)"
 license="MIT"
 issueTrackerURL="https://github.com/PlatinPython/VFXGenerator/issues"
 
@@ -9,21 +9,20 @@ issueTrackerURL="https://github.com/PlatinPython/VFXGenerator/issues"
   displayName="VFX Generator"
   authors="PlatinPython"
   description="Adds a block that can generate custom visual effects."
-  # logoFile="logo.png"
-  # logoBlur=true
+  logoFile="logo.png"
   credits="Thanks TobiBenzi for modeling and texturing."
   displayURL="https://www.curseforge.com/minecraft/mc-mods/vfx-generator"
 
 [[dependencies.vfxgenerator]]
   modId="forge"
   mandatory=true
-  versionRange="[34,)"
+  versionRange="[35,)"
   ordering="NONE"
   side="BOTH"
 
 [[dependencies.vfxgenerator]]
   modId="minecraft"
   mandatory=true
-  versionRange="[1.16.3,)"
+  versionRange="[1.16.4,1.17)"
   ordering="NONE"
   side="BOTH"
