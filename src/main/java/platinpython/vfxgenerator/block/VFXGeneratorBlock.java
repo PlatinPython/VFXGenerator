@@ -28,6 +28,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.fml.network.PacketDistributor;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
 import platinpython.vfxgenerator.util.ClientUtils;
@@ -84,13 +85,8 @@ public class VFXGeneratorBlock extends Block {
 	@Override
 	public void neighborChanged(BlockState state, World level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		if (!level.isClientSide) {
-			boolean isPowered = state.getValue(POWERED);
-			if (isPowered != level.hasNeighborSignal(pos)) {
-				if (isPowered) {
-					level.getBlockTicks().scheduleTick(pos, this, 4);
-				} else {
-					level.setBlock(pos, state.cycle(POWERED), 2);
-				}
+			if (state.getValue(POWERED) != level.hasNeighborSignal(pos)) {
+				level.setBlock(pos, state.cycle(POWERED), BlockFlags.DEFAULT);
 			}
 		}
 	}
