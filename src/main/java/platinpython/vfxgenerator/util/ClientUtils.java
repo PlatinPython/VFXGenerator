@@ -1,14 +1,20 @@
 package platinpython.vfxgenerator.util;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -16,6 +22,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.client.gui.screen.VFXGeneratorScreen;
+import platinpython.vfxgenerator.client.model.FullbrightBakedModel;
 import platinpython.vfxgenerator.client.particle.VFXParticle;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
 import platinpython.vfxgenerator.util.Constants.ParticleConstants;
@@ -30,6 +37,26 @@ public class ClientUtils {
 		event.enqueueWork(() -> {
 			ItemModelsProperties.register(BlockRegistry.VFX_GENERATOR.get().asItem(), new ResourceLocation(VFXGenerator.MOD_ID, "inverted"), (stack, world, entity) -> Boolean.valueOf(stack.getOrCreateTagElement("BlockStateTag").getString("inverted")) ? 1F : 0F);
 		});
+	}
+
+	@SubscribeEvent
+	public static void onModelBake(ModelBakeEvent event) {
+		makeEmissive(BlockRegistry.VFX_GENERATOR.get(), event);
+	}
+
+	private static void makeEmissive(Block block, ModelBakeEvent event) {
+		for (BlockState blockState : block.getStateDefinition().getPossibleStates()) {
+			ModelResourceLocation modelResourceLocation = BlockModelShapes.stateToModelLocation(blockState);
+			IBakedModel existingModel = event.getModelRegistry().get(modelResourceLocation);
+			if (existingModel == null) {
+				VFXGenerator.LOGGER.warn("Did not find the expected vanilla baked model(s) for" + block.toString() + "in registry");
+			} else if (existingModel instanceof FullbrightBakedModel) {
+				VFXGenerator.LOGGER.warn("Tried to replace FullbrightModel twice");
+			} else {
+				FullbrightBakedModel customModel = new FullbrightBakedModel(existingModel);
+				event.getModelRegistry().put(modelResourceLocation, customModel);
+			}
+		}
 	}
 
 	@SuppressWarnings("deprecation")
