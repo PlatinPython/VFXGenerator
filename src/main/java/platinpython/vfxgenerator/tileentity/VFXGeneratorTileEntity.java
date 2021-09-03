@@ -25,7 +25,7 @@ import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
 public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileEntity {
 	private boolean particleEnabled = true;
-	private List<String> particleSelected = Arrays.asList("circle", "square");
+	private List<String> particleSelected = Arrays.asList("spark_small", "spark_mid", "spark_big");
 	private boolean particleUseHSB = false;
 	private int particleRGBColorBot = 0xFF000000;
 	private int particleRGBColorTop = 0xFFFFFFFF;
@@ -143,6 +143,10 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		particleEnabled = particleTag.getBoolean("enabled");
 		if (particleTag.getTagType("selected") == Constants.NBT.TAG_LIST) {
 			particleSelected = ((ListNBT) particleTag.get("selected")).stream().map((nbt) -> nbt.getAsString()).filter((string) -> ParticleConstants.PARTICLE_OPTIONS.contains(string)).collect(Collectors.toList());
+			if(particleSelected.isEmpty())
+				particleSelected = Arrays.asList("circle");
+			if (particleSelected.size() > ParticleConstants.PARTICLE_OPTIONS.size())
+				particleSelected = ParticleConstants.PARTICLE_OPTIONS;
 		} else {
 			particleSelected = Arrays.asList(ParticleConstants.PARTICLE_OPTIONS.contains(particleTag.getString("selected")) ? particleTag.getString("selected") : "circle");
 		}

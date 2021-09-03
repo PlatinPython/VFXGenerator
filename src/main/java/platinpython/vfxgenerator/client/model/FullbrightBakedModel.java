@@ -28,7 +28,6 @@ public class FullbrightBakedModel implements IBakedModel {
 		List<BakedQuad> quads = this.base.getQuads(state, direction, random, EmptyModelData.INSTANCE);
 		if (state.is(BlockRegistry.VFX_GENERATOR.get())) {
 			if (state.getValue(VFXGeneratorBlock.POWERED)) {
-				VFXGenerator.LOGGER.warn(quads.size());
 				for (int i = 0; i < quads.size(); i++) {
 					BakedQuad quad = quads.get(i);
 					if (quad.getSprite().getName().equals(new ResourceLocation(VFXGenerator.MOD_ID, "block/redstone_rod_on"))) {

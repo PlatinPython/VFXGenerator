@@ -20,6 +20,10 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 		this.setRenderBackground(false);
 	}
 
+	public void addButton(ITextComponent displayText, VoidFunction onPress) {
+		this.addEntry(VFXGeneratorOptionsListEntry.addButton(this.width, displayText, onPress));
+	}
+
 	public void addToggleButton(ITextComponent displayTextFalse, ITextComponent displayTextTrue, Consumer<Boolean> setValueFunction, Supplier<Boolean> valueSupplier, VoidFunction applyValueFunction) {
 		this.addEntry(VFXGeneratorOptionsListEntry.addToggleButton(this.width, displayTextFalse, displayTextTrue, setValueFunction, valueSupplier, applyValueFunction));
 	}
@@ -55,6 +59,37 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 
 		private VFXGeneratorOptionsListEntry(UpdateableWidget child) {
 			this.child = child;
+		}
+
+		public static VFXGeneratorOptionsListEntry addButton(int guiWidth, ITextComponent displayText, VoidFunction onPress) {
+			return new VFXGeneratorOptionsListEntry(new UpdateableWidget(guiWidth / 2 - 155, 0, 310, 20, () -> {
+			}) {
+				@Override
+				protected int getYImage(boolean isHovered) {
+					if (!this.active)
+						return 1;
+					return isHovered ? 2 : 1;
+				}
+
+				@Override
+				public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+					this.setMessage(displayText);
+					super.render(matrixStack, mouseX, mouseY, partialTicks);
+				}
+
+				@Override
+				public void onClick(double mouseX, double mouseY) {
+					onPress.apply();
+				}
+
+				@Override
+				public void updateValue() {
+				}
+
+				@Override
+				protected void updateMessage() {
+				}
+			});
 		}
 
 		public static VFXGeneratorOptionsListEntry addToggleButton(int guiWidth, ITextComponent displayTextFalse, ITextComponent displayTextTrue, Consumer<Boolean> setValueFunction, Supplier<Boolean> valueSupplier, VoidFunction applyValueFunction) {

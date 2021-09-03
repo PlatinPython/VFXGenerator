@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import platinpython.vfxgenerator.VFXGenerator;
-import platinpython.vfxgenerator.client.gui.screen.VFXGeneratorScreen;
+import platinpython.vfxgenerator.client.gui.screen.ParticleOptionsScreen;
 import platinpython.vfxgenerator.client.model.FullbrightBakedModel;
 import platinpython.vfxgenerator.client.particle.VFXParticle;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
@@ -74,7 +74,7 @@ public class ClientUtils {
 	}
 
 	public static void openVFXGeneratorScreen(VFXGeneratorTileEntity tileEntity) {
-		Minecraft.getInstance().setScreen(new VFXGeneratorScreen(tileEntity));
+		Minecraft.getInstance().setScreen(new ParticleOptionsScreen(tileEntity));
 	}
 
 	public static TranslationTextComponent getGuiTranslationTextComponent(String suffix) {
