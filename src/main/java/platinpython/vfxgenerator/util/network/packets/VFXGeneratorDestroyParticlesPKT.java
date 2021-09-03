@@ -36,7 +36,7 @@ public class VFXGeneratorDestroyParticlesPKT {
 						double motionY = (random.nextFloat() * (.2F)) - .1F;
 						double motionZ = (random.nextFloat() * (.2F)) - .1F;
 						Vector3d motion = new Vector3d(motionX, motionY, motionZ);
-						ClientUtils.addParticle("circle", Color.HSBtoRGB(random.nextFloat(), 1F, 1F), Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F, false);
+						ClientUtils.addParticle("circle", Color.HSBtoRGB(random.nextFloat(), 1F, 1F), Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F, false, false);
 					}
 				}
 			});

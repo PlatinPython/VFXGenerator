@@ -52,6 +52,8 @@ public class ModLanguageProvider extends LanguageProvider {
 		addGui("gravity", "Gravity");
 
 		addGui("collision", "Collision");
+		
+		addGui("fullbright", "Fullbright");
 
 		addGui("ticks", "Ticks");
 	}

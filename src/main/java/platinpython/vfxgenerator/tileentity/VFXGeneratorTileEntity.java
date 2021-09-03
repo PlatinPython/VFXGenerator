@@ -1,9 +1,14 @@
 package platinpython.vfxgenerator.tileentity;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -11,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
@@ -19,7 +25,7 @@ import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
 public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileEntity {
 	private boolean particleEnabled = true;
-	private String particleSelected = "circle";
+	private List<String> particleSelected = Arrays.asList("circle", "square");
 	private boolean particleUseHSB = false;
 	private int particleRGBColorBot = 0xFF000000;
 	private int particleRGBColorTop = 0xFFFFFFFF;
@@ -44,6 +50,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 	private int particleDelay = 5;
 	private float particleGravity = 0F;
 	private boolean particleCollision = false;
+	private boolean particleFullbright = true;
 
 	public VFXGeneratorTileEntity() {
 		super(TileEntityRegistry.VFX_GENERATOR.get());
@@ -56,6 +63,8 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 			if (world.isClientSide && this.particleEnabled) {
 				if (world.getGameTime() % particleDelay == 0) {
 					Random random = world.getRandom();
+
+					String particle = particleSelected.get(random.nextInt(particleSelected.size()));
 
 					int color = 0xFF000000;
 					if (particleUseHSB) {
@@ -77,7 +86,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 					double motionZ = particleMotionZBot + (random.nextFloat() * (particleMotionZTop - particleMotionZBot));
 					Vector3d motion = new Vector3d(motionX, motionY, motionZ);
 
-					ClientUtils.addParticle(particleSelected, color, lifetime, size, pos, motion, particleGravity, particleCollision);
+					ClientUtils.addParticle(particle, color, lifetime, size, pos, motion, particleGravity, particleCollision, particleFullbright);
 				}
 			}
 		}
@@ -91,7 +100,9 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 	private CompoundNBT saveToParticleTag() {
 		CompoundNBT particleTag = new CompoundNBT();
 		particleTag.putBoolean("enabled", isParticleEnabled());
-		particleTag.putString("selected", getParticleSelected());
+		ListNBT listNBT = new ListNBT();
+		getParticleSelected().forEach((s) -> listNBT.add(StringNBT.valueOf(s)));
+		particleTag.put("selected", listNBT);
 		particleTag.putBoolean("useHSB", isParticleUseHSB());
 		particleTag.putInt("RGBColorBot", getParticleRGBColorBot());
 		particleTag.putInt("RGBColorTop", getParticleRGBColorTop());
@@ -120,6 +131,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		particleTag.putInt("delay", getParticleDelay());
 		particleTag.putFloat("gravity", getParticleGravity());
 		particleTag.putBoolean("collision", isParticleCollision());
+		particleTag.putBoolean("fullbright", isParticleFullbright());
 		return particleTag;
 	}
 
@@ -129,7 +141,11 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 
 	private void loadFromParticleTag(CompoundNBT particleTag) {
 		particleEnabled = particleTag.getBoolean("enabled");
-		particleSelected = ParticleConstants.PARTICLE_OPTIONS.contains(particleTag.getString("selected")) ? particleTag.getString("selected") : "circle";
+		if (particleTag.getTagType("selected") == Constants.NBT.TAG_LIST) {
+			particleSelected = ((ListNBT) particleTag.get("selected")).stream().map((nbt) -> nbt.getAsString()).filter((string) -> ParticleConstants.PARTICLE_OPTIONS.contains(string)).collect(Collectors.toList());
+		} else {
+			particleSelected = Arrays.asList(ParticleConstants.PARTICLE_OPTIONS.contains(particleTag.getString("selected")) ? particleTag.getString("selected") : "circle");
+		}
 		particleUseHSB = particleTag.getBoolean("useHSB");
 		particleRGBColorBot = MathHelper.clamp(particleTag.getInt("RGBColorBot"), 0xFF000000, 0xFFFFFFFF);
 		particleRGBColorTop = MathHelper.clamp(particleTag.getInt("RGBColorTop"), 0xFF000000, 0xFFFFFFFF);
@@ -158,6 +174,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		particleDelay = MathHelper.clamp(particleTag.getInt("delay"), ParticleConstants.MIN_DELAY, ParticleConstants.MAX_DELAY);
 		particleGravity = MathHelper.clamp(particleTag.getFloat("gravity"), ParticleConstants.MIN_GRAVITY, ParticleConstants.MAX_GRAVITY);
 		particleCollision = particleTag.getBoolean("collision");
+		particleFullbright = particleTag.getBoolean("fullbright");
 
 		ensureParticleDataOrder();
 	}
@@ -230,12 +247,14 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		setChanged();
 	}
 
-	public String getParticleSelected() {
+	public List<String> getParticleSelected() {
 		return particleSelected;
 	}
 
-	public void setParticleSelected(String particleSelected) {
-		this.particleSelected = ParticleConstants.PARTICLE_OPTIONS.contains(particleSelected) ? particleSelected : "circle";
+	public void setParticleSelected(List<String> particleSelected) {
+		this.particleSelected = particleSelected.stream().filter((s) -> ParticleConstants.PARTICLE_OPTIONS.contains(s)).collect(Collectors.toList());
+		if (this.particleSelected.isEmpty())
+			this.particleSelected = Arrays.asList("circle");
 		setChanged();
 	}
 
@@ -456,6 +475,15 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 
 	public void setParticleCollision(boolean particleCollision) {
 		this.particleCollision = particleCollision;
+		setChanged();
+	}
+
+	public boolean isParticleFullbright() {
+		return particleFullbright;
+	}
+
+	public void setParticleFullbright(boolean particleFullbright) {
+		this.particleFullbright = particleFullbright;
 		setChanged();
 	}
 }

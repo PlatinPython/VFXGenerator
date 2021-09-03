@@ -4,6 +4,7 @@ import java.util.stream.Stream;
 
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -12,9 +13,11 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class VFXParticle extends SpriteTexturedParticle {
+	private final boolean fullbright;
+
 	private boolean stoppedByCollision;
 
-	public VFXParticle(ClientWorld clientWorld, TextureAtlasSprite sprite, int color, int lifetime, float size, Vector3d pos, Vector3d motion, float gravity, boolean collision) {
+	public VFXParticle(ClientWorld clientWorld, TextureAtlasSprite sprite, int color, int lifetime, float size, Vector3d pos, Vector3d motion, float gravity, boolean collision, boolean fullbright) {
 		super(clientWorld, pos.x, pos.y, pos.z);
 		this.setSprite(sprite);
 		this.rCol = (color >> 16 & 0xFF) / 255f;
@@ -27,6 +30,16 @@ public class VFXParticle extends SpriteTexturedParticle {
 		this.zd = motion.z;
 		this.gravity = gravity;
 		this.hasPhysics = collision;
+		this.fullbright = fullbright;
+	}
+
+	@Override
+	protected int getLightColor(float pPartialTick) {
+		if (this.fullbright) {
+			return LightTexture.pack(15, 15);
+		} else {
+			return super.getLightColor(pPartialTick);
+		}
 	}
 
 	public void setSize(float size) {

@@ -1,19 +1,33 @@
 package platinpython.vfxgenerator.client.gui.screen;
 
+import java.util.Arrays;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.client.gui.widget.ToggleButton;
 import platinpython.vfxgenerator.client.gui.widget.VFXGeneratorOptionsList;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
 import platinpython.vfxgenerator.util.Constants.ParticleConstants;
+import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDataSyncPKT;
 
@@ -34,7 +48,9 @@ public class VFXGeneratorScreen extends Screen {
 
 		this.particleOptionsList = new VFXGeneratorOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
 
-		this.particleOptionsList.addMultipleChoiceButton(ParticleConstants.PARTICLE_OPTIONS, this.tileEntity::setParticleSelected, this.tileEntity::getParticleSelected, this::sendToServer);
+		this.particleOptionsList.addMultipleChoiceButton(ParticleConstants.PARTICLE_OPTIONS, (s) -> {
+			this.tileEntity.setParticleSelected(Arrays.asList(s));
+		}, () -> this.tileEntity.getParticleSelected().get(0), this::sendToServer);
 
 		this.particleOptionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("rgb"), ClientUtils.getGuiTranslationTextComponent("hsb"), this.tileEntity::setParticleUseHSB, this.tileEntity::isParticleUseHSB, this::sendToServer);
 
@@ -132,6 +148,8 @@ public class VFXGeneratorScreen extends Screen {
 
 		this.particleOptionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("collision").append(": ").append(ClientUtils.getGuiTranslationTextComponent("disabled")), ClientUtils.getGuiTranslationTextComponent("collision").append(": ").append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.tileEntity::setParticleCollision, this.tileEntity::isParticleCollision, this::sendToServer);
 
+		this.particleOptionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("fullbright").append(": ").append(ClientUtils.getGuiTranslationTextComponent("disabled")), ClientUtils.getGuiTranslationTextComponent("fullbright").append(": ").append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.tileEntity::setParticleFullbright, this.tileEntity::isParticleFullbright, this::sendToServer);
+
 		this.particleOptionsList.children().parallelStream().forEach((entry) -> entry.setActive(this.tileEntity.isParticleEnabled()));
 
 		this.addWidget(this.particleOptionsList);
@@ -146,6 +164,34 @@ public class VFXGeneratorScreen extends Screen {
 		}
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		AbstractGui.drawCenteredString(matrixStack, this.font, ClientUtils.getGuiTranslationTextComponent("particle"), this.width / 2, 10, 0xFFFFFFFF);
+
+		// START TESTING
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferBuilder = tessellator.getBuilder();
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ZERO);
+		this.minecraft.getTextureManager().bind(AtlasTexture.LOCATION_PARTICLES);
+		bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		TextureAtlasSprite sprite = minecraft.particleEngine.textureAtlas.getSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + this.tileEntity.getParticleSelected().get(this.minecraft.level.random.nextInt(this.tileEntity.getParticleSelected().size()))));
+		Vector3f[] cornerCoordinates = new Vector3f[] { new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F) };
+
+		for (int i = 0; i < 4; ++i) {
+			Vector3f cornerCoordinate = cornerCoordinates[i];
+//			cornerCoordinate.mul(((this.minecraft.level.getGameTime() % 100) - 50) * 2);
+			cornerCoordinate.mul((float) Util.map(Math.sin(this.minecraft.level.getGameTime() / 5F), -1D, 1D, 10D, 20D));
+			cornerCoordinate.add(this.width / 2F, this.height / 2F, 0F);
+		}
+
+		float u0 = sprite.getU0();
+		float u1 = sprite.getU1();
+		float v0 = sprite.getV0();
+		float v1 = sprite.getV1();
+		bufferBuilder.vertex((double) cornerCoordinates[0].x(), (double) cornerCoordinates[0].y(), (double) cornerCoordinates[0].z()).uv(u1, v1).endVertex();
+		bufferBuilder.vertex((double) cornerCoordinates[1].x(), (double) cornerCoordinates[1].y(), (double) cornerCoordinates[1].z()).uv(u1, v0).endVertex();
+		bufferBuilder.vertex((double) cornerCoordinates[2].x(), (double) cornerCoordinates[2].y(), (double) cornerCoordinates[2].z()).uv(u0, v0).endVertex();
+		bufferBuilder.vertex((double) cornerCoordinates[3].x(), (double) cornerCoordinates[3].y(), (double) cornerCoordinates[3].z()).uv(u0, v1).endVertex();
+		tessellator.end();
+		// END TESTING
 	}
 
 	@Override
