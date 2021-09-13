@@ -1,7 +1,7 @@
 package platinpython.vfxgenerator.tileentity;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -13,10 +13,12 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
@@ -25,7 +27,7 @@ import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
 public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileEntity {
 	private boolean particleEnabled = true;
-	private List<String> particleSelected = Arrays.asList("spark_small", "spark_mid", "spark_big");
+	private LinkedHashSet<ResourceLocation> particlesSelected = new LinkedHashSet<>(Arrays.asList(new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_small"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_mid"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_big")));
 	private boolean particleUseHSB = false;
 	private int particleRGBColorBot = 0xFF000000;
 	private int particleRGBColorTop = 0xFFFFFFFF;
@@ -64,7 +66,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 				if (world.getGameTime() % particleDelay == 0) {
 					Random random = world.getRandom();
 
-					String particle = particleSelected.get(random.nextInt(particleSelected.size()));
+					ResourceLocation particle = particlesSelected.stream().collect(Collectors.toList()).get(random.nextInt(particlesSelected.size()));
 
 					int color = 0xFF000000;
 					if (particleUseHSB) {
@@ -101,7 +103,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		CompoundNBT particleTag = new CompoundNBT();
 		particleTag.putBoolean("enabled", isParticleEnabled());
 		ListNBT listNBT = new ListNBT();
-		getParticleSelected().forEach((s) -> listNBT.add(StringNBT.valueOf(s)));
+		getParticlesSelected().forEach((location) -> listNBT.add(StringNBT.valueOf(location.toString())));
 		particleTag.put("selected", listNBT);
 		particleTag.putBoolean("useHSB", isParticleUseHSB());
 		particleTag.putInt("RGBColorBot", getParticleRGBColorBot());
@@ -142,13 +144,13 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 	private void loadFromParticleTag(CompoundNBT particleTag) {
 		particleEnabled = particleTag.getBoolean("enabled");
 		if (particleTag.getTagType("selected") == Constants.NBT.TAG_LIST) {
-			particleSelected = ((ListNBT) particleTag.get("selected")).stream().map((nbt) -> nbt.getAsString()).filter((string) -> ParticleConstants.PARTICLE_OPTIONS.contains(string)).collect(Collectors.toList());
-			if(particleSelected.isEmpty())
-				particleSelected = Arrays.asList("circle");
-			if (particleSelected.size() > ParticleConstants.PARTICLE_OPTIONS.size())
-				particleSelected = ParticleConstants.PARTICLE_OPTIONS;
+			particlesSelected = new LinkedHashSet<>(((ListNBT) particleTag.get("selected")).stream().map((nbt) -> ResourceLocation.tryParse(nbt.getAsString())).filter((location) -> ParticleConstants.PARTICLE_OPTIONS.contains(location)).collect(Collectors.toList()));
+			if (particlesSelected.isEmpty())
+				particlesSelected = new LinkedHashSet<>(Arrays.asList(new ResourceLocation(VFXGenerator.MOD_ID, "particle/circle")));
+			if (particlesSelected.size() > ParticleConstants.PARTICLE_OPTIONS.size())
+				particlesSelected = new LinkedHashSet<>(ParticleConstants.PARTICLE_OPTIONS);
 		} else {
-			particleSelected = Arrays.asList(ParticleConstants.PARTICLE_OPTIONS.contains(particleTag.getString("selected")) ? particleTag.getString("selected") : "circle");
+			particlesSelected = new LinkedHashSet<>(Arrays.asList(ParticleConstants.PARTICLE_OPTIONS.contains(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + particleTag.getString("selected"))) ? new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + particleTag.getString("selected")) : new ResourceLocation(VFXGenerator.MOD_ID, "particle/circle")));
 		}
 		particleUseHSB = particleTag.getBoolean("useHSB");
 		particleRGBColorBot = MathHelper.clamp(particleTag.getInt("RGBColorBot"), 0xFF000000, 0xFFFFFFFF);
@@ -251,14 +253,14 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		setChanged();
 	}
 
-	public List<String> getParticleSelected() {
-		return particleSelected;
+	public LinkedHashSet<ResourceLocation> getParticlesSelected() {
+		return particlesSelected;
 	}
 
-	public void setParticleSelected(List<String> particleSelected) {
-		this.particleSelected = particleSelected.stream().filter((s) -> ParticleConstants.PARTICLE_OPTIONS.contains(s)).collect(Collectors.toList());
-		if (this.particleSelected.isEmpty())
-			this.particleSelected = Arrays.asList("circle");
+	public void setParticlesSelected(LinkedHashSet<ResourceLocation> particlesSelected) {
+		this.particlesSelected = new LinkedHashSet<>(particlesSelected.stream().filter((location) -> ParticleConstants.PARTICLE_OPTIONS.contains(location)).collect(Collectors.toList()));
+		if (this.particlesSelected.isEmpty())
+			this.particlesSelected = new LinkedHashSet<>(Arrays.asList(new ResourceLocation(VFXGenerator.MOD_ID, "particle/circle")));
 		setChanged();
 	}
 

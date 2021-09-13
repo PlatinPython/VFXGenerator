@@ -1,10 +1,13 @@
 package platinpython.vfxgenerator.util;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+
+import net.minecraft.util.ResourceLocation;
+import platinpython.vfxgenerator.VFXGenerator;
 
 public final class Constants {
 	public static final class ParticleConstants {
-		public static final ImmutableList<String> PARTICLE_OPTIONS = ImmutableList.of("circle", "square", "spark_small", "spark_mid", "spark_big");
+		public static final ImmutableSet<ResourceLocation> PARTICLE_OPTIONS = ImmutableSet.of(new ResourceLocation(VFXGenerator.MOD_ID, "particle/circle"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/square"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_small"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_mid"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_big"));
 		public static final int MIN_LIFETIME = 0;
 		public static final int MAX_LIFETIME = 200;
 		public static final float MIN_SIZE = 0F;

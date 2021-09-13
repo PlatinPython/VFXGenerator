@@ -1,11 +1,16 @@
 package platinpython.vfxgenerator.util.network.packets;
 
+import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.NetworkEvent;
+import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
 
@@ -31,12 +36,13 @@ public class VFXGeneratorDestroyParticlesPKT {
 			context.get().enqueueWork(() -> {
 				if (context.get().getDirection().getOriginationSide().isServer()) {
 					Random random = new Random();
+					List<ResourceLocation> list = ImmutableList.of(new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_small"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_mid"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_big"));
 					for (int i = 0; i < 100; i++) {
 						double motionX = (random.nextFloat() * (.2F)) - .1F;
 						double motionY = (random.nextFloat() * (.2F)) - .1F;
 						double motionZ = (random.nextFloat() * (.2F)) - .1F;
 						Vector3d motion = new Vector3d(motionX, motionY, motionZ);
-						ClientUtils.addParticle("circle", Color.HSBtoRGB(random.nextFloat(), 1F, 1F), Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F, false, false);
+						ClientUtils.addParticle(list.get(random.nextInt(list.size())), Color.HSBtoRGB(random.nextFloat(), 1F, 1F), Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F, false, false);
 					}
 				}
 			});

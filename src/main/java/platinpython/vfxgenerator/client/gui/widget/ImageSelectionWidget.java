@@ -1,8 +1,7 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -22,19 +21,18 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 public class ImageSelectionWidget extends UpdateableWidget {
-	private final String imageName;
-	private final Consumer<List<String>> setValueFunction;
-	private final Supplier<List<String>> valueSupplier;
+	private final ResourceLocation imageLocation;
+	private final Consumer<LinkedHashSet<ResourceLocation>> setValueFunction;
+	private final Supplier<LinkedHashSet<ResourceLocation>> valueSupplier;
 
 	private boolean selected;
 
-	public ImageSelectionWidget(int x, int y, int width, int height, String imageName, Consumer<List<String>> setValueFunction, Supplier<List<String>> valueSupplier, VoidFunction applyValueFunction) {
+	public ImageSelectionWidget(int x, int y, int width, int height, ResourceLocation imageLocation, Consumer<LinkedHashSet<ResourceLocation>> setValueFunction, Supplier<LinkedHashSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
 		super(x, y, width, height, applyValueFunction);
-		this.imageName = imageName;
+		this.imageLocation = imageLocation;
 		this.setValueFunction = setValueFunction;
 		this.valueSupplier = valueSupplier;
 		this.updateValue();
@@ -57,7 +55,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
 		RenderSystem.blendFuncSeparate(SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ZERO);
 		minecraft.getTextureManager().bind(AtlasTexture.LOCATION_PARTICLES);
 		bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-		TextureAtlasSprite sprite = minecraft.particleEngine.textureAtlas.getSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + imageName));
+		TextureAtlasSprite sprite = minecraft.particleEngine.textureAtlas.getSprite(imageLocation);
 
 		float u0 = sprite.getU0();
 		float u1 = sprite.getU1();
@@ -77,17 +75,15 @@ public class ImageSelectionWidget extends UpdateableWidget {
 			if (!this.selected) {
 				this.selected = this.valueSupplier.get().size() <= 1;
 			}
-			ArrayList<String> list = new ArrayList<>(this.valueSupplier.get());
+			LinkedHashSet<ResourceLocation> set = this.valueSupplier.get();
 			if (this.selected) {
-				if (!list.contains(this.imageName))
-					list.add(this.imageName);
+				set.add(this.imageLocation);
 			} else {
-				if (list.contains(this.imageName))
-					list.remove(this.imageName);
+				set.remove(this.imageLocation);
 			}
-			this.setValueFunction.accept(list);
+			this.setValueFunction.accept(set);
 		} else {
-			List<String> list = Arrays.asList(this.imageName);
+			LinkedHashSet<ResourceLocation> list = new LinkedHashSet<>(Arrays.asList(this.imageLocation));
 			this.setValueFunction.accept(list);
 			this.selected = true;
 		}
@@ -95,7 +91,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
 
 	@Override
 	public void updateValue() {
-		this.selected = this.valueSupplier.get().contains(imageName);
+		this.selected = this.valueSupplier.get().contains(imageLocation);
 	}
 
 	@Override

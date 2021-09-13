@@ -63,13 +63,13 @@ public class ClientUtils {
 	@SubscribeEvent
 	public static void onTextureStich(TextureStitchEvent.Pre event) {
 		if (event.getMap().location().equals(AtlasTexture.LOCATION_PARTICLES)) {
-			ParticleConstants.PARTICLE_OPTIONS.forEach((option) -> event.addSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + option)));
+			ParticleConstants.PARTICLE_OPTIONS.forEach((option) -> event.addSprite(option));
 		}
 	}
 
-	public static void addParticle(String spriteName, int color, int lifetime, float size, Vector3d pos, Vector3d motion, float gravity, boolean collision, boolean fullbright) {
+	public static void addParticle(ResourceLocation spriteLocation, int color, int lifetime, float size, Vector3d pos, Vector3d motion, float gravity, boolean collision, boolean fullbright) {
 		Minecraft minecraft = Minecraft.getInstance();
-		VFXParticle particle = new VFXParticle(minecraft.level, minecraft.particleEngine.textureAtlas.getSprite(new ResourceLocation(VFXGenerator.MOD_ID, "particle/" + spriteName)), color, lifetime, size, pos, motion, gravity, collision, fullbright);
+		VFXParticle particle = new VFXParticle(minecraft.level, minecraft.particleEngine.textureAtlas.getSprite(spriteLocation), color, lifetime, size, pos, motion, gravity, collision, fullbright);
 		minecraft.particleEngine.add(particle);
 	}
 

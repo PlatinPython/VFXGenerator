@@ -19,7 +19,7 @@ public class ParticleTextureSelectionScreen extends Screen {
 
 	@Override
 	protected void init() {
-		this.textureOptionsList = new TextureOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 50, this.parent.tileEntity::setParticleSelected, this.parent.tileEntity::getParticleSelected, this.parent::sendToServer);
+		this.textureOptionsList = new TextureOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 50, this.parent.tileEntity::setParticlesSelected, this.parent.tileEntity::getParticlesSelected, this.parent::sendToServer);
 
 		this.addWidget(this.textureOptionsList);
 	}
