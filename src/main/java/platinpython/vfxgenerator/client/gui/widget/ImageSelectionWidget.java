@@ -1,7 +1,7 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
 import java.util.Arrays;
-import java.util.LinkedHashSet;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -21,16 +21,17 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 public class ImageSelectionWidget extends UpdateableWidget {
 	private final ResourceLocation imageLocation;
-	private final Consumer<LinkedHashSet<ResourceLocation>> setValueFunction;
-	private final Supplier<LinkedHashSet<ResourceLocation>> valueSupplier;
+	private final Consumer<TreeSet<ResourceLocation>> setValueFunction;
+	private final Supplier<TreeSet<ResourceLocation>> valueSupplier;
 
 	private boolean selected;
 
-	public ImageSelectionWidget(int x, int y, int width, int height, ResourceLocation imageLocation, Consumer<LinkedHashSet<ResourceLocation>> setValueFunction, Supplier<LinkedHashSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+	public ImageSelectionWidget(int x, int y, int width, int height, ResourceLocation imageLocation, Consumer<TreeSet<ResourceLocation>> setValueFunction, Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
 		super(x, y, width, height, applyValueFunction);
 		this.imageLocation = imageLocation;
 		this.setValueFunction = setValueFunction;
@@ -75,7 +76,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
 			if (!this.selected) {
 				this.selected = this.valueSupplier.get().size() <= 1;
 			}
-			LinkedHashSet<ResourceLocation> set = this.valueSupplier.get();
+			TreeSet<ResourceLocation> set = this.valueSupplier.get();
 			if (this.selected) {
 				set.add(this.imageLocation);
 			} else {
@@ -83,7 +84,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
 			}
 			this.setValueFunction.accept(set);
 		} else {
-			LinkedHashSet<ResourceLocation> list = new LinkedHashSet<>(Arrays.asList(this.imageLocation));
+			TreeSet<ResourceLocation> list = Util.createTreeSetFromCollectionWithComparator(Arrays.asList(this.imageLocation), ResourceLocation::compareNamespaced);
 			this.setValueFunction.accept(list);
 			this.selected = true;
 		}

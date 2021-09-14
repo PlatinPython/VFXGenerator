@@ -1,7 +1,7 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -13,17 +13,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
 import net.minecraft.util.ResourceLocation;
 import platinpython.vfxgenerator.util.Constants.ParticleConstants;
+import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.TextureOptionsListEntry> {
-	public TextureOptionsList(Minecraft minecraft, int width, int height, int top, int bottom, int itemHeight, Consumer<LinkedHashSet<ResourceLocation>> setValueFunction, Supplier<LinkedHashSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+	public TextureOptionsList(Minecraft minecraft, int width, int height, int top, int bottom, int itemHeight, Consumer<TreeSet<ResourceLocation>> setValueFunction, Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
 		super(minecraft, width, height, top, bottom, itemHeight);
 		this.init(setValueFunction, valueSupplier, applyValueFunction);
 		this.setRenderBackground(false);
 	}
 
-	private void init(Consumer<LinkedHashSet<ResourceLocation>> setValueFunction, Supplier<LinkedHashSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
-		List<ResourceLocation> list = new LinkedHashSet<>(ParticleConstants.PARTICLE_OPTIONS).stream().collect(Collectors.toList());
+	private void init(Consumer<TreeSet<ResourceLocation>> setValueFunction, Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+		List<ResourceLocation> list = Util.createTreeSetFromCollectionWithComparator(ParticleConstants.PARTICLE_OPTIONS, ResourceLocation::compareNamespaced).stream().collect(Collectors.toList());
 		for (int i = 0; i < list.size() - list.size() % 3; i += 3) {
 			addEntry(TextureOptionsListEntry.addThreeTextures(this.width, list.get(i), list.get(i + 1), list.get(i + 2), setValueFunction, valueSupplier, applyValueFunction));
 		}
@@ -58,18 +59,18 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
 			this.child3 = child3;
 		}
 
-		public static TextureOptionsListEntry addOneTexture(int guiWidth, ResourceLocation imageName1, Consumer<LinkedHashSet<ResourceLocation>> setValueFunction, Supplier<LinkedHashSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+		public static TextureOptionsListEntry addOneTexture(int guiWidth, ResourceLocation imageName1, Consumer<TreeSet<ResourceLocation>> setValueFunction, Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
 			ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 25, 0, 50, 50, imageName1, setValueFunction, valueSupplier, applyValueFunction);
 			return new TextureOptionsListEntry(child1, null, null);
 		}
 
-		public static TextureOptionsListEntry addTwoTextures(int guiWidth, ResourceLocation imageName1, ResourceLocation imageName2, Consumer<LinkedHashSet<ResourceLocation>> setValueFunction, Supplier<LinkedHashSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+		public static TextureOptionsListEntry addTwoTextures(int guiWidth, ResourceLocation imageName1, ResourceLocation imageName2, Consumer<TreeSet<ResourceLocation>> setValueFunction, Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
 			ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 50, 0, 50, 50, imageName1, setValueFunction, valueSupplier, applyValueFunction);
 			ImageSelectionWidget child2 = new ImageSelectionWidget(guiWidth / 2, 0, 50, 50, imageName2, setValueFunction, valueSupplier, applyValueFunction);
 			return new TextureOptionsListEntry(child1, child2, null);
 		}
 
-		public static TextureOptionsListEntry addThreeTextures(int guiWidth, ResourceLocation imageName1, ResourceLocation imageName2, ResourceLocation imageName3, Consumer<LinkedHashSet<ResourceLocation>> setValueFunction, Supplier<LinkedHashSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+		public static TextureOptionsListEntry addThreeTextures(int guiWidth, ResourceLocation imageName1, ResourceLocation imageName2, ResourceLocation imageName3, Consumer<TreeSet<ResourceLocation>> setValueFunction, Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
 			ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 75, 0, 50, 50, imageName1, setValueFunction, valueSupplier, applyValueFunction);
 			ImageSelectionWidget child2 = new ImageSelectionWidget(guiWidth / 2 - 25, 0, 50, 50, imageName2, setValueFunction, valueSupplier, applyValueFunction);
 			ImageSelectionWidget child3 = new ImageSelectionWidget(guiWidth / 2 + 25, 0, 50, 50, imageName3, setValueFunction, valueSupplier, applyValueFunction);
