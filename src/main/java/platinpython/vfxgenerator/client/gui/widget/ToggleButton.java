@@ -1,13 +1,12 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ToggleButton extends UpdateableWidget {
 	private final Consumer<Boolean> setValueFunction;

@@ -1,18 +1,17 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOptionsList.VFXGeneratorOptionsListEntry> {
 	public VFXGeneratorOptionsList(Minecraft minecraft, int width, int height, int top, int bottom, int itemHeight) {

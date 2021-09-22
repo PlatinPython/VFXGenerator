@@ -1,14 +1,7 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import java.text.DecimalFormat;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.math.MathHelper;
@@ -17,22 +10,27 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
 
+import java.text.DecimalFormat;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public class FloatRangeSlider extends UpdateableWidget {
-	private double leftSliderValue, rightSliderValue;
 	private final double minValue, maxValue;
 	private final float stepSize;
 	private final DecimalFormat format;
-
 	private final ITextComponent prefix;
 	private final ITextComponent suffix;
-
 	private final Consumer<Float> setLeftValueFunction;
 	private final Consumer<Float> setRightValueFunction;
 	private final Supplier<Float> leftValueSupplier;
 	private final Supplier<Float> rightValueSupplier;
+	private double leftSliderValue, rightSliderValue;
+	private boolean isLeftSelected;
+	private boolean stopped;
 
 	public FloatRangeSlider(int x, int y, int width, int height, ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction, Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier, Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
 		super(x, y, width, height, applyValueFunction);
@@ -97,9 +95,6 @@ public class FloatRangeSlider extends UpdateableWidget {
 		}
 	}
 
-	private boolean isLeftSelected;
-	private boolean stopped;
-
 	private boolean getIsLeftClicked(double mouseX) {
 		return (mouseX < this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 8 || mouseX < ((this.x + this.leftSliderValue * this.width) + (this.x + this.rightSliderValue * this.width)) / 2);
 	}
@@ -158,6 +153,10 @@ public class FloatRangeSlider extends UpdateableWidget {
 		this.updateMessage();
 	}
 
+	private double getLeftSliderValue() {
+		return this.leftSliderValue * (this.maxValue - this.minValue) + this.minValue;
+	}
+
 	private void setLeftSliderValue(double value) {
 		double d0 = this.leftSliderValue;
 		this.leftSliderValue = Util.toValue(MathHelper.clamp(value, 0.0D, this.rightSliderValue), this.minValue, this.maxValue, this.stepSize);
@@ -169,8 +168,8 @@ public class FloatRangeSlider extends UpdateableWidget {
 		this.updateMessage();
 	}
 
-	private double getLeftSliderValue() {
-		return this.leftSliderValue * (this.maxValue - this.minValue) + this.minValue;
+	private double getRightSliderValue() {
+		return this.rightSliderValue * (this.maxValue - this.minValue) + this.minValue;
 	}
 
 	private void setRightSliderValue(double value) {
@@ -182,10 +181,6 @@ public class FloatRangeSlider extends UpdateableWidget {
 		}
 
 		this.updateMessage();
-	}
-
-	private double getRightSliderValue() {
-		return this.rightSliderValue * (this.maxValue - this.minValue) + this.minValue;
 	}
 
 	@Override

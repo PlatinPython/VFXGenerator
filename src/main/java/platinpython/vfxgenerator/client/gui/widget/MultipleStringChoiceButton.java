@@ -1,14 +1,12 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
+import com.google.common.collect.ImmutableList;
+import net.minecraft.util.text.StringTextComponent;
+import org.apache.commons.lang3.StringUtils;
+import platinpython.vfxgenerator.util.Util.VoidFunction;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.collect.ImmutableList;
-
-import net.minecraft.util.text.StringTextComponent;
-import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 public class MultipleStringChoiceButton extends UpdateableWidget {
 	private final ImmutableList<String> options;

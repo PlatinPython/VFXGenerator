@@ -1,7 +1,5 @@
 package platinpython.vfxgenerator.client.particle;
 
-import java.util.stream.Stream;
-
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.LightTexture;
@@ -11,6 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.vector.Vector3d;
+
+import java.util.stream.Stream;
 
 public class VFXParticle extends SpriteTexturedParticle {
 	private final boolean fullbright;
@@ -67,7 +67,7 @@ public class VFXParticle extends SpriteTexturedParticle {
 			double dY = y;
 			double dZ = z;
 			if (this.hasPhysics && (x != 0.0D || y != 0.0D || z != 0.0D)) {
-				Vector3d vector3d = Entity.collideBoundingBoxHeuristically((Entity) null, new Vector3d(x, y, z), this.getBoundingBox(), this.level, ISelectionContext.empty(), new ReuseableStream<>(Stream.empty()));
+				Vector3d vector3d = Entity.collideBoundingBoxHeuristically(null, new Vector3d(x, y, z), this.getBoundingBox(), this.level, ISelectionContext.empty(), new ReuseableStream<>(Stream.empty()));
 				x = vector3d.x;
 				y = vector3d.y;
 				z = vector3d.z;

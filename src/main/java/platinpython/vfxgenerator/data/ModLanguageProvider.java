@@ -18,7 +18,7 @@ public class ModLanguageProvider extends LanguageProvider {
 		add(BlockRegistry.VFX_GENERATOR.get(), "VFX Generator");
 
 		addGui("dataSaved", "Contents Saved.");
-		
+
 		addGui("selectTypes", "Select Types/Textures");
 
 		addGui("particle", "Particle");
@@ -54,7 +54,7 @@ public class ModLanguageProvider extends LanguageProvider {
 		addGui("gravity", "Gravity");
 
 		addGui("collision", "Collision");
-		
+
 		addGui("fullbright", "Fullbright");
 
 		addGui("ticks", "Ticks");

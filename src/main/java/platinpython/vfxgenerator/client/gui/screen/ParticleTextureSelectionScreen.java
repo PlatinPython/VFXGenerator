@@ -1,7 +1,6 @@
 package platinpython.vfxgenerator.client.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
@@ -44,7 +43,7 @@ public class ParticleTextureSelectionScreen extends Screen {
 	public boolean isPauseScreen() {
 		return false;
 	}
-	
+
 	@Override
 	public void onClose() {
 		this.minecraft.setScreen(this.parent);

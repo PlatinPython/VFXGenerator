@@ -49,7 +49,7 @@ public class ClientUtils {
 			ModelResourceLocation modelResourceLocation = BlockModelShapes.stateToModelLocation(blockState);
 			IBakedModel existingModel = event.getModelRegistry().get(modelResourceLocation);
 			if (existingModel == null) {
-				VFXGenerator.LOGGER.warn("Did not find the expected vanilla baked model(s) for" + block.toString() + "in registry");
+				VFXGenerator.LOGGER.warn("Did not find the expected vanilla baked model(s) for" + block + "in registry");
 			} else if (existingModel instanceof FullbrightBakedModel) {
 				VFXGenerator.LOGGER.warn("Tried to replace FullbrightModel twice");
 			} else {

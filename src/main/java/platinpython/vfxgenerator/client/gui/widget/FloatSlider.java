@@ -1,12 +1,7 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import java.text.DecimalFormat;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -16,17 +11,19 @@ import net.minecraft.util.text.TranslationTextComponent;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
 
+import java.text.DecimalFormat;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public class FloatSlider extends UpdateableWidget {
-	private double sliderValue;
 	private final double minValue, maxValue;
 	private final float stepSize;
 	private final DecimalFormat format;
-
 	private final ITextComponent prefix;
 	private final ITextComponent suffix;
-
 	private final Consumer<Float> setValueFunction;
 	private final Supplier<Float> valueSupplier;
+	private double sliderValue;
 
 	public FloatSlider(int x, int y, int width, int height, ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
 		super(x, y, width, height, applyValueFunction);
@@ -89,6 +86,10 @@ public class FloatSlider extends UpdateableWidget {
 		this.setValueFromMouse(mouseX);
 	}
 
+	private double getSliderValue() {
+		return this.sliderValue * (this.maxValue - this.minValue) + this.minValue;
+	}
+
 	private void setSliderValue(double value) {
 		double d0 = this.sliderValue;
 		this.sliderValue = Util.toValue(value, this.minValue, this.maxValue, this.stepSize);
@@ -98,10 +99,6 @@ public class FloatSlider extends UpdateableWidget {
 		}
 
 		this.updateMessage();
-	}
-
-	private double getSliderValue() {
-		return this.sliderValue * (this.maxValue - this.minValue) + this.minValue;
 	}
 
 	@Override

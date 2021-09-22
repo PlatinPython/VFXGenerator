@@ -1,7 +1,5 @@
 package platinpython.vfxgenerator.data;
 
-import java.util.function.Consumer;
-
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
@@ -10,6 +8,8 @@ import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraftforge.common.Tags;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
 import platinpython.vfxgenerator.util.registries.ItemRegistry;
+
+import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider {
 	public ModRecipeProvider(DataGenerator gen) {

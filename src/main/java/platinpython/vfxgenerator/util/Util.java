@@ -1,10 +1,10 @@
 package platinpython.vfxgenerator.util;
 
+import net.minecraft.util.math.MathHelper;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeSet;
-
-import net.minecraft.util.math.MathHelper;
 
 public class Util {
 	public static final <E> TreeSet<E> createTreeSetFromCollectionWithComparator(Collection<? extends E> collection, Comparator<? super E> comparator) {

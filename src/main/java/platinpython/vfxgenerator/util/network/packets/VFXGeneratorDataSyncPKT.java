@@ -1,7 +1,5 @@
 package platinpython.vfxgenerator.util.network.packets;
 
-import java.util.function.Supplier;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -9,6 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.fml.network.NetworkEvent;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
+
+import java.util.function.Supplier;
 
 public class VFXGeneratorDataSyncPKT {
 	private final CompoundNBT tag;

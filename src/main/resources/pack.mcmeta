@@ -1,6 +1,6 @@
 {
-    "pack": {
-        "description": "Resources for VFX Generator",
-        "pack_format": 6
-    }
+  "pack": {
+	"description": "Resources for VFX Generator",
+	"pack_format": 6
+  }
 }

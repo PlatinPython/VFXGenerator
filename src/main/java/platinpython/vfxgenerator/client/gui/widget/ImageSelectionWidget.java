@@ -1,15 +1,9 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import java.util.Arrays;
-import java.util.TreeSet;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -21,8 +15,14 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import org.lwjgl.opengl.GL11C;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
+
+import java.util.Arrays;
+import java.util.TreeSet;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ImageSelectionWidget extends UpdateableWidget {
 	private final ResourceLocation imageLocation;
@@ -55,18 +55,19 @@ public class ImageSelectionWidget extends UpdateableWidget {
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ZERO);
 		minecraft.getTextureManager().bind(AtlasTexture.LOCATION_PARTICLES);
-		bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferBuilder.begin(GL11C.GL_LINES, DefaultVertexFormats.POSITION_TEX);
 		TextureAtlasSprite sprite = minecraft.particleEngine.textureAtlas.getSprite(imageLocation);
 
 		float u0 = sprite.getU0();
 		float u1 = sprite.getU1();
 		float v0 = sprite.getV0();
 		float v1 = sprite.getV1();
-		bufferBuilder.vertex(matrix, minX, maxY, 0F).uv(u0, v1).endVertex();
-		bufferBuilder.vertex(matrix, maxX, maxY, 0F).uv(u1, v1).endVertex();
-		bufferBuilder.vertex(matrix, maxX, minY, 0F).uv(u1, v0).endVertex();
-		bufferBuilder.vertex(matrix, minX, minY, 0F).uv(u0, v0).endVertex();
+		bufferBuilder.vertex(matrix, minX, maxY, 0F).uv(u0, v1).color(1F, 0F, 0F, 1F).endVertex();
+		bufferBuilder.vertex(matrix, maxX, maxY, 0F).uv(u1, v1).color(1F, 0F, 0F, 1F).endVertex();
+		bufferBuilder.vertex(matrix, maxX, minY, 0F).uv(u1, v0).color(1F, 0F, 0F, 1F).endVertex();
+		bufferBuilder.vertex(matrix, minX, minY, 0F).uv(u0, v0).color(1F, 0F, 0F, 1F).endVertex();
 		tessellator.end();
+		RenderSystem.disableBlend();
 	}
 
 	@Override

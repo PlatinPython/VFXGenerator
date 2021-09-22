@@ -1,8 +1,5 @@
 package platinpython.vfxgenerator.block;
 
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -35,6 +32,9 @@ import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDestroyParticlesPKT;
 import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
+
+import java.util.List;
+import java.util.Random;
 
 public class VFXGeneratorBlock extends Block {
 	public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;

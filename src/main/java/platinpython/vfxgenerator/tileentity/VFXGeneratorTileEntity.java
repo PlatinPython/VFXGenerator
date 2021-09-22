@@ -1,10 +1,5 @@
 package platinpython.vfxgenerator.tileentity;
 
-import java.util.Arrays;
-import java.util.Random;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -26,14 +21,19 @@ import platinpython.vfxgenerator.util.Constants.ParticleConstants;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
+import java.util.Arrays;
+import java.util.Random;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
 public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileEntity {
+	private final float[] particleHSBColorBot = {0F, 0F, 0F};
+	private final float[] particleHSBColorTop = {1F, 1F, 1F};
 	private boolean particleEnabled = true;
 	private TreeSet<ResourceLocation> particlesSelected = Util.createTreeSetFromCollectionWithComparator(Arrays.asList(new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_small"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_mid"), new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_big")), ResourceLocation::compareNamespaced);
 	private boolean particleUseHSB = false;
 	private int particleRGBColorBot = 0xFF000000;
 	private int particleRGBColorTop = 0xFFFFFFFF;
-	private float[] particleHSBColorBot = { 0F, 0F, 0F };
-	private float[] particleHSBColorTop = { 1F, 1F, 1F };
 	private int particleLifetimeBot = 20;
 	private int particleLifetimeTop = 80;
 	private float particleSizeBot = 1F;
@@ -53,7 +53,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 	private int particleDelay = 5;
 	private float particleGravity = 0F;
 	private boolean particleCollision = false;
-	private boolean particleFullbright = false;
+	private boolean particleFullBright = false;
 
 	public VFXGeneratorTileEntity() {
 		super(TileEntityRegistry.VFX_GENERATOR.get());
@@ -89,7 +89,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 					double motionZ = particleMotionZBot + (random.nextFloat() * (particleMotionZTop - particleMotionZBot));
 					Vector3d motion = new Vector3d(motionX, motionY, motionZ);
 
-					ClientUtils.addParticle(particle, color, lifetime, size, pos, motion, particleGravity, particleCollision, particleFullbright);
+					ClientUtils.addParticle(particle, color, lifetime, size, pos, motion, particleGravity, particleCollision, particleFullBright);
 				}
 			}
 		}
@@ -134,7 +134,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		particleTag.putInt("delay", getParticleDelay());
 		particleTag.putFloat("gravity", getParticleGravity());
 		particleTag.putBoolean("collision", isParticleCollision());
-		particleTag.putBoolean("fullbright", isParticleFullbright());
+		particleTag.putBoolean("fullbright", isParticleFullBright());
 		return particleTag;
 	}
 
@@ -181,7 +181,7 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		particleDelay = MathHelper.clamp(particleTag.getInt("delay"), ParticleConstants.MIN_DELAY, ParticleConstants.MAX_DELAY);
 		particleGravity = MathHelper.clamp(particleTag.getFloat("gravity"), ParticleConstants.MIN_GRAVITY, ParticleConstants.MAX_GRAVITY);
 		particleCollision = particleTag.getBoolean("collision");
-		particleFullbright = particleTag.getBoolean("fullbright");
+		particleFullBright = particleTag.getBoolean("fullbright");
 
 		ensureParticleDataOrder();
 	}
@@ -485,12 +485,12 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 		setChanged();
 	}
 
-	public boolean isParticleFullbright() {
-		return particleFullbright;
+	public boolean isParticleFullBright() {
+		return particleFullBright;
 	}
 
-	public void setParticleFullbright(boolean particleFullbright) {
-		this.particleFullbright = particleFullbright;
+	public void setParticleFullBright(boolean particleFullBright) {
+		this.particleFullBright = particleFullBright;
 		setChanged();
 	}
 }

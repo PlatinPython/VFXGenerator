@@ -1,7 +1,6 @@
 package platinpython.vfxgenerator.util;
 
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.util.ResourceLocation;
 import platinpython.vfxgenerator.VFXGenerator;
 

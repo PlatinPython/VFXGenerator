@@ -1,8 +1,5 @@
 package platinpython.vfxgenerator.client.model;
 
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -15,6 +12,9 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
+
+import java.util.List;
+import java.util.Random;
 
 public class FullbrightBakedModel implements IBakedModel {
 	private final IBakedModel base;

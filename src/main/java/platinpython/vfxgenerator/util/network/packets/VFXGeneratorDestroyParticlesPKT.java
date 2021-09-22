@@ -1,11 +1,6 @@
 package platinpython.vfxgenerator.util.network.packets;
 
-import java.util.List;
-import java.util.Random;
-import java.util.function.Supplier;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
@@ -13,6 +8,10 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
+
+import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class VFXGeneratorDestroyParticlesPKT {
 	private final Vector3d pos;

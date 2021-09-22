@@ -1,20 +1,19 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import java.util.List;
-import java.util.TreeSet;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
 import net.minecraft.util.ResourceLocation;
 import platinpython.vfxgenerator.util.Constants.ParticleConstants;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
+
+import java.util.List;
+import java.util.TreeSet;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.TextureOptionsListEntry> {
 	public TextureOptionsList(Minecraft minecraft, int width, int height, int top, int bottom, int itemHeight, Consumer<TreeSet<ResourceLocation>> setValueFunction, Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
@@ -29,14 +28,14 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
 			addEntry(TextureOptionsListEntry.addThreeTextures(this.width, list.get(i), list.get(i + 1), list.get(i + 2), setValueFunction, valueSupplier, applyValueFunction));
 		}
 		switch (list.size() % 3) {
-		case 1:
-			addEntry(TextureOptionsListEntry.addOneTexture(this.width, list.get(list.size() - 1), setValueFunction, valueSupplier, applyValueFunction));
-			break;
-		case 2:
-			addEntry(TextureOptionsListEntry.addTwoTextures(this.width, list.get(list.size() - 2), list.get(list.size() - 1), setValueFunction, valueSupplier, applyValueFunction));
-			break;
-		default:
-			break;
+			case 1:
+				addEntry(TextureOptionsListEntry.addOneTexture(this.width, list.get(list.size() - 1), setValueFunction, valueSupplier, applyValueFunction));
+				break;
+			case 2:
+				addEntry(TextureOptionsListEntry.addTwoTextures(this.width, list.get(list.size() - 2), list.get(list.size() - 1), setValueFunction, valueSupplier, applyValueFunction));
+				break;
+			default:
+				break;
 		}
 	}
 

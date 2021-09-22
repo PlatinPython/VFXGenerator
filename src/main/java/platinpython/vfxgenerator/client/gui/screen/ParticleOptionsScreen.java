@@ -1,7 +1,6 @@
 package platinpython.vfxgenerator.client.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.CompoundNBT;
@@ -50,10 +49,10 @@ public class ParticleOptionsScreen extends Screen {
 			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getRed();
 		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("hue")).suffixSecond(new StringTextComponent("°")).minValueSecond(0F).maxValueSecond(360F).setLeftValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
-			this.tileEntity.setParticleHSBColorBot(new float[] { value / 360F, oldHsb[1], oldHsb[2] });
+			this.tileEntity.setParticleHSBColorBot(new float[]{value / 360F, oldHsb[1], oldHsb[2]});
 		}).setRightValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
-			this.tileEntity.setParticleHSBColorTop(new float[] { value / 360F, oldHsb[1], oldHsb[2] });
+			this.tileEntity.setParticleHSBColorTop(new float[]{value / 360F, oldHsb[1], oldHsb[2]});
 		}).leftValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorBot()[0] * 360F;
 		}).rightValueSupplierSecond(() -> {
@@ -74,10 +73,10 @@ public class ParticleOptionsScreen extends Screen {
 			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getGreen();
 		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("saturation")).suffixSecond(new StringTextComponent("%")).minValueSecond(0F).maxValueSecond(100F).setLeftValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
-			this.tileEntity.setParticleHSBColorBot(new float[] { oldHsb[0], value / 100F, oldHsb[2] });
+			this.tileEntity.setParticleHSBColorBot(new float[]{oldHsb[0], value / 100F, oldHsb[2]});
 		}).setRightValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
-			this.tileEntity.setParticleHSBColorTop(new float[] { oldHsb[0], value / 100F, oldHsb[2] });
+			this.tileEntity.setParticleHSBColorTop(new float[]{oldHsb[0], value / 100F, oldHsb[2]});
 		}).leftValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorBot()[1] * 100F;
 		}).rightValueSupplierSecond(() -> {
@@ -98,10 +97,10 @@ public class ParticleOptionsScreen extends Screen {
 			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getBlue();
 		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("brightness")).suffixSecond(new StringTextComponent("%")).minValueSecond(0F).maxValueSecond(100F).setLeftValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
-			this.tileEntity.setParticleHSBColorBot(new float[] { oldHsb[0], oldHsb[1], value / 100F });
+			this.tileEntity.setParticleHSBColorBot(new float[]{oldHsb[0], oldHsb[1], value / 100F});
 		}).setRightValueFunctionSecond((value) -> {
 			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
-			this.tileEntity.setParticleHSBColorTop(new float[] { oldHsb[0], oldHsb[1], value / 100F });
+			this.tileEntity.setParticleHSBColorTop(new float[]{oldHsb[0], oldHsb[1], value / 100F});
 		}).leftValueSupplierSecond(() -> {
 			return this.tileEntity.getParticleHSBColorBot()[2] * 100F;
 		}).rightValueSupplierSecond(() -> {
@@ -130,7 +129,7 @@ public class ParticleOptionsScreen extends Screen {
 
 		this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("collision").append(": ").append(ClientUtils.getGuiTranslationTextComponent("disabled")), ClientUtils.getGuiTranslationTextComponent("collision").append(": ").append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.tileEntity::setParticleCollision, this.tileEntity::isParticleCollision, this::sendToServer);
 
-		this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("fullbright").append(": ").append(ClientUtils.getGuiTranslationTextComponent("disabled")), ClientUtils.getGuiTranslationTextComponent("fullbright").append(": ").append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.tileEntity::setParticleFullbright, this.tileEntity::isParticleFullbright, this::sendToServer);
+		this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("fullbright").append(": ").append(ClientUtils.getGuiTranslationTextComponent("disabled")), ClientUtils.getGuiTranslationTextComponent("fullbright").append(": ").append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.tileEntity::setParticleFullBright, this.tileEntity::isParticleFullBright, this::sendToServer);
 
 		this.optionsList.children().parallelStream().forEach((entry) -> entry.setActive(this.tileEntity.isParticleEnabled()));
 

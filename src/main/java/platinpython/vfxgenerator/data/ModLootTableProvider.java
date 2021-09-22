@@ -1,24 +1,13 @@
 package platinpython.vfxgenerator.data;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.loot.LootParameterSet;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootTable;
+import net.minecraft.loot.*;
 import net.minecraft.loot.LootTable.Builder;
-import net.minecraft.loot.LootTableManager;
-import net.minecraft.loot.ValidationTracker;
 import net.minecraft.loot.functions.CopyBlockState;
 import net.minecraft.loot.functions.CopyNbt;
 import net.minecraft.loot.functions.CopyNbt.Source;
@@ -27,6 +16,12 @@ import net.minecraftforge.fml.RegistryObject;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.util.RegistryHandler;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ModLootTableProvider extends LootTableProvider {
 	public ModLootTableProvider(DataGenerator gen) {

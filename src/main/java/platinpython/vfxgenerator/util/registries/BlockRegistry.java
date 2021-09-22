@@ -1,7 +1,5 @@
 package platinpython.vfxgenerator.util.registries;
 
-import java.util.function.Supplier;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -10,6 +8,8 @@ import net.minecraftforge.fml.RegistryObject;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.item.VFXGeneratorBlockItem;
 import platinpython.vfxgenerator.util.RegistryHandler;
+
+import java.util.function.Supplier;
 
 public class BlockRegistry {
 	public static final RegistryObject<Block> VFX_GENERATOR = register("vfx_generator", VFXGeneratorBlock::new);
