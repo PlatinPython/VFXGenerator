@@ -37,116 +37,123 @@ import java.util.List;
 import java.util.Random;
 
 public class VFXGeneratorBlock extends Block {
-	public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
-	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-	public VFXGeneratorBlock() {
-		super(Properties.copy(Blocks.STONE).noOcclusion());
-		this.registerDefaultState(this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE));
-	}
+    public VFXGeneratorBlock() {
+        super(Properties.copy(Blocks.STONE).noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any()
+                                                      .setValue(INVERTED, Boolean.FALSE)
+                                                      .setValue(POWERED, Boolean.FALSE));
+    }
 
-	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(INVERTED, POWERED);
-	}
+    @Override
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        builder.add(INVERTED, POWERED);
+    }
 
-	@Override
-	public void appendHoverText(ItemStack stack, IBlockReader level, List<ITextComponent> tooltip, ITooltipFlag flag) {
-		if (stack.getTagElement("particleData") != null) {
-			tooltip.add(ClientUtils.getGuiTranslationTextComponent("dataSaved"));
-		}
-	}
+    @Override
+    public void appendHoverText(ItemStack stack, IBlockReader level, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        if (stack.getTagElement("particleData") != null) {
+            tooltip.add(ClientUtils.getGuiTranslationTextComponent("dataSaved"));
+        }
+    }
 
-	@Override
-	public VoxelShape getBlockSupportShape(BlockState state, IBlockReader reader, BlockPos pos) {
-		return VoxelShapes.empty();
-	}
+    @Override
+    public VoxelShape getBlockSupportShape(BlockState state, IBlockReader reader, BlockPos pos) {
+        return VoxelShapes.empty();
+    }
 
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.defaultBlockState().setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos())));
-	}
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.defaultBlockState()
+                   .setValue(POWERED, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos())));
+    }
 
-	@Override
-	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-		return true;
-	}
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+        return true;
+    }
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
 
-	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return TileEntityRegistry.VFX_GENERATOR.get().create();
-	}
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return TileEntityRegistry.VFX_GENERATOR.get().create();
+    }
 
-	@Override
-	public void neighborChanged(BlockState state, World level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-		if (!level.isClientSide) {
-			if (state.getValue(POWERED) != level.hasNeighborSignal(pos)) {
-				level.setBlock(pos, state.cycle(POWERED), BlockFlags.DEFAULT);
-			}
-		}
-	}
+    @Override
+    public void neighborChanged(BlockState state, World level, BlockPos pos, Block block, BlockPos fromPos,
+                                boolean isMoving) {
+        if (!level.isClientSide) {
+            if (state.getValue(POWERED) != level.hasNeighborSignal(pos)) {
+                level.setBlock(pos, state.cycle(POWERED), BlockFlags.DEFAULT);
+            }
+        }
+    }
 
-	@Override
-	public void tick(BlockState state, ServerWorld level, BlockPos pos, Random random) {
-		if (state.getValue(POWERED) && !level.hasNeighborSignal(pos)) {
-			level.setBlock(pos, state.cycle(POWERED), 2);
-		}
-	}
+    @Override
+    public void tick(BlockState state, ServerWorld level, BlockPos pos, Random random) {
+        if (state.getValue(POWERED) && !level.hasNeighborSignal(pos)) {
+            level.setBlock(pos, state.cycle(POWERED), 2);
+        }
+    }
 
-	@Override
-	public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (player.getMainHandItem().isEmpty()) {
-			if (player.isShiftKeyDown() && player.getOffhandItem().isEmpty()) {
-				level.setBlock(pos, state.cycle(INVERTED), 2);
-				return ActionResultType.SUCCESS;
-			} else {
-				if (level.isClientSide) {
-					TileEntity tileEntity = level.getBlockEntity(pos);
-					if (tileEntity instanceof VFXGeneratorTileEntity) {
-						ClientUtils.openVFXGeneratorScreen((VFXGeneratorTileEntity) tileEntity);
-						return ActionResultType.CONSUME;
-					}
-				}
-			}
-		}
-		return ActionResultType.PASS;
-	}
+    @Override
+    public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand,
+                                BlockRayTraceResult hit) {
+        if (player.getMainHandItem().isEmpty()) {
+            if (player.isShiftKeyDown() && player.getOffhandItem().isEmpty()) {
+                level.setBlock(pos, state.cycle(INVERTED), 2);
+                return ActionResultType.SUCCESS;
+            } else {
+                if (level.isClientSide) {
+                    TileEntity tileEntity = level.getBlockEntity(pos);
+                    if (tileEntity instanceof VFXGeneratorTileEntity) {
+                        ClientUtils.openVFXGeneratorScreen((VFXGeneratorTileEntity) tileEntity);
+                        return ActionResultType.CONSUME;
+                    }
+                }
+            }
+        }
+        return ActionResultType.PASS;
+    }
 
-	@Override
-	public void setPlacedBy(World level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		if (stack.getTagElement("particleData") != null) {
-			TileEntity tileEntity = level.getBlockEntity(pos);
-			if (tileEntity instanceof VFXGeneratorTileEntity) {
-				((VFXGeneratorTileEntity) tileEntity).loadFromTag(stack.getOrCreateTag());
-			}
-		}
-	}
+    @Override
+    public void setPlacedBy(World level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.getTagElement("particleData") != null) {
+            TileEntity tileEntity = level.getBlockEntity(pos);
+            if (tileEntity instanceof VFXGeneratorTileEntity) {
+                ((VFXGeneratorTileEntity) tileEntity).loadFromTag(stack.getOrCreateTag());
+            }
+        }
+    }
 
-	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-		ItemStack stack = new ItemStack(this);
-		CompoundNBT tag = stack.getOrCreateTag();
-		CompoundNBT blockStateTag = new CompoundNBT();
-		blockStateTag.putString("inverted", state.getValue(INVERTED).toString());
-		tag.put("BlockStateTag", blockStateTag);
-		stack.setTag(tag);
-		TileEntity tileEntity = world.getBlockEntity(pos);
-		if (tileEntity instanceof VFXGeneratorTileEntity) {
-			stack.setTag(((VFXGeneratorTileEntity) tileEntity).saveToTag(tag));
-		}
-		return stack;
-	}
+    @Override
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+                                  PlayerEntity player) {
+        ItemStack stack = new ItemStack(this);
+        CompoundNBT tag = stack.getOrCreateTag();
+        CompoundNBT blockStateTag = new CompoundNBT();
+        blockStateTag.putString("inverted", state.getValue(INVERTED).toString());
+        tag.put("BlockStateTag", blockStateTag);
+        stack.setTag(tag);
+        TileEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof VFXGeneratorTileEntity) {
+            stack.setTag(((VFXGeneratorTileEntity) tileEntity).saveToTag(tag));
+        }
+        return stack;
+    }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!level.isClientSide && !state.is(newState.getBlock()))
-			NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new VFXGeneratorDestroyParticlesPKT(Vector3d.atCenterOf(pos)));
-		super.onRemove(state, level, pos, newState, isMoving);
-	}
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!level.isClientSide && !state.is(newState.getBlock()))
+            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(),
+                                         new VFXGeneratorDestroyParticlesPKT(Vector3d.atCenterOf(pos)));
+        super.onRemove(state, level, pos, newState, isMoving);
+    }
 }

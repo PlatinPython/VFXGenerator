@@ -10,15 +10,15 @@ import platinpython.vfxgenerator.util.network.NetworkHandler;
 
 @Mod(VFXGenerator.MOD_ID)
 public class VFXGenerator {
-	public static final String MOD_ID = "vfxgenerator";
+    public static final String MOD_ID = "vfxgenerator";
 
-	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-	public VFXGenerator() {
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(DataGatherer::onGatherData);
+    public VFXGenerator() {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(DataGatherer::onGatherData);
 
-		RegistryHandler.register();
+        RegistryHandler.register();
 
-		NetworkHandler.register();
-	}
+        NetworkHandler.register();
+    }
 }

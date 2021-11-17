@@ -16,154 +16,273 @@ import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDataSyncPKT;
 
 public class ParticleOptionsScreen extends Screen {
-	protected final VFXGeneratorTileEntity tileEntity;
+    protected final VFXGeneratorTileEntity tileEntity;
 
-	private VFXGeneratorOptionsList optionsList;
+    private VFXGeneratorOptionsList optionsList;
 
-	public ParticleOptionsScreen(VFXGeneratorTileEntity tileEntity) {
-		super(StringTextComponent.EMPTY);
-		this.tileEntity = tileEntity;
-	}
+    public ParticleOptionsScreen(VFXGeneratorTileEntity tileEntity) {
+        super(StringTextComponent.EMPTY);
+        this.tileEntity = tileEntity;
+    }
 
-	@Override
-	protected void init() {
-		addButton(new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.tileEntity::setParticleEnabled, this.tileEntity::isParticleEnabled, this::sendToServer));
+    @Override
+    protected void init() {
+        addButton(new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.tileEntity::setParticleEnabled,
+                                   this.tileEntity::isParticleEnabled, this::sendToServer));
 
-		this.optionsList = new VFXGeneratorOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
+        this.optionsList = new VFXGeneratorOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32,
+                                                       25);
 
-		this.optionsList.addButton(ClientUtils.getGuiTranslationTextComponent("selectTypes"), () -> this.minecraft.setScreen(new ParticleTextureSelectionScreen(this)));
+        this.optionsList.addButton(ClientUtils.getGuiTranslationTextComponent("selectTypes"),
+                                   () -> this.minecraft.setScreen(new ParticleTextureSelectionScreen(this)));
 
-		this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("rgb"), ClientUtils.getGuiTranslationTextComponent("hsb"), this.tileEntity::setParticleUseHSB, this.tileEntity::isParticleUseHSB, this::sendToServer);
+        this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("rgb"),
+                                         ClientUtils.getGuiTranslationTextComponent("hsb"),
+                                         this.tileEntity::setParticleUseHSB, this.tileEntity::isParticleUseHSB,
+                                         this::sendToServer);
 
-		this.optionsList.getToggleableRangeSliderBuilder().applyValueFunction(this::sendToServer).toggleValueSupplier(this.tileEntity::isParticleUseHSB).prefixFirst(ClientUtils.getGuiTranslationTextComponent("red")).minValueFirst(0F).maxValueFirst(255F).setLeftValueFunctionFirst((value) -> {
-			Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
-			Color newColor = new Color(value.intValue(), oldColor.getGreen(), oldColor.getBlue());
-			this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
-		}).setRightValueFunctionFirst((value) -> {
-			Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
-			Color newColor = new Color(value.intValue(), oldColor.getGreen(), oldColor.getBlue());
-			this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
-		}).leftValueSupplierFirst(() -> {
-			return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getRed();
-		}).rightValueSupplierFirst(() -> {
-			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getRed();
-		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("hue")).suffixSecond(new StringTextComponent("°")).minValueSecond(0F).maxValueSecond(360F).setLeftValueFunctionSecond((value) -> {
-			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
-			this.tileEntity.setParticleHSBColorBot(new float[]{value / 360F, oldHsb[1], oldHsb[2]});
-		}).setRightValueFunctionSecond((value) -> {
-			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
-			this.tileEntity.setParticleHSBColorTop(new float[]{value / 360F, oldHsb[1], oldHsb[2]});
-		}).leftValueSupplierSecond(() -> {
-			return this.tileEntity.getParticleHSBColorBot()[0] * 360F;
-		}).rightValueSupplierSecond(() -> {
-			return this.tileEntity.getParticleHSBColorTop()[0] * 360F;
-		}).build();
+        this.optionsList.getToggleableRangeSliderBuilder()
+                        .applyValueFunction(this::sendToServer)
+                        .toggleValueSupplier(this.tileEntity::isParticleUseHSB)
+                        .prefixFirst(ClientUtils.getGuiTranslationTextComponent("red"))
+                        .minValueFirst(0F)
+                        .maxValueFirst(255F)
+                        .setLeftValueFunctionFirst((value) -> {
+                            Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
+                            Color newColor = new Color(value.intValue(), oldColor.getGreen(), oldColor.getBlue());
+                            this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
+                        })
+                        .setRightValueFunctionFirst((value) -> {
+                            Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
+                            Color newColor = new Color(value.intValue(), oldColor.getGreen(), oldColor.getBlue());
+                            this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
+                        })
+                        .leftValueSupplierFirst(() -> {
+                            return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getRed();
+                        })
+                        .rightValueSupplierFirst(() -> {
+                            return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getRed();
+                        })
+                        .prefixSecond(ClientUtils.getGuiTranslationTextComponent("hue"))
+                        .suffixSecond(new StringTextComponent("°"))
+                        .minValueSecond(0F)
+                        .maxValueSecond(360F)
+                        .setLeftValueFunctionSecond((value) -> {
+                            float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
+                            this.tileEntity.setParticleHSBColorBot(new float[]{value / 360F, oldHsb[1], oldHsb[2]});
+                        })
+                        .setRightValueFunctionSecond((value) -> {
+                            float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
+                            this.tileEntity.setParticleHSBColorTop(new float[]{value / 360F, oldHsb[1], oldHsb[2]});
+                        })
+                        .leftValueSupplierSecond(() -> {
+                            return this.tileEntity.getParticleHSBColorBot()[0] * 360F;
+                        })
+                        .rightValueSupplierSecond(() -> {
+                            return this.tileEntity.getParticleHSBColorTop()[0] * 360F;
+                        })
+                        .build();
 
-		this.optionsList.getToggleableRangeSliderBuilder().applyValueFunction(this::sendToServer).toggleValueSupplier(this.tileEntity::isParticleUseHSB).prefixFirst(ClientUtils.getGuiTranslationTextComponent("green")).minValueFirst(0F).maxValueFirst(255F).setLeftValueFunctionFirst((value) -> {
-			Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
-			Color newColor = new Color(oldColor.getRed(), value.intValue(), oldColor.getBlue());
-			this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
-		}).setRightValueFunctionFirst((value) -> {
-			Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
-			Color newColor = new Color(oldColor.getRed(), value.intValue(), oldColor.getBlue());
-			this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
-		}).leftValueSupplierFirst(() -> {
-			return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getGreen();
-		}).rightValueSupplierFirst(() -> {
-			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getGreen();
-		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("saturation")).suffixSecond(new StringTextComponent("%")).minValueSecond(0F).maxValueSecond(100F).setLeftValueFunctionSecond((value) -> {
-			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
-			this.tileEntity.setParticleHSBColorBot(new float[]{oldHsb[0], value / 100F, oldHsb[2]});
-		}).setRightValueFunctionSecond((value) -> {
-			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
-			this.tileEntity.setParticleHSBColorTop(new float[]{oldHsb[0], value / 100F, oldHsb[2]});
-		}).leftValueSupplierSecond(() -> {
-			return this.tileEntity.getParticleHSBColorBot()[1] * 100F;
-		}).rightValueSupplierSecond(() -> {
-			return this.tileEntity.getParticleHSBColorTop()[1] * 100F;
-		}).build();
+        this.optionsList.getToggleableRangeSliderBuilder()
+                        .applyValueFunction(this::sendToServer)
+                        .toggleValueSupplier(this.tileEntity::isParticleUseHSB)
+                        .prefixFirst(ClientUtils.getGuiTranslationTextComponent("green"))
+                        .minValueFirst(0F)
+                        .maxValueFirst(255F)
+                        .setLeftValueFunctionFirst((value) -> {
+                            Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
+                            Color newColor = new Color(oldColor.getRed(), value.intValue(), oldColor.getBlue());
+                            this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
+                        })
+                        .setRightValueFunctionFirst((value) -> {
+                            Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
+                            Color newColor = new Color(oldColor.getRed(), value.intValue(), oldColor.getBlue());
+                            this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
+                        })
+                        .leftValueSupplierFirst(() -> {
+                            return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getGreen();
+                        })
+                        .rightValueSupplierFirst(() -> {
+                            return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getGreen();
+                        })
+                        .prefixSecond(ClientUtils.getGuiTranslationTextComponent("saturation"))
+                        .suffixSecond(new StringTextComponent("%"))
+                        .minValueSecond(0F)
+                        .maxValueSecond(100F)
+                        .setLeftValueFunctionSecond((value) -> {
+                            float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
+                            this.tileEntity.setParticleHSBColorBot(new float[]{oldHsb[0], value / 100F, oldHsb[2]});
+                        })
+                        .setRightValueFunctionSecond((value) -> {
+                            float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
+                            this.tileEntity.setParticleHSBColorTop(new float[]{oldHsb[0], value / 100F, oldHsb[2]});
+                        })
+                        .leftValueSupplierSecond(() -> {
+                            return this.tileEntity.getParticleHSBColorBot()[1] * 100F;
+                        })
+                        .rightValueSupplierSecond(() -> {
+                            return this.tileEntity.getParticleHSBColorTop()[1] * 100F;
+                        })
+                        .build();
 
-		this.optionsList.getToggleableRangeSliderBuilder().applyValueFunction(this::sendToServer).toggleValueSupplier(this.tileEntity::isParticleUseHSB).prefixFirst(ClientUtils.getGuiTranslationTextComponent("blue")).minValueFirst(0F).maxValueFirst(255F).setLeftValueFunctionFirst((value) -> {
-			Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
-			Color newColor = new Color(oldColor.getRed(), oldColor.getGreen(), value.intValue());
-			this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
-		}).setRightValueFunctionFirst((value) -> {
-			Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
-			Color newColor = new Color(oldColor.getRed(), oldColor.getGreen(), value.intValue());
-			this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
-		}).leftValueSupplierFirst(() -> {
-			return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getBlue();
-		}).rightValueSupplierFirst(() -> {
-			return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getBlue();
-		}).prefixSecond(ClientUtils.getGuiTranslationTextComponent("brightness")).suffixSecond(new StringTextComponent("%")).minValueSecond(0F).maxValueSecond(100F).setLeftValueFunctionSecond((value) -> {
-			float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
-			this.tileEntity.setParticleHSBColorBot(new float[]{oldHsb[0], oldHsb[1], value / 100F});
-		}).setRightValueFunctionSecond((value) -> {
-			float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
-			this.tileEntity.setParticleHSBColorTop(new float[]{oldHsb[0], oldHsb[1], value / 100F});
-		}).leftValueSupplierSecond(() -> {
-			return this.tileEntity.getParticleHSBColorBot()[2] * 100F;
-		}).rightValueSupplierSecond(() -> {
-			return this.tileEntity.getParticleHSBColorTop()[2] * 100F;
-		}).build();
+        this.optionsList.getToggleableRangeSliderBuilder()
+                        .applyValueFunction(this::sendToServer)
+                        .toggleValueSupplier(this.tileEntity::isParticleUseHSB)
+                        .prefixFirst(ClientUtils.getGuiTranslationTextComponent("blue"))
+                        .minValueFirst(0F)
+                        .maxValueFirst(255F)
+                        .setLeftValueFunctionFirst((value) -> {
+                            Color oldColor = new Color(this.tileEntity.getParticleRGBColorBot());
+                            Color newColor = new Color(oldColor.getRed(), oldColor.getGreen(), value.intValue());
+                            this.tileEntity.setParticleRGBColorBot(newColor.getRGB());
+                        })
+                        .setRightValueFunctionFirst((value) -> {
+                            Color oldColor = new Color(this.tileEntity.getParticleRGBColorTop());
+                            Color newColor = new Color(oldColor.getRed(), oldColor.getGreen(), value.intValue());
+                            this.tileEntity.setParticleRGBColorTop(newColor.getRGB());
+                        })
+                        .leftValueSupplierFirst(() -> {
+                            return (float) new Color(this.tileEntity.getParticleRGBColorBot()).getBlue();
+                        })
+                        .rightValueSupplierFirst(() -> {
+                            return (float) new Color(this.tileEntity.getParticleRGBColorTop()).getBlue();
+                        })
+                        .prefixSecond(ClientUtils.getGuiTranslationTextComponent("brightness"))
+                        .suffixSecond(new StringTextComponent("%"))
+                        .minValueSecond(0F)
+                        .maxValueSecond(100F)
+                        .setLeftValueFunctionSecond((value) -> {
+                            float[] oldHsb = this.tileEntity.getParticleHSBColorBot();
+                            this.tileEntity.setParticleHSBColorBot(new float[]{oldHsb[0], oldHsb[1], value / 100F});
+                        })
+                        .setRightValueFunctionSecond((value) -> {
+                            float[] oldHsb = this.tileEntity.getParticleHSBColorTop();
+                            this.tileEntity.setParticleHSBColorTop(new float[]{oldHsb[0], oldHsb[1], value / 100F});
+                        })
+                        .leftValueSupplierSecond(() -> {
+                            return this.tileEntity.getParticleHSBColorBot()[2] * 100F;
+                        })
+                        .rightValueSupplierSecond(() -> {
+                            return this.tileEntity.getParticleHSBColorTop()[2] * 100F;
+                        })
+                        .build();
 
-		this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("lifetime"), ClientUtils.getGuiTranslationTextComponent("ticks"), ParticleConstants.MIN_LIFETIME, ParticleConstants.MAX_LIFETIME, 1F, (value) -> this.tileEntity.setParticleLifetimeBot(value.intValue()), (value) -> this.tileEntity.setParticleLifetimeTop(value.intValue()), () -> (float) this.tileEntity.getParticleLifetimeBot(), () -> (float) this.tileEntity.getParticleLifetimeTop(), this::sendToServer);
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("lifetime"),
+                                        ClientUtils.getGuiTranslationTextComponent("ticks"),
+                                        ParticleConstants.MIN_LIFETIME, ParticleConstants.MAX_LIFETIME, 1F,
+                                        (value) -> this.tileEntity.setParticleLifetimeBot(value.intValue()),
+                                        (value) -> this.tileEntity.setParticleLifetimeTop(value.intValue()),
+                                        () -> (float) this.tileEntity.getParticleLifetimeBot(),
+                                        () -> (float) this.tileEntity.getParticleLifetimeTop(), this::sendToServer);
 
-		this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("size"), StringTextComponent.EMPTY, ParticleConstants.MIN_SIZE, ParticleConstants.MAX_SIZE, .1F, this.tileEntity::setParticleSizeBot, this.tileEntity::setParticleSizeTop, this.tileEntity::getParticleSizeBot, this.tileEntity::getParticleSizeTop, this::sendToServer);
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("size"), StringTextComponent.EMPTY,
+                                        ParticleConstants.MIN_SIZE, ParticleConstants.MAX_SIZE, .1F,
+                                        this.tileEntity::setParticleSizeBot, this.tileEntity::setParticleSizeTop,
+                                        this.tileEntity::getParticleSizeBot, this.tileEntity::getParticleSizeTop,
+                                        this::sendToServer);
 
-		this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnX"), StringTextComponent.EMPTY, ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN, .1F, this.tileEntity::setParticleSpawnXBot, this.tileEntity::setParticleSpawnXTop, this.tileEntity::getParticleSpawnXBot, this.tileEntity::getParticleSpawnXTop, this::sendToServer);
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnX"), StringTextComponent.EMPTY,
+                                        ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN, .1F,
+                                        this.tileEntity::setParticleSpawnXBot, this.tileEntity::setParticleSpawnXTop,
+                                        this.tileEntity::getParticleSpawnXBot, this.tileEntity::getParticleSpawnXTop,
+                                        this::sendToServer);
 
-		this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnY"), StringTextComponent.EMPTY, ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN, .1F, this.tileEntity::setParticleSpawnYBot, this.tileEntity::setParticleSpawnYTop, this.tileEntity::getParticleSpawnYBot, this.tileEntity::getParticleSpawnYTop, this::sendToServer);
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnY"), StringTextComponent.EMPTY,
+                                        ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN, .1F,
+                                        this.tileEntity::setParticleSpawnYBot, this.tileEntity::setParticleSpawnYTop,
+                                        this.tileEntity::getParticleSpawnYBot, this.tileEntity::getParticleSpawnYTop,
+                                        this::sendToServer);
 
-		this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnZ"), StringTextComponent.EMPTY, ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN, .1F, this.tileEntity::setParticleSpawnZBot, this.tileEntity::setParticleSpawnZTop, this.tileEntity::getParticleSpawnZBot, this.tileEntity::getParticleSpawnZTop, this::sendToServer);
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnZ"), StringTextComponent.EMPTY,
+                                        ParticleConstants.MIN_SPAWN, ParticleConstants.MAX_SPAWN, .1F,
+                                        this.tileEntity::setParticleSpawnZBot, this.tileEntity::setParticleSpawnZTop,
+                                        this.tileEntity::getParticleSpawnZBot, this.tileEntity::getParticleSpawnZTop,
+                                        this::sendToServer);
 
-		this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionX"), StringTextComponent.EMPTY, ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION, .01F, this.tileEntity::setParticleMotionXBot, this.tileEntity::setParticleMotionXTop, this.tileEntity::getParticleMotionXBot, this.tileEntity::getParticleMotionXTop, this::sendToServer);
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionX"),
+                                        StringTextComponent.EMPTY, ParticleConstants.MIN_MOTION,
+                                        ParticleConstants.MAX_MOTION, .01F, this.tileEntity::setParticleMotionXBot,
+                                        this.tileEntity::setParticleMotionXTop, this.tileEntity::getParticleMotionXBot,
+                                        this.tileEntity::getParticleMotionXTop, this::sendToServer);
 
-		this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionY"), StringTextComponent.EMPTY, ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION, .01F, this.tileEntity::setParticleMotionYBot, this.tileEntity::setParticleMotionYTop, this.tileEntity::getParticleMotionYBot, this.tileEntity::getParticleMotionYTop, this::sendToServer);
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionY"),
+                                        StringTextComponent.EMPTY, ParticleConstants.MIN_MOTION,
+                                        ParticleConstants.MAX_MOTION, .01F, this.tileEntity::setParticleMotionYBot,
+                                        this.tileEntity::setParticleMotionYTop, this.tileEntity::getParticleMotionYBot,
+                                        this.tileEntity::getParticleMotionYTop, this::sendToServer);
 
-		this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionZ"), StringTextComponent.EMPTY, ParticleConstants.MIN_MOTION, ParticleConstants.MAX_MOTION, .01F, this.tileEntity::setParticleMotionZBot, this.tileEntity::setParticleMotionZTop, this.tileEntity::getParticleMotionZBot, this.tileEntity::getParticleMotionZTop, this::sendToServer);
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionZ"),
+                                        StringTextComponent.EMPTY, ParticleConstants.MIN_MOTION,
+                                        ParticleConstants.MAX_MOTION, .01F, this.tileEntity::setParticleMotionZBot,
+                                        this.tileEntity::setParticleMotionZTop, this.tileEntity::getParticleMotionZBot,
+                                        this.tileEntity::getParticleMotionZTop, this::sendToServer);
 
-		this.optionsList.addSlider(ClientUtils.getGuiTranslationTextComponent("delay"), ClientUtils.getGuiTranslationTextComponent("ticks"), ParticleConstants.MIN_DELAY, ParticleConstants.MAX_DELAY, 1F, (value) -> this.tileEntity.setParticleDelay(value.intValue()), () -> (float) this.tileEntity.getParticleDelay(), this::sendToServer);
+        this.optionsList.addSlider(ClientUtils.getGuiTranslationTextComponent("delay"),
+                                   ClientUtils.getGuiTranslationTextComponent("ticks"), ParticleConstants.MIN_DELAY,
+                                   ParticleConstants.MAX_DELAY, 1F,
+                                   (value) -> this.tileEntity.setParticleDelay(value.intValue()),
+                                   () -> (float) this.tileEntity.getParticleDelay(), this::sendToServer);
 
-		this.optionsList.addSlider(ClientUtils.getGuiTranslationTextComponent("gravity"), StringTextComponent.EMPTY, ParticleConstants.MIN_GRAVITY, ParticleConstants.MAX_GRAVITY, .01F, this.tileEntity::setParticleGravity, this.tileEntity::getParticleGravity, this::sendToServer);
+        this.optionsList.addSlider(ClientUtils.getGuiTranslationTextComponent("gravity"), StringTextComponent.EMPTY,
+                                   ParticleConstants.MIN_GRAVITY, ParticleConstants.MAX_GRAVITY, .01F,
+                                   this.tileEntity::setParticleGravity, this.tileEntity::getParticleGravity,
+                                   this::sendToServer);
 
-		this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("collision").append(": ").append(ClientUtils.getGuiTranslationTextComponent("disabled")), ClientUtils.getGuiTranslationTextComponent("collision").append(": ").append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.tileEntity::setParticleCollision, this.tileEntity::isParticleCollision, this::sendToServer);
+        this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("collision")
+                                                    .append(": ")
+                                                    .append(ClientUtils.getGuiTranslationTextComponent("disabled")),
+                                         ClientUtils.getGuiTranslationTextComponent("collision")
+                                                    .append(": ")
+                                                    .append(ClientUtils.getGuiTranslationTextComponent("enabled")),
+                                         this.tileEntity::setParticleCollision, this.tileEntity::isParticleCollision,
+                                         this::sendToServer);
 
-		this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("fullbright").append(": ").append(ClientUtils.getGuiTranslationTextComponent("disabled")), ClientUtils.getGuiTranslationTextComponent("fullbright").append(": ").append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.tileEntity::setParticleFullBright, this.tileEntity::isParticleFullBright, this::sendToServer);
+        this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("fullbright")
+                                                    .append(": ")
+                                                    .append(ClientUtils.getGuiTranslationTextComponent("disabled")),
+                                         ClientUtils.getGuiTranslationTextComponent("fullbright")
+                                                    .append(": ")
+                                                    .append(ClientUtils.getGuiTranslationTextComponent("enabled")),
+                                         this.tileEntity::setParticleFullBright, this.tileEntity::isParticleFullBright,
+                                         this::sendToServer);
 
-		this.optionsList.children().parallelStream().forEach((entry) -> entry.setActive(this.tileEntity.isParticleEnabled()));
+        this.optionsList.children()
+                        .parallelStream()
+                        .forEach((entry) -> entry.setActive(this.tileEntity.isParticleEnabled()));
 
-		this.addWidget(this.optionsList);
-	}
+        this.addWidget(this.optionsList);
+    }
 
-	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
-		this.optionsList.render(matrixStack, mouseX, mouseY, partialTicks);
-		if (!this.tileEntity.isParticleEnabled()) {
-			this.fillGradient(matrixStack, 0, 32, this.width, this.height - 32, 0xC0101010, 0xD0101010);
-		}
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
-		AbstractGui.drawCenteredString(matrixStack, this.font, ClientUtils.getGuiTranslationTextComponent("particle"), this.width / 2, 10, 0xFFFFFFFF);
-	}
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(matrixStack);
+        this.optionsList.render(matrixStack, mouseX, mouseY, partialTicks);
+        if (!this.tileEntity.isParticleEnabled()) {
+            this.fillGradient(matrixStack, 0, 32, this.width, this.height - 32, 0xC0101010, 0xD0101010);
+        }
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        AbstractGui.drawCenteredString(matrixStack, this.font, ClientUtils.getGuiTranslationTextComponent("particle"),
+                                       this.width / 2, 10, 0xFFFFFFFF);
+    }
 
-	@Override
-	public void tick() {
-		if (minecraft.player.distanceToSqr(Vector3d.atCenterOf(tileEntity.getBlockPos())) > 64.0D) {
-			this.onClose();
-		}
-		this.optionsList.children().forEach((entry) -> {
-			entry.updateValue();
-			entry.setActive(this.tileEntity.isParticleEnabled());
-		});
-	}
+    @Override
+    public void tick() {
+        if (minecraft.player.distanceToSqr(Vector3d.atCenterOf(tileEntity.getBlockPos())) > 64.0D) {
+            this.onClose();
+        }
+        this.optionsList.children().forEach((entry) -> {
+            entry.updateValue();
+            entry.setActive(this.tileEntity.isParticleEnabled());
+        });
+    }
 
-	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
 
-	protected final void sendToServer() {
-		NetworkHandler.INSTANCE.sendToServer(new VFXGeneratorDataSyncPKT(this.tileEntity.saveToTag(new CompoundNBT()), this.tileEntity.getBlockPos()));
-	}
+    protected final void sendToServer() {
+        NetworkHandler.INSTANCE.sendToServer(new VFXGeneratorDataSyncPKT(this.tileEntity.saveToTag(new CompoundNBT()),
+                                                                         this.tileEntity.getBlockPos()));
+    }
 }

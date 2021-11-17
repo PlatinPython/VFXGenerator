@@ -12,19 +12,22 @@ import platinpython.vfxgenerator.util.registries.ItemRegistry;
 import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
 public class RegistryHandler {
-	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, VFXGenerator.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS,
+                                                                                 VFXGenerator.MOD_ID);
 
-	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, VFXGenerator.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,
+                                                                               VFXGenerator.MOD_ID);
 
-	public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, VFXGenerator.MOD_ID);
+    public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES,
+                                                                                                        VFXGenerator.MOD_ID);
 
-	public static void register() {
-		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+    public static void register() {
+        BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
-		BlockRegistry.register();
-		ItemRegistry.register();
-		TileEntityRegistry.register();
-	}
+        BlockRegistry.register();
+        ItemRegistry.register();
+        TileEntityRegistry.register();
+    }
 }
