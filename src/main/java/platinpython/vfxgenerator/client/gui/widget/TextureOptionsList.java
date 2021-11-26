@@ -5,15 +5,15 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
 import net.minecraft.util.ResourceLocation;
-import platinpython.vfxgenerator.util.Constants.ParticleConstants;
+import platinpython.vfxgenerator.util.Constants;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.Util.VoidFunction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.TextureOptionsListEntry> {
     public TextureOptionsList(Minecraft minecraft, int width, int height, int top, int bottom, int itemHeight,
@@ -26,10 +26,7 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
 
     private void init(Consumer<TreeSet<ResourceLocation>> setValueFunction,
                       Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
-        List<ResourceLocation> list = Util.createTreeSetFromCollectionWithComparator(ParticleConstants.PARTICLE_OPTIONS,
-                                                                                     ResourceLocation::compareNamespaced)
-                                          .stream()
-                                          .collect(Collectors.toList());
+        List<ResourceLocation> list = new ArrayList<>(Util.createTreeSetFromCollectionWithComparator(Constants.ParticleConstants.Values.PARTICLE_OPTIONS, ResourceLocation::compareNamespaced));
         for (int i = 0; i < list.size() - list.size() % 3; i += 3) {
             addEntry(TextureOptionsListEntry.addThreeTextures(this.width,
                                                               list.get(i),
@@ -152,7 +149,7 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
         }
 
         public void updateValue() {
-            this.children().forEach((child) -> child.updateValue());
+            this.children().forEach(ImageSelectionWidget::updateValue);
         }
 
         @Override

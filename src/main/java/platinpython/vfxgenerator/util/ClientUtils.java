@@ -21,11 +21,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import platinpython.vfxgenerator.VFXGenerator;
+import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.client.gui.screen.ParticleOptionsScreen;
 import platinpython.vfxgenerator.client.model.FullbrightBakedModel;
 import platinpython.vfxgenerator.client.particle.VFXParticle;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
-import platinpython.vfxgenerator.util.Constants.ParticleConstants;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
 
 @EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
@@ -34,12 +34,14 @@ public class ClientUtils {
     public static void init(FMLClientSetupEvent event) {
         RenderTypeLookup.setRenderLayer(BlockRegistry.VFX_GENERATOR.get(), RenderType.cutout());
 
-        event.enqueueWork(() -> {
-            ItemModelsProperties.register(BlockRegistry.VFX_GENERATOR.get().asItem(),
-                                          new ResourceLocation(VFXGenerator.MOD_ID, "inverted"),
-                                          (stack, world, entity) -> Boolean.valueOf(stack.getOrCreateTagElement(
-                                                  "BlockStateTag").getString("inverted")) ? 1F : 0F);
-        });
+        event.enqueueWork(() -> ItemModelsProperties.register(BlockRegistry.VFX_GENERATOR.get().asItem(),
+                                                              Util.createNamespacedResourceLocation(VFXGeneratorBlock.INVERTED_KEY),
+                                                              (stack, world, entity) -> Boolean.parseBoolean(stack.getOrCreateTagElement(
+                                                                                                                          "BlockStateTag")
+                                                                                                                  .getString(
+                                                                                                                          VFXGeneratorBlock.INVERTED_KEY))
+                                                                                        ? 1F
+                                                                                        : 0F));
     }
 
     @SubscribeEvent
@@ -56,7 +58,7 @@ public class ClientUtils {
                                          block +
                                          "in registry");
             } else if (existingModel instanceof FullbrightBakedModel) {
-                VFXGenerator.LOGGER.warn("Tried to replace FullbrightModel twice");
+                VFXGenerator.LOGGER.warn("Tried to replace FullBrightModel twice");
             } else {
                 FullbrightBakedModel customModel = new FullbrightBakedModel(existingModel);
                 event.getModelRegistry().put(modelResourceLocation, customModel);
@@ -68,12 +70,12 @@ public class ClientUtils {
     @SubscribeEvent
     public static void onTextureStich(TextureStitchEvent.Pre event) {
         if (event.getMap().location().equals(AtlasTexture.LOCATION_PARTICLES)) {
-            ParticleConstants.PARTICLE_OPTIONS.forEach((option) -> event.addSprite(option));
+            Constants.ParticleConstants.Values.PARTICLE_OPTIONS.forEach(event::addSprite);
         }
     }
 
     public static void addParticle(ResourceLocation spriteLocation, int color, int lifetime, float size, Vector3d pos,
-                                   Vector3d motion, float gravity, boolean collision, boolean fullbright) {
+                                   Vector3d motion, float gravity, boolean collision, boolean fullBright) {
         Minecraft minecraft = Minecraft.getInstance();
         VFXParticle particle = new VFXParticle(minecraft.level,
                                                minecraft.particleEngine.textureAtlas.getSprite(spriteLocation),
@@ -84,7 +86,7 @@ public class ClientUtils {
                                                motion,
                                                gravity,
                                                collision,
-                                               fullbright);
+                                               fullBright);
         minecraft.particleEngine.add(particle);
     }
 

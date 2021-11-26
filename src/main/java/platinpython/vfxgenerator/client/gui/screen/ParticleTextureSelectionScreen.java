@@ -24,8 +24,8 @@ public class ParticleTextureSelectionScreen extends Screen {
                                                          32,
                                                          this.height - 32,
                                                          50,
-                                                         this.parent.tileEntity::setParticlesSelected,
-                                                         this.parent.tileEntity::getParticlesSelected,
+                                                         this.parent.particleData::setSelected,
+                                                         this.parent.particleData::getSelected,
                                                          this.parent::sendToServer);
 
         this.addWidget(this.textureOptionsList);
@@ -42,9 +42,7 @@ public class ParticleTextureSelectionScreen extends Screen {
         if (minecraft.player.distanceToSqr(Vector3d.atCenterOf(this.parent.tileEntity.getBlockPos())) > 64.0D) {
             this.parent.onClose();
         }
-        this.textureOptionsList.children().forEach((entry) -> {
-            entry.updateValue();
-        });
+        this.textureOptionsList.children().forEach(TextureOptionsList.TextureOptionsListEntry::updateValue);
     }
 
     @Override

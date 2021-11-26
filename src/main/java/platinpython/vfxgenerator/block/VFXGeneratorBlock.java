@@ -40,6 +40,8 @@ public class VFXGeneratorBlock extends Block {
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
+    public static final String INVERTED_KEY = "inverted";
+
     public VFXGeneratorBlock() {
         super(Properties.copy(Blocks.STONE).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
