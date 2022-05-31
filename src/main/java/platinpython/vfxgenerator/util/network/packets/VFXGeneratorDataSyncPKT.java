@@ -39,10 +39,10 @@ public class VFXGeneratorDataSyncPKT {
                 context.get()
                        .getSender()
                        .getLevel()
-                       .sendBlockUpdated(message.pos,
+                       .sendBlockUpdated(message.pos, context.get().getSender().getLevel().getBlockState(message.pos),
                                          context.get().getSender().getLevel().getBlockState(message.pos),
-                                         context.get().getSender().getLevel().getBlockState(message.pos),
-                                         BlockFlags.DEFAULT);
+                                         BlockFlags.DEFAULT
+                       );
             });
             context.get().setPacketHandled(true);
         }

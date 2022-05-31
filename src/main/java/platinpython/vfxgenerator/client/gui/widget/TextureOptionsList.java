@@ -25,31 +25,26 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
 
     private void init(Consumer<TreeSet<ResourceLocation>> setValueFunction,
                       Supplier<TreeSet<ResourceLocation>> valueSupplier, Runnable applyValueFunction) {
-        List<ResourceLocation> list = new ArrayList<>(Util.createTreeSetFromCollectionWithComparator(Constants.ParticleConstants.Values.PARTICLE_OPTIONS, ResourceLocation::compareNamespaced));
+        List<ResourceLocation> list = new ArrayList<>(
+                Util.createTreeSetFromCollectionWithComparator(Constants.ParticleConstants.Values.PARTICLE_OPTIONS,
+                                                               ResourceLocation::compareNamespaced
+                ));
         for (int i = 0; i < list.size() - list.size() % 3; i += 3) {
-            addEntry(TextureOptionsListEntry.addThreeTextures(this.width,
-                                                              list.get(i),
-                                                              list.get(i + 1),
-                                                              list.get(i + 2),
-                                                              setValueFunction,
-                                                              valueSupplier,
-                                                              applyValueFunction));
+            addEntry(TextureOptionsListEntry.addThreeTextures(this.width, list.get(i), list.get(i + 1), list.get(i + 2),
+                                                              setValueFunction, valueSupplier, applyValueFunction
+            ));
         }
         switch (list.size() % 3) {
             case 1:
-                addEntry(TextureOptionsListEntry.addOneTexture(this.width,
-                                                               list.get(list.size() - 1),
-                                                               setValueFunction,
-                                                               valueSupplier,
-                                                               applyValueFunction));
+                addEntry(TextureOptionsListEntry.addOneTexture(this.width, list.get(list.size() - 1), setValueFunction,
+                                                               valueSupplier, applyValueFunction
+                ));
                 break;
             case 2:
-                addEntry(TextureOptionsListEntry.addTwoTextures(this.width,
-                                                                list.get(list.size() - 2),
-                                                                list.get(list.size() - 1),
-                                                                setValueFunction,
-                                                                valueSupplier,
-                                                                applyValueFunction));
+                addEntry(TextureOptionsListEntry.addTwoTextures(this.width, list.get(list.size() - 2),
+                                                                list.get(list.size() - 1), setValueFunction,
+                                                                valueSupplier, applyValueFunction
+                ));
                 break;
             default:
                 break;
@@ -80,14 +75,9 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
                                                             Consumer<TreeSet<ResourceLocation>> setValueFunction,
                                                             Supplier<TreeSet<ResourceLocation>> valueSupplier,
                                                             Runnable applyValueFunction) {
-            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 25,
-                                                                   0,
-                                                                   50,
-                                                                   50,
-                                                                   imageName1,
-                                                                   setValueFunction,
-                                                                   valueSupplier,
-                                                                   applyValueFunction);
+            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 25, 0, 50, 50, imageName1,
+                                                                   setValueFunction, valueSupplier, applyValueFunction
+            );
             return new TextureOptionsListEntry(child1, null, null);
         }
 
@@ -96,22 +86,12 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
                                                              Consumer<TreeSet<ResourceLocation>> setValueFunction,
                                                              Supplier<TreeSet<ResourceLocation>> valueSupplier,
                                                              Runnable applyValueFunction) {
-            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 50,
-                                                                   0,
-                                                                   50,
-                                                                   50,
-                                                                   imageName1,
-                                                                   setValueFunction,
-                                                                   valueSupplier,
-                                                                   applyValueFunction);
-            ImageSelectionWidget child2 = new ImageSelectionWidget(guiWidth / 2,
-                                                                   0,
-                                                                   50,
-                                                                   50,
-                                                                   imageName2,
-                                                                   setValueFunction,
-                                                                   valueSupplier,
-                                                                   applyValueFunction);
+            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 50, 0, 50, 50, imageName1,
+                                                                   setValueFunction, valueSupplier, applyValueFunction
+            );
+            ImageSelectionWidget child2 = new ImageSelectionWidget(guiWidth / 2, 0, 50, 50, imageName2,
+                                                                   setValueFunction, valueSupplier, applyValueFunction
+            );
             return new TextureOptionsListEntry(child1, child2, null);
         }
 
@@ -120,30 +100,15 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
                                                                Consumer<TreeSet<ResourceLocation>> setValueFunction,
                                                                Supplier<TreeSet<ResourceLocation>> valueSupplier,
                                                                Runnable applyValueFunction) {
-            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 75,
-                                                                   0,
-                                                                   50,
-                                                                   50,
-                                                                   imageName1,
-                                                                   setValueFunction,
-                                                                   valueSupplier,
-                                                                   applyValueFunction);
-            ImageSelectionWidget child2 = new ImageSelectionWidget(guiWidth / 2 - 25,
-                                                                   0,
-                                                                   50,
-                                                                   50,
-                                                                   imageName2,
-                                                                   setValueFunction,
-                                                                   valueSupplier,
-                                                                   applyValueFunction);
-            ImageSelectionWidget child3 = new ImageSelectionWidget(guiWidth / 2 + 25,
-                                                                   0,
-                                                                   50,
-                                                                   50,
-                                                                   imageName3,
-                                                                   setValueFunction,
-                                                                   valueSupplier,
-                                                                   applyValueFunction);
+            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 75, 0, 50, 50, imageName1,
+                                                                   setValueFunction, valueSupplier, applyValueFunction
+            );
+            ImageSelectionWidget child2 = new ImageSelectionWidget(guiWidth / 2 - 25, 0, 50, 50, imageName2,
+                                                                   setValueFunction, valueSupplier, applyValueFunction
+            );
+            ImageSelectionWidget child3 = new ImageSelectionWidget(guiWidth / 2 + 25, 0, 50, 50, imageName3,
+                                                                   setValueFunction, valueSupplier, applyValueFunction
+            );
             return new TextureOptionsListEntry(child1, child2, child3);
         }
 

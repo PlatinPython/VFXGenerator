@@ -29,71 +29,51 @@ public class VFXGeneratorTileEntity extends TileEntity implements ITickableTileE
 
     @Override
     public void tick() {
-        if ((this.getBlockState().getValue(VFXGeneratorBlock.INVERTED) &&
-             !this.getBlockState().getValue(VFXGeneratorBlock.POWERED)) ||
-            (!this.getBlockState().getValue(VFXGeneratorBlock.INVERTED) &&
-             this.getBlockState().getValue(VFXGeneratorBlock.POWERED))) {
+        if ((this.getBlockState().getValue(VFXGeneratorBlock.INVERTED) && !this.getBlockState()
+                                                                               .getValue(
+                                                                                       VFXGeneratorBlock.POWERED)) || (!this.getBlockState()
+                                                                                                                            .getValue(
+                                                                                                                                    VFXGeneratorBlock.INVERTED) && this.getBlockState()
+                                                                                                                                                                       .getValue(
+                                                                                                                                                                               VFXGeneratorBlock.POWERED))) {
             World world = this.getLevel();
             if (world.isClientSide && this.particleData.isEnabled()) {
                 if (world.getGameTime() % this.particleData.getDelay() == 0) {
                     ThreadLocalRandom random = ThreadLocalRandom.current();
 
-                    ResourceLocation particle = new ArrayList<>(this.particleData.getSelected()).get(random.nextInt(this.particleData.getSelected()
-                                                                                                                                     .size()));
+                    ResourceLocation particle = new ArrayList<>(this.particleData.getSelected()).get(
+                            random.nextInt(this.particleData.getSelected().size()));
 
                     int color;
                     if (this.particleData.useHSB()) {
                         color = Color.getRandomHSBColor(random,
                                                         new float[]{this.particleData.getHueBot(), this.particleData.getSaturationBot(), this.particleData.getBrightnessBot()},
-                                                        new float[]{this.particleData.getHueTop(), this.particleData.getSaturationTop(), this.particleData.getBrightnessTop()});
+                                                        new float[]{this.particleData.getHueTop(), this.particleData.getSaturationTop(), this.particleData.getBrightnessTop()}
+                        );
                     } else {
-                        color = Color.getRandomRGBColor(random,
-                                                        this.particleData.getRGBColorBot(),
-                                                        this.particleData.getRGBColorTop());
+                        color = Color.getRandomRGBColor(random, this.particleData.getRGBColorBot(),
+                                                        this.particleData.getRGBColorTop()
+                        );
                     }
-                    int lifetime = Math.round((this.particleData.getLifetimeBot() +
-                                               (random.nextFloat() *
-                                                (this.particleData.getLifetimeTop() -
-                                                 this.particleData.getLifetimeBot()))));
-                    float size = this.particleData.getSizeBot() +
-                                 (random.nextFloat() *
-                                  (this.particleData.getSizeTop() - this.particleData.getSizeBot()));
+                    int lifetime = Math.round(
+                            (this.particleData.getLifetimeBot() + (random.nextFloat() * (this.particleData.getLifetimeTop() - this.particleData.getLifetimeBot()))));
+                    float size = this.particleData.getSizeBot() + (random.nextFloat() * (this.particleData.getSizeTop() - this.particleData.getSizeBot()));
 
                     Vector3d pos = Vector3d.atCenterOf(this.getBlockPos());
-                    double spawnX = pos.x +
-                                    this.particleData.getSpawnXBot() +
-                                    (random.nextFloat() *
-                                     (this.particleData.getSpawnXTop() - this.particleData.getSpawnXBot()));
-                    double spawnY = pos.y +
-                                    this.particleData.getSpawnYBot() +
-                                    (random.nextFloat() *
-                                     (this.particleData.getSpawnYTop() - this.particleData.getSpawnYBot()));
-                    double spawnZ = pos.z +
-                                    this.particleData.getSpawnZBot() +
-                                    (random.nextFloat() *
-                                     (this.particleData.getSpawnZTop() - this.particleData.getSpawnZBot()));
+                    double spawnX = pos.x + this.particleData.getSpawnXBot() + (random.nextFloat() * (this.particleData.getSpawnXTop() - this.particleData.getSpawnXBot()));
+                    double spawnY = pos.y + this.particleData.getSpawnYBot() + (random.nextFloat() * (this.particleData.getSpawnYTop() - this.particleData.getSpawnYBot()));
+                    double spawnZ = pos.z + this.particleData.getSpawnZBot() + (random.nextFloat() * (this.particleData.getSpawnZTop() - this.particleData.getSpawnZBot()));
                     pos = new Vector3d(spawnX, spawnY, spawnZ);
 
-                    double motionX = this.particleData.getMotionXBot() +
-                                     (random.nextFloat() *
-                                      (this.particleData.getMotionXTop() - this.particleData.getMotionXBot()));
-                    double motionY = this.particleData.getMotionYBot() +
-                                     (random.nextFloat() *
-                                      (this.particleData.getMotionYTop() - this.particleData.getMotionYBot()));
-                    double motionZ = this.particleData.getMotionZBot() +
-                                     (random.nextFloat() *
-                                      (this.particleData.getMotionZTop() - this.particleData.getMotionZBot()));
+                    double motionX = this.particleData.getMotionXBot() + (random.nextFloat() * (this.particleData.getMotionXTop() - this.particleData.getMotionXBot()));
+                    double motionY = this.particleData.getMotionYBot() + (random.nextFloat() * (this.particleData.getMotionYTop() - this.particleData.getMotionYBot()));
+                    double motionZ = this.particleData.getMotionZBot() + (random.nextFloat() * (this.particleData.getMotionZTop() - this.particleData.getMotionZBot()));
                     Vector3d motion = new Vector3d(motionX, motionY, motionZ);
 
-                    ClientUtils.addParticle(particle,
-                                            color,
-                                            lifetime,
-                                            size,
-                                            pos,
-                                            motion,
-                                            this.particleData.getGravity(),
-                                            this.particleData.hasCollision(),
-                                            this.particleData.isFullBright());
+                    ClientUtils.addParticle(particle, color, lifetime, size, pos, motion,
+                                            this.particleData.getGravity(), this.particleData.hasCollision(),
+                                            this.particleData.isFullBright()
+                    );
                 }
             }
         }

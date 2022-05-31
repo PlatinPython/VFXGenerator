@@ -41,12 +41,13 @@ public class ModLootTableProvider extends LootTableProvider {
     public class Blocks extends BlockLootTables {
         @Override
         protected void addTables() {
-            this.add(BlockRegistry.VFX_GENERATOR.get(),
-                     createSingleItemTable(BlockRegistry.VFX_GENERATOR.get()).apply(CopyBlockState.copyState(
-                                                                                     BlockRegistry.VFX_GENERATOR.get()).copy(VFXGeneratorBlock.INVERTED))
-                                                                             .apply(CopyNbt.copyData(Source.BLOCK_ENTITY)
-                                                                                           .copy("particleData",
-                                                                                                 "particleData")));
+            this.add(BlockRegistry.VFX_GENERATOR.get(), createSingleItemTable(BlockRegistry.VFX_GENERATOR.get()).apply(
+                                                                                                                        CopyBlockState.copyState(BlockRegistry.VFX_GENERATOR.get()).copy(VFXGeneratorBlock.INVERTED))
+                                                                                                                .apply(CopyNbt.copyData(
+                                                                                                                                      Source.BLOCK_ENTITY)
+                                                                                                                              .copy("particleData",
+                                                                                                                                    "particleData"
+                                                                                                                              )));
         }
 
         @Override

@@ -2,21 +2,17 @@ package platinpython.vfxgenerator.util;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.util.ResourceLocation;
-import platinpython.vfxgenerator.VFXGenerator;
 
 public final class Constants {
     public static final class ParticleConstants {
         public static final class Values {
-            public static final ImmutableSet<ResourceLocation> PARTICLE_OPTIONS = ImmutableSet.of(Util.createNamespacedResourceLocation(
-                                                                                                          "particle/circle"),
-                                                                                                  Util.createNamespacedResourceLocation(
-                                                                                                          "particle/square"),
-                                                                                                  Util.createNamespacedResourceLocation(
-                                                                                                          "particle/spark_small"),
-                                                                                                  Util.createNamespacedResourceLocation(
-                                                                                                          "particle/spark_mid"),
-                                                                                                  Util.createNamespacedResourceLocation(
-                                                                                                          "particle/spark_big"));
+            public static final ImmutableSet<ResourceLocation> PARTICLE_OPTIONS = ImmutableSet.of(
+                    Util.createNamespacedResourceLocation("particle/circle"),
+                    Util.createNamespacedResourceLocation("particle/square"),
+                    Util.createNamespacedResourceLocation("particle/spark_small"),
+                    Util.createNamespacedResourceLocation("particle/spark_mid"),
+                    Util.createNamespacedResourceLocation("particle/spark_big")
+            );
             public static final int MIN_LIFETIME = 0;
             public static final int MAX_LIFETIME = 200;
             public static final float MIN_SIZE = 0F;

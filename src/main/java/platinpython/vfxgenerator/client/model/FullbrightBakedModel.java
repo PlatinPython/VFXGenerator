@@ -38,11 +38,10 @@ public class FullbrightBakedModel implements IBakedModel {
                             vertexData[8 * j + 6] = LightTexture.pack(15, 15);
                         }
                         quads.set(i,
-                                  new BakedQuad(vertexData,
-                                                quad.getTintIndex(),
-                                                quad.getDirection(),
-                                                quad.getSprite(),
-                                                quad.isShade()));
+                                  new BakedQuad(vertexData, quad.getTintIndex(), quad.getDirection(), quad.getSprite(),
+                                                quad.isShade()
+                                  )
+                        );
                     }
                 }
             }

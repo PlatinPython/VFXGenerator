@@ -44,9 +44,8 @@ public class VFXGeneratorBlock extends Block {
 
     public VFXGeneratorBlock() {
         super(Properties.copy(Blocks.STONE).noOcclusion());
-        this.registerDefaultState(this.stateDefinition.any()
-                                                      .setValue(INVERTED, Boolean.FALSE)
-                                                      .setValue(POWERED, Boolean.FALSE));
+        this.registerDefaultState(
+                this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE));
     }
 
     @Override
@@ -155,7 +154,8 @@ public class VFXGeneratorBlock extends Block {
     public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!level.isClientSide && !state.is(newState.getBlock()))
             NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(),
-                                         new VFXGeneratorDestroyParticlesPKT(Vector3d.atCenterOf(pos)));
+                                         new VFXGeneratorDestroyParticlesPKT(Vector3d.atCenterOf(pos))
+            );
         super.onRemove(state, level, pos, newState, isMoving);
     }
 }

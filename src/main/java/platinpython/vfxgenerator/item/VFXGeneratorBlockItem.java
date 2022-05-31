@@ -20,14 +20,10 @@ public class VFXGeneratorBlockItem extends BlockItem {
 
     @Override
     public Entity createEntity(World level, Entity itemEntity, ItemStack stack) {
-        return new DestroyParticlesItemEntity(level,
-                                              itemEntity.getX(),
-                                              itemEntity.getY(),
-                                              itemEntity.getZ(),
-                                              itemEntity.getDeltaMovement().x,
-                                              itemEntity.getDeltaMovement().y,
-                                              itemEntity.getDeltaMovement().z,
-                                              ((ItemEntity) itemEntity).pickupDelay,
-                                              stack);
+        return new DestroyParticlesItemEntity(level, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(),
+                                              itemEntity.getDeltaMovement().x, itemEntity.getDeltaMovement().y,
+                                              itemEntity.getDeltaMovement().z, ((ItemEntity) itemEntity).pickupDelay,
+                                              stack
+        );
     }
 }

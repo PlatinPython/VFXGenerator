@@ -13,7 +13,8 @@ public class ItemRegistry {
                                                                                                  () -> new VFXGeneratorCoreItem(
                                                                                                          new Properties().rarity(
                                                                                                                                  Rarity.RARE)
-                                                                                                                         .tab(ItemGroup.TAB_REDSTONE)));
+                                                                                                                         .tab(ItemGroup.TAB_REDSTONE))
+    );
 
     public static void register() {
     }

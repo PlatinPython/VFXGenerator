@@ -29,10 +29,10 @@ public class FloatSlider extends UpdateableWidget {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.stepSize = stepSize;
-        this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 &&
-                      Float.toString(this.stepSize).split("\\.")[1].equals("0")
-                      ? new DecimalFormat("0")
-                      : new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
+        this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 && Float.toString(this.stepSize)
+                                                                                          .split("\\.")[1].equals("0") ?
+                      new DecimalFormat("0") :
+                      new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
         this.prefix = prefix;
         this.suffix = suffix;
         this.setValueFunction = setValueFunction;
@@ -53,8 +53,7 @@ public class FloatSlider extends UpdateableWidget {
     }
 
     private int getYImageNoDisabled(boolean isHovered) {
-        if (!this.active)
-            return 1;
+        if (!this.active) return 1;
         return isHovered ? 2 : 1;
     }
 
@@ -62,20 +61,12 @@ public class FloatSlider extends UpdateableWidget {
     @Override
     protected void renderBg(MatrixStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.blit(matrixStack,
-                  this.x + (int) (this.sliderValue * (double) (this.width - 8)),
-                  this.y,
-                  0,
-                  46 + this.getYImageNoDisabled(isHovered()) * 20,
-                  4,
-                  this.height);
-        this.blit(matrixStack,
-                  this.x + (int) (this.sliderValue * (double) (this.width - 8)) + 4,
-                  this.y,
-                  196,
-                  46 + this.getYImageNoDisabled(isHovered()) * 20,
-                  4,
-                  this.height);
+        this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)), this.y, 0,
+                  46 + this.getYImageNoDisabled(isHovered()) * 20, 4, this.height
+        );
+        this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)) + 4, this.y, 196,
+                  46 + this.getYImageNoDisabled(isHovered()) * 20, 4, this.height
+        );
     }
 
     @Override

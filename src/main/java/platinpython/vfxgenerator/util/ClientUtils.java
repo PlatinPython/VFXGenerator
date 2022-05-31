@@ -35,13 +35,14 @@ public class ClientUtils {
         RenderTypeLookup.setRenderLayer(BlockRegistry.VFX_GENERATOR.get(), RenderType.cutout());
 
         event.enqueueWork(() -> ItemModelsProperties.register(BlockRegistry.VFX_GENERATOR.get().asItem(),
-                                                              Util.createNamespacedResourceLocation(VFXGeneratorBlock.INVERTED_KEY),
-                                                              (stack, world, entity) -> Boolean.parseBoolean(stack.getOrCreateTagElement(
-                                                                                                                          "BlockStateTag")
-                                                                                                                  .getString(
-                                                                                                                          VFXGeneratorBlock.INVERTED_KEY))
-                                                                                        ? 1F
-                                                                                        : 0F));
+                                                              Util.createNamespacedResourceLocation(
+                                                                      VFXGeneratorBlock.INVERTED_KEY),
+                                                              (stack, world, entity) -> Boolean.parseBoolean(
+                                                                      stack.getOrCreateTagElement("BlockStateTag")
+                                                                           .getString(VFXGeneratorBlock.INVERTED_KEY)) ?
+                                                                                        1F :
+                                                                                        0F
+        ));
     }
 
     @SubscribeEvent
@@ -54,9 +55,8 @@ public class ClientUtils {
             ModelResourceLocation modelResourceLocation = BlockModelShapes.stateToModelLocation(blockState);
             IBakedModel existingModel = event.getModelRegistry().get(modelResourceLocation);
             if (existingModel == null) {
-                VFXGenerator.LOGGER.warn("Did not find the expected vanilla baked model(s) for" +
-                                         block +
-                                         "in registry");
+                VFXGenerator.LOGGER.warn(
+                        "Did not find the expected vanilla baked model(s) for" + block + "in registry");
             } else if (existingModel instanceof FullbrightBakedModel) {
                 VFXGenerator.LOGGER.warn("Tried to replace FullBrightModel twice");
             } else {
@@ -78,15 +78,9 @@ public class ClientUtils {
                                    Vector3d motion, float gravity, boolean collision, boolean fullBright) {
         Minecraft minecraft = Minecraft.getInstance();
         VFXParticle particle = new VFXParticle(minecraft.level,
-                                               minecraft.particleEngine.textureAtlas.getSprite(spriteLocation),
-                                               color,
-                                               lifetime,
-                                               size,
-                                               pos,
-                                               motion,
-                                               gravity,
-                                               collision,
-                                               fullBright);
+                                               minecraft.particleEngine.textureAtlas.getSprite(spriteLocation), color,
+                                               lifetime, size, pos, motion, gravity, collision, fullBright
+        );
         minecraft.particleEngine.add(particle);
     }
 

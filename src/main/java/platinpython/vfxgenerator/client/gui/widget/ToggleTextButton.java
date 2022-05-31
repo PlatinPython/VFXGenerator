@@ -23,8 +23,7 @@ public class ToggleTextButton extends UpdateableWidget {
 
     @Override
     protected int getYImage(boolean isHovered) {
-        if (!this.active)
-            return 1;
+        if (!this.active) return 1;
         return isHovered ? 2 : 1;
     }
 

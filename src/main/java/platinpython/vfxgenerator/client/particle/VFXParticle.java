@@ -68,12 +68,11 @@ public class VFXParticle extends SpriteTexturedParticle {
             double dY = y;
             double dZ = z;
             if (this.hasPhysics && (x != 0.0D || y != 0.0D || z != 0.0D)) {
-                Vector3d vector3d = Entity.collideBoundingBoxHeuristically(null,
-                                                                           new Vector3d(x, y, z),
-                                                                           this.getBoundingBox(),
-                                                                           this.level,
+                Vector3d vector3d = Entity.collideBoundingBoxHeuristically(null, new Vector3d(x, y, z),
+                                                                           this.getBoundingBox(), this.level,
                                                                            ISelectionContext.empty(),
-                                                                           new ReuseableStream<>(Stream.empty()));
+                                                                           new ReuseableStream<>(Stream.empty())
+                );
                 x = vector3d.x;
                 y = vector3d.y;
                 z = vector3d.z;

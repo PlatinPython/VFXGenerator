@@ -22,10 +22,9 @@ public class Util {
     }
 
     public static double toValue(double value, double minValue, double maxValue, float stepSize) {
-        return clamp(MathHelper.lerp(MathHelper.clamp(value, 0.0D, 1.0D), minValue, maxValue),
-                     minValue,
-                     maxValue,
-                     stepSize);
+        return clamp(MathHelper.lerp(MathHelper.clamp(value, 0.0D, 1.0D), minValue, maxValue), minValue, maxValue,
+                     stepSize
+        );
     }
 
     public static double clamp(double value, double minValue, double maxValue, float stepSize) {

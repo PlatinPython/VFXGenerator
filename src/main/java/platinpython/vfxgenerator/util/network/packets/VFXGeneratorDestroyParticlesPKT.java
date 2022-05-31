@@ -27,9 +27,8 @@ public class VFXGeneratorDestroyParticlesPKT {
     }
 
     public static VFXGeneratorDestroyParticlesPKT decode(PacketBuffer buffer) {
-        return new VFXGeneratorDestroyParticlesPKT(new Vector3d(buffer.readDouble(),
-                                                                buffer.readDouble(),
-                                                                buffer.readDouble()));
+        return new VFXGeneratorDestroyParticlesPKT(
+                new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
     }
 
     public static class Handler {
@@ -37,12 +36,11 @@ public class VFXGeneratorDestroyParticlesPKT {
             context.get().enqueueWork(() -> {
                 if (context.get().getDirection().getOriginationSide().isServer()) {
                     Random random = new Random();
-                    List<ResourceLocation> list = ImmutableList.of(new ResourceLocation(VFXGenerator.MOD_ID,
-                                                                                        "particle/spark_small"),
-                                                                   new ResourceLocation(VFXGenerator.MOD_ID,
-                                                                                        "particle/spark_mid"),
-                                                                   new ResourceLocation(VFXGenerator.MOD_ID,
-                                                                                        "particle/spark_big"));
+                    List<ResourceLocation> list = ImmutableList.of(
+                            new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_small"),
+                            new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_mid"),
+                            new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_big")
+                    );
                     for (int i = 0; i < 100; i++) {
                         double motionX = (random.nextFloat() * (.2F)) - .1F;
                         double motionY = (random.nextFloat() * (.2F)) - .1F;
@@ -50,13 +48,9 @@ public class VFXGeneratorDestroyParticlesPKT {
                         Vector3d motion = new Vector3d(motionX, motionY, motionZ);
                         ClientUtils.addParticle(list.get(random.nextInt(list.size())),
                                                 Color.HSBtoRGB(random.nextFloat(), 1F, 1F),
-                                                Math.round(5 + (random.nextFloat() * (15 - 5))),
-                                                .3F,
-                                                message.pos,
-                                                motion,
-                                                0F,
-                                                false,
-                                                false);
+                                                Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos,
+                                                motion, 0F, false, false
+                        );
                     }
                 }
             });

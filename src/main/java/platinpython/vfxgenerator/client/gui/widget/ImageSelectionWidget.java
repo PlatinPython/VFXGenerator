@@ -18,7 +18,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.lwjgl.opengl.GL11C;
 import platinpython.vfxgenerator.util.Util;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -42,38 +42,18 @@ public class ImageSelectionWidget extends UpdateableWidget {
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        AbstractGui.fill(matrixStack,
-                         this.x,
-                         this.y,
-                         this.x + this.width,
-                         this.y + this.height,
-                         this.selected ? 0xFFFFFFFF : 0xFF000000);
-        AbstractGui.fill(matrixStack,
-                         this.x + 1,
-                         this.y + 1,
-                         this.x + this.width - 1,
-                         this.y + this.height - 1,
-                         0xFF000000);
-        GuiUtils.drawContinuousTexturedBox(matrixStack,
-                                           WIDGETS_LOCATION,
-                                           this.x,
-                                           this.y,
-                                           0,
-                                           this.selected ? 86 : 66,
-                                           this.width,
-                                           this.height,
-                                           200,
-                                           20,
-                                           2,
-                                           3,
-                                           2,
-                                           2,
-                                           this.getBlitOffset());
-        this.renderImage(matrixStack.last().pose(),
-                         this.x + 5,
-                         this.y + 5,
-                         this.x + this.width - 5,
-                         this.y + this.height - 5);
+        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height,
+                         this.selected ? 0xFFFFFFFF : 0xFF000000
+        );
+        AbstractGui.fill(matrixStack, this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1,
+                         0xFF000000
+        );
+        GuiUtils.drawContinuousTexturedBox(matrixStack, WIDGETS_LOCATION, this.x, this.y, 0, this.selected ? 86 : 66,
+                                           this.width, this.height, 200, 20, 2, 3, 2, 2, this.getBlitOffset()
+        );
+        this.renderImage(matrixStack.last().pose(), this.x + 5, this.y + 5, this.x + this.width - 5,
+                         this.y + this.height - 5
+        );
     }
 
     @SuppressWarnings("deprecation")
@@ -82,10 +62,9 @@ public class ImageSelectionWidget extends UpdateableWidget {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuilder();
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(SourceFactor.SRC_COLOR,
-                                       DestFactor.ONE_MINUS_SRC_ALPHA,
-                                       SourceFactor.ZERO,
-                                       DestFactor.ZERO);
+        RenderSystem.blendFuncSeparate(SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO,
+                                       DestFactor.ZERO
+        );
         minecraft.getTextureManager().bind(AtlasTexture.LOCATION_PARTICLES);
         bufferBuilder.begin(GL11C.GL_LINES, DefaultVertexFormats.POSITION_TEX);
         TextureAtlasSprite sprite = minecraft.particleEngine.textureAtlas.getSprite(imageLocation);
@@ -117,8 +96,8 @@ public class ImageSelectionWidget extends UpdateableWidget {
             }
             this.setValueFunction.accept(set);
         } else {
-            TreeSet<ResourceLocation> list = Util.createTreeSetFromCollectionWithComparator(Arrays.asList(this.imageLocation),
-                                                                                            ResourceLocation::compareNamespaced);
+            TreeSet<ResourceLocation> list = Util.createTreeSetFromCollectionWithComparator(
+                    Collections.singletonList(this.imageLocation), ResourceLocation::compareNamespaced);
             this.setValueFunction.accept(list);
             this.selected = true;
         }

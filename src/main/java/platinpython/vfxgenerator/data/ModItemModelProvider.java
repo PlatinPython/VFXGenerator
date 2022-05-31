@@ -13,9 +13,8 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        singleTexture(ItemRegistry.VFX_GENERATOR_CORE.getId().getPath(),
-                      mcLoc(ITEM_FOLDER + "/generated"),
-                      "layer0",
-                      modLoc(ITEM_FOLDER + "/vfx_generator_core"));
+        singleTexture(ItemRegistry.VFX_GENERATOR_CORE.getId().getPath(), mcLoc(ITEM_FOLDER + "/generated"), "layer0",
+                      modLoc(ITEM_FOLDER + "/vfx_generator_core")
+        );
     }
 }

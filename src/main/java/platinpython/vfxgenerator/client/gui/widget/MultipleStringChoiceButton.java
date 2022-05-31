@@ -25,16 +25,15 @@ public class MultipleStringChoiceButton extends UpdateableWidget {
 
     @Override
     protected int getYImage(boolean pIsHovered) {
-        if (!this.active)
-            return 1;
+        if (!this.active) return 1;
         return isHovered ? 2 : 1;
     }
 
     @Override
     public void onClick(double mouseX, double mouseY) {
         if (this.options.contains(this.valueSupplier.get())) {
-            this.setValueFunction.accept(this.options.get((this.options.indexOf(this.valueSupplier.get()) + 1) %
-                                                          this.options.size()));
+            this.setValueFunction.accept(
+                    this.options.get((this.options.indexOf(this.valueSupplier.get()) + 1) % this.options.size()));
         } else {
             this.setValueFunction.accept(this.options.size() != 0 ? this.options.get(0) : "");
         }
