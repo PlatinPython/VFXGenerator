@@ -12,11 +12,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
-import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 import java.text.DecimalFormat;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class FloatRangeSlider extends UpdateableWidget {
     private final double minValue, maxValue;
@@ -24,18 +21,18 @@ public class FloatRangeSlider extends UpdateableWidget {
     private final DecimalFormat format;
     private final ITextComponent prefix;
     private final ITextComponent suffix;
-    private final Consumer<Float> setLeftValueFunction;
-    private final Consumer<Float> setRightValueFunction;
-    private final Supplier<Float> leftValueSupplier;
-    private final Supplier<Float> rightValueSupplier;
+    private final Util.FloatConsumer setLeftValueFunction;
+    private final Util.FloatConsumer setRightValueFunction;
+    private final Util.FloatSupplier leftValueSupplier;
+    private final Util.FloatSupplier rightValueSupplier;
     private double leftSliderValue, rightSliderValue;
     private boolean isLeftSelected;
     private boolean stopped;
 
     public FloatRangeSlider(int x, int y, int width, int height, ITextComponent prefix, ITextComponent suffix,
-                            double minValue, double maxValue, float stepSize, Consumer<Float> setLeftValueFunction,
-                            Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier,
-                            Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
+                            double minValue, double maxValue, float stepSize, Util.FloatConsumer setLeftValueFunction,
+                            Util.FloatConsumer setRightValueFunction, Util.FloatSupplier leftValueSupplier,
+                            Util.FloatSupplier rightValueSupplier, Runnable applyValueFunction) {
         super(x, y, width, height, applyValueFunction);
         this.minValue = minValue;
         this.maxValue = maxValue;

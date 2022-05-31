@@ -7,7 +7,7 @@ import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import platinpython.vfxgenerator.util.Util.VoidFunction;
+import platinpython.vfxgenerator.util.Util;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -19,13 +19,13 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         this.setRenderBackground(false);
     }
 
-    public void addButton(ITextComponent displayText, VoidFunction onPress) {
+    public void addButton(ITextComponent displayText, Runnable onPress) {
         this.addEntry(VFXGeneratorOptionsListEntry.addButton(this.width, displayText, onPress));
     }
 
     public void addToggleButton(ITextComponent displayTextFalse, ITextComponent displayTextTrue,
-                                Consumer<Boolean> setValueFunction, Supplier<Boolean> valueSupplier,
-                                VoidFunction applyValueFunction) {
+                                Util.BooleanConsumer setValueFunction, Util.BooleanSupplier valueSupplier,
+                                Runnable applyValueFunction) {
         this.addEntry(VFXGeneratorOptionsListEntry.addToggleButton(this.width,
                                                                    displayTextFalse,
                                                                    displayTextTrue,
@@ -35,7 +35,7 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
     }
 
     public void addMultipleChoiceButton(ImmutableList<String> options, Consumer<String> setValueFunction,
-                                        Supplier<String> valueSupplier, VoidFunction applyValueFunction) {
+                                        Supplier<String> valueSupplier, Runnable applyValueFunction) {
         this.addEntry(VFXGeneratorOptionsListEntry.addMultipleChoiceButton(this.width,
                                                                            options,
                                                                            setValueFunction,
@@ -44,8 +44,8 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
     }
 
     public void addSlider(ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue,
-                          float stepSize, Consumer<Float> setValueFunction, Supplier<Float> valueSupplier,
-                          VoidFunction applyValueFunction) {
+                          float stepSize, Util.FloatConsumer setValueFunction, Util.FloatSupplier valueSupplier,
+                          Runnable applyValueFunction) {
         this.addEntry(VFXGeneratorOptionsListEntry.addSlider(this.width,
                                                              prefix,
                                                              suffix,
@@ -58,9 +58,9 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
     }
 
     public void addRangeSlider(ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue,
-                               float stepSize, Consumer<Float> setLeftValueFunction,
-                               Consumer<Float> setRightValueFunction, Supplier<Float> leftValueSupplier,
-                               Supplier<Float> rightValueSupplier, VoidFunction applyValueFunction) {
+                               float stepSize, Util.FloatConsumer setLeftValueFunction,
+                               Util.FloatConsumer setRightValueFunction, Util.FloatSupplier leftValueSupplier,
+                               Util.FloatSupplier rightValueSupplier, Runnable applyValueFunction) {
         this.addEntry(VFXGeneratorOptionsListEntry.addRangeSlider(this.width,
                                                                   prefix,
                                                                   suffix,
@@ -96,7 +96,7 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         }
 
         public static VFXGeneratorOptionsListEntry addButton(int guiWidth, ITextComponent displayText,
-                                                             VoidFunction onPress) {
+                                                             Runnable onPress) {
             return new VFXGeneratorOptionsListEntry(new UpdateableWidget(guiWidth / 2 - 155, 0, 310, 20, () -> {
             }) {
                 @Override
@@ -114,7 +114,7 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 
                 @Override
                 public void onClick(double mouseX, double mouseY) {
-                    onPress.apply();
+                    onPress.run();
                 }
 
                 @Override
@@ -129,9 +129,9 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 
         public static VFXGeneratorOptionsListEntry addToggleButton(int guiWidth, ITextComponent displayTextFalse,
                                                                    ITextComponent displayTextTrue,
-                                                                   Consumer<Boolean> setValueFunction,
-                                                                   Supplier<Boolean> valueSupplier,
-                                                                   VoidFunction applyValueFunction) {
+                                                                   Util.BooleanConsumer setValueFunction,
+                                                                   Util.BooleanSupplier valueSupplier,
+                                                                   Runnable applyValueFunction) {
             return new VFXGeneratorOptionsListEntry(new ToggleTextButton(guiWidth / 2 - 155,
                                                                          0,
                                                                          310,
@@ -146,7 +146,7 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         public static VFXGeneratorOptionsListEntry addMultipleChoiceButton(int guiWidth, ImmutableList<String> options,
                                                                            Consumer<String> setValueFunction,
                                                                            Supplier<String> valueSupplier,
-                                                                           VoidFunction applyValueFunction) {
+                                                                           Runnable applyValueFunction) {
             return new VFXGeneratorOptionsListEntry(new MultipleStringChoiceButton(guiWidth / 2 - 155,
                                                                                    0,
                                                                                    310,
@@ -159,9 +159,9 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 
         public static VFXGeneratorOptionsListEntry addSlider(int guiWidth, ITextComponent prefix, ITextComponent suffix,
                                                              double minValue, double maxValue, float stepSize,
-                                                             Consumer<Float> setValueFunction,
-                                                             Supplier<Float> valueSupplier,
-                                                             VoidFunction applyValueFunction) {
+                                                             Util.FloatConsumer setValueFunction,
+                                                             Util.FloatSupplier valueSupplier,
+                                                             Runnable applyValueFunction) {
             return new VFXGeneratorOptionsListEntry(new FloatSlider(guiWidth / 2 - 155,
                                                                     0,
                                                                     310,
@@ -179,11 +179,11 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         public static VFXGeneratorOptionsListEntry addRangeSlider(int guiWidth, ITextComponent prefix,
                                                                   ITextComponent suffix, double minValue,
                                                                   double maxValue, float stepSize,
-                                                                  Consumer<Float> setLeftValueFunction,
-                                                                  Consumer<Float> setRightValueFunction,
-                                                                  Supplier<Float> leftValueSupplier,
-                                                                  Supplier<Float> rightValueSupplier,
-                                                                  VoidFunction applyValueFunction) {
+                                                                  Util.FloatConsumer setLeftValueFunction,
+                                                                  Util.FloatConsumer setRightValueFunction,
+                                                                  Util.FloatSupplier leftValueSupplier,
+                                                                  Util.FloatSupplier rightValueSupplier,
+                                                                  Runnable applyValueFunction) {
             return new VFXGeneratorOptionsListEntry(new FloatRangeSlider(guiWidth / 2 - 155,
                                                                          0,
                                                                          310,
@@ -225,10 +225,10 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         private final UpdateableWidget firstChild;
         private final UpdateableWidget secondChild;
 
-        private final Supplier<Boolean> toggleValueSupplier;
+        private final Util.BooleanSupplier toggleValueSupplier;
 
         public ToggleableVFXGeneratorOptionsListEntry(UpdateableWidget firstChild, UpdateableWidget secondChild,
-                                                      Supplier<Boolean> toggleValueSupplier) {
+                                                      Util.BooleanSupplier toggleValueSupplier) {
             super(null);
             this.firstChild = firstChild;
             this.secondChild = secondChild;
@@ -280,27 +280,27 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         private ITextComponent suffixFirst = StringTextComponent.EMPTY;
         private double minValueFirst = 0F;
         private double maxValueFirst = 0F;
-        private Consumer<Float> setLeftValueFunctionFirst = (value) -> {
+        private Util.FloatConsumer setLeftValueFunctionFirst = (value) -> {
         };
-        private Consumer<Float> setRightValueFunctionFirst = (value) -> {
+        private Util.FloatConsumer setRightValueFunctionFirst = (value) -> {
         };
-        private Supplier<Float> leftValueSupplierFirst = () -> 0F;
-        private Supplier<Float> rightValueSupplierFirst = () -> 0F;
+        private Util.FloatSupplier leftValueSupplierFirst = () -> 0F;
+        private Util.FloatSupplier rightValueSupplierFirst = () -> 0F;
 
         private ITextComponent prefixSecond = StringTextComponent.EMPTY;
         private ITextComponent suffixSecond = StringTextComponent.EMPTY;
         private double minValueSecond = 0F;
         private double maxValueSecond = 0F;
-        private Consumer<Float> setLeftValueFunctionSecond = (value) -> {
+        private Util.FloatConsumer setLeftValueFunctionSecond = (value) -> {
         };
-        private Consumer<Float> setRightValueFunctionSecond = (value) -> {
+        private Util.FloatConsumer setRightValueFunctionSecond = (value) -> {
         };
-        private Supplier<Float> leftValueSupplierSecond = () -> 0F;
-        private Supplier<Float> rightValueSupplierSecond = () -> 0F;
+        private Util.FloatSupplier leftValueSupplierSecond = () -> 0F;
+        private Util.FloatSupplier rightValueSupplierSecond = () -> 0F;
 
-        private VoidFunction applyValueFunction = () -> {
+        private Runnable applyValueFunction = () -> {
         };
-        private Supplier<Boolean> toggleValueSupplier = () -> false;
+        private Util.BooleanSupplier toggleValueSupplier = () -> false;
 
         private ToggleableRangeSliderBuilder(VFXGeneratorOptionsList list, int guiWidth) {
             this.list = list;
@@ -332,22 +332,22 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
             return this;
         }
 
-        public ToggleableRangeSliderBuilder setLeftValueFunctionFirst(Consumer<Float> setLeftValueFunctionFirst) {
+        public ToggleableRangeSliderBuilder setLeftValueFunctionFirst(Util.FloatConsumer setLeftValueFunctionFirst) {
             this.setLeftValueFunctionFirst = setLeftValueFunctionFirst;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder setRightValueFunctionFirst(Consumer<Float> setRightValueFunctionFirst) {
+        public ToggleableRangeSliderBuilder setRightValueFunctionFirst(Util.FloatConsumer setRightValueFunctionFirst) {
             this.setRightValueFunctionFirst = setRightValueFunctionFirst;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder leftValueSupplierFirst(Supplier<Float> leftValueSupplierFirst) {
+        public ToggleableRangeSliderBuilder leftValueSupplierFirst(Util.FloatSupplier leftValueSupplierFirst) {
             this.leftValueSupplierFirst = leftValueSupplierFirst;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder rightValueSupplierFirst(Supplier<Float> rightValueSupplierFirst) {
+        public ToggleableRangeSliderBuilder rightValueSupplierFirst(Util.FloatSupplier rightValueSupplierFirst) {
             this.rightValueSupplierFirst = rightValueSupplierFirst;
             return this;
         }
@@ -372,32 +372,32 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
             return this;
         }
 
-        public ToggleableRangeSliderBuilder setLeftValueFunctionSecond(Consumer<Float> setLeftValueFunctionSecond) {
+        public ToggleableRangeSliderBuilder setLeftValueFunctionSecond(Util.FloatConsumer setLeftValueFunctionSecond) {
             this.setLeftValueFunctionSecond = setLeftValueFunctionSecond;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder setRightValueFunctionSecond(Consumer<Float> setRightValueFunctionSecond) {
+        public ToggleableRangeSliderBuilder setRightValueFunctionSecond(Util.FloatConsumer setRightValueFunctionSecond) {
             this.setRightValueFunctionSecond = setRightValueFunctionSecond;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder leftValueSupplierSecond(Supplier<Float> leftValueSupplierSecond) {
+        public ToggleableRangeSliderBuilder leftValueSupplierSecond(Util.FloatSupplier leftValueSupplierSecond) {
             this.leftValueSupplierSecond = leftValueSupplierSecond;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder rightValueSupplierSecond(Supplier<Float> rightValueSupplierSecond) {
+        public ToggleableRangeSliderBuilder rightValueSupplierSecond(Util.FloatSupplier rightValueSupplierSecond) {
             this.rightValueSupplierSecond = rightValueSupplierSecond;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder applyValueFunction(VoidFunction applyValueFunction) {
+        public ToggleableRangeSliderBuilder applyValueFunction(Runnable applyValueFunction) {
             this.applyValueFunction = applyValueFunction;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder toggleValueSupplier(Supplier<Boolean> toggleValueSupplier) {
+        public ToggleableRangeSliderBuilder toggleValueSupplier(Util.BooleanSupplier toggleValueSupplier) {
             this.toggleValueSupplier = toggleValueSupplier;
             return this;
         }

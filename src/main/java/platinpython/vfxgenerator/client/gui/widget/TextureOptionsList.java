@@ -7,7 +7,6 @@ import net.minecraft.client.gui.widget.list.AbstractOptionList;
 import net.minecraft.util.ResourceLocation;
 import platinpython.vfxgenerator.util.Constants;
 import platinpython.vfxgenerator.util.Util;
-import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +17,14 @@ import java.util.function.Supplier;
 public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.TextureOptionsListEntry> {
     public TextureOptionsList(Minecraft minecraft, int width, int height, int top, int bottom, int itemHeight,
                               Consumer<TreeSet<ResourceLocation>> setValueFunction,
-                              Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+                              Supplier<TreeSet<ResourceLocation>> valueSupplier, Runnable applyValueFunction) {
         super(minecraft, width, height, top, bottom, itemHeight);
         this.init(setValueFunction, valueSupplier, applyValueFunction);
         this.setRenderBackground(false);
     }
 
     private void init(Consumer<TreeSet<ResourceLocation>> setValueFunction,
-                      Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+                      Supplier<TreeSet<ResourceLocation>> valueSupplier, Runnable applyValueFunction) {
         List<ResourceLocation> list = new ArrayList<>(Util.createTreeSetFromCollectionWithComparator(Constants.ParticleConstants.Values.PARTICLE_OPTIONS, ResourceLocation::compareNamespaced));
         for (int i = 0; i < list.size() - list.size() % 3; i += 3) {
             addEntry(TextureOptionsListEntry.addThreeTextures(this.width,
@@ -80,7 +79,7 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
         public static TextureOptionsListEntry addOneTexture(int guiWidth, ResourceLocation imageName1,
                                                             Consumer<TreeSet<ResourceLocation>> setValueFunction,
                                                             Supplier<TreeSet<ResourceLocation>> valueSupplier,
-                                                            VoidFunction applyValueFunction) {
+                                                            Runnable applyValueFunction) {
             ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 25,
                                                                    0,
                                                                    50,
@@ -96,7 +95,7 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
                                                              ResourceLocation imageName2,
                                                              Consumer<TreeSet<ResourceLocation>> setValueFunction,
                                                              Supplier<TreeSet<ResourceLocation>> valueSupplier,
-                                                             VoidFunction applyValueFunction) {
+                                                             Runnable applyValueFunction) {
             ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 50,
                                                                    0,
                                                                    50,
@@ -120,7 +119,7 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
                                                                ResourceLocation imageName2, ResourceLocation imageName3,
                                                                Consumer<TreeSet<ResourceLocation>> setValueFunction,
                                                                Supplier<TreeSet<ResourceLocation>> valueSupplier,
-                                                               VoidFunction applyValueFunction) {
+                                                               Runnable applyValueFunction) {
             ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 75,
                                                                    0,
                                                                    50,

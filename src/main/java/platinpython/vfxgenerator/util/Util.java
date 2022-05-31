@@ -6,6 +6,7 @@ import platinpython.vfxgenerator.VFXGenerator;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.TreeSet;
 
 public class Util {
@@ -40,7 +41,38 @@ public class Util {
     }
 
     @FunctionalInterface
-    public interface VoidFunction {
-        void apply();
+    public interface BooleanSupplier {
+        boolean get();
+    }
+
+    @FunctionalInterface
+    public interface BooleanConsumer {
+        void accept(boolean value);
+
+        default BooleanConsumer andThen(BooleanConsumer after) {
+            Objects.requireNonNull(after);
+            return (boolean t) -> {
+                accept(t);
+                after.accept(t);
+            };
+        }
+    }
+
+    @FunctionalInterface
+    public interface FloatSupplier {
+        float get();
+    }
+
+    @FunctionalInterface
+    public interface FloatConsumer {
+        void accept(float value);
+
+        default FloatConsumer andThen(FloatConsumer after) {
+            Objects.requireNonNull(after);
+            return (float t) -> {
+                accept(t);
+                after.accept(t);
+            };
+        }
     }
 }

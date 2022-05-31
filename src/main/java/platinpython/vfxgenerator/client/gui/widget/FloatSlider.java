@@ -9,11 +9,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import platinpython.vfxgenerator.util.Util;
-import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 import java.text.DecimalFormat;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class FloatSlider extends UpdateableWidget {
     private final double minValue, maxValue;
@@ -21,13 +18,13 @@ public class FloatSlider extends UpdateableWidget {
     private final DecimalFormat format;
     private final ITextComponent prefix;
     private final ITextComponent suffix;
-    private final Consumer<Float> setValueFunction;
-    private final Supplier<Float> valueSupplier;
+    private final Util.FloatConsumer setValueFunction;
+    private final Util.FloatSupplier valueSupplier;
     private double sliderValue;
 
     public FloatSlider(int x, int y, int width, int height, ITextComponent prefix, ITextComponent suffix,
-                       double minValue, double maxValue, float stepSize, Consumer<Float> setValueFunction,
-                       Supplier<Float> valueSupplier, VoidFunction applyValueFunction) {
+                       double minValue, double maxValue, float stepSize, Util.FloatConsumer setValueFunction,
+                       Util.FloatSupplier valueSupplier, Runnable applyValueFunction) {
         super(x, y, width, height, applyValueFunction);
         this.minValue = minValue;
         this.maxValue = maxValue;

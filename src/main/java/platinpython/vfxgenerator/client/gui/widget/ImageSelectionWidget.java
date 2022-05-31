@@ -17,7 +17,6 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.lwjgl.opengl.GL11C;
 import platinpython.vfxgenerator.util.Util;
-import platinpython.vfxgenerator.util.Util.VoidFunction;
 
 import java.util.Arrays;
 import java.util.TreeSet;
@@ -33,7 +32,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
 
     public ImageSelectionWidget(int x, int y, int width, int height, ResourceLocation imageLocation,
                                 Consumer<TreeSet<ResourceLocation>> setValueFunction,
-                                Supplier<TreeSet<ResourceLocation>> valueSupplier, VoidFunction applyValueFunction) {
+                                Supplier<TreeSet<ResourceLocation>> valueSupplier, Runnable applyValueFunction) {
         super(x, y, width, height, applyValueFunction);
         this.imageLocation = imageLocation;
         this.setValueFunction = setValueFunction;

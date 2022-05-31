@@ -1,21 +1,18 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
 import net.minecraft.util.text.ITextComponent;
-import platinpython.vfxgenerator.util.Util.VoidFunction;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import platinpython.vfxgenerator.util.Util;
 
 public class ToggleTextButton extends UpdateableWidget {
     private final ITextComponent displayTextFalse;
     private final ITextComponent displayTextTrue;
 
-    private final Consumer<Boolean> setValueFunction;
-    private final Supplier<Boolean> valueSupplier;
+    private final Util.BooleanConsumer setValueFunction;
+    private final Util.BooleanSupplier valueSupplier;
 
     public ToggleTextButton(int x, int y, int width, int height, ITextComponent displayTextFalse,
-                            ITextComponent displayTextTrue, Consumer<Boolean> setValueFunction,
-                            Supplier<Boolean> valueSupplier, VoidFunction applyValueFunction) {
+                            ITextComponent displayTextTrue, Util.BooleanConsumer setValueFunction,
+                            Util.BooleanSupplier valueSupplier, Runnable applyValueFunction) {
         super(x, y, width, height, applyValueFunction);
         this.displayTextFalse = displayTextFalse;
         this.displayTextTrue = displayTextTrue;
