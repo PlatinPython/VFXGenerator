@@ -244,11 +244,19 @@ public class FloatRangeSlider extends UpdateableWidget {
         setMessage(new StringTextComponent("").append(prefix)
                                               .append(": ")
                                               .append(format.format(getLeftSliderValue()))
-                                              .append(suffix.getString().isEmpty() ? "" : " ")
+                                              .append(suffix.getString().isEmpty() || suffix.getString()
+                                                                                            .equals("\u00B0") || suffix.getString()
+                                                                                                                       .equals("%") ?
+                                                      "" :
+                                                      " ")
                                               .append(suffix)
                                               .append(" - ")
                                               .append(format.format(getRightSliderValue()))
-                                              .append(suffix.getString().isEmpty() ? "" : " ")
+                                              .append(suffix.getString().isEmpty() || suffix.getString()
+                                                                                            .equals("\u00B0") || suffix.getString()
+                                                                                                                       .equals("%") ?
+                                                      "" :
+                                                      " ")
                                               .append(suffix));
     }
 

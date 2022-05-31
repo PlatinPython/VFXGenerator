@@ -91,7 +91,7 @@ public class ParticleData {
         particleTag.putInt(Constants.ParticleConstants.Keys.DELAY, getDelay());
         particleTag.putFloat(Constants.ParticleConstants.Keys.GRAVITY, getGravity());
         particleTag.putBoolean(Constants.ParticleConstants.Keys.COLLISION, hasCollision());
-        particleTag.putBoolean(Constants.ParticleConstants.Keys.FULL_BRIGHT, isFullBright());
+        particleTag.putBoolean(Constants.ParticleConstants.Keys.FULLBRIGHT, isFullBright());
         return particleTag;
     }
 
@@ -208,7 +208,7 @@ public class ParticleData {
                                    Constants.ParticleConstants.Values.MAX_GRAVITY
         );
         collision = particleTag.getBoolean(Constants.ParticleConstants.Keys.COLLISION);
-        fullBright = particleTag.getBoolean(Constants.ParticleConstants.Keys.FULL_BRIGHT);
+        fullBright = particleTag.getBoolean(Constants.ParticleConstants.Keys.FULLBRIGHT);
 
         ensureDataOrder();
     }

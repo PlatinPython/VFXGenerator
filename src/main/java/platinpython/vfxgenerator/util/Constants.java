@@ -58,7 +58,7 @@ public final class Constants {
             public static final String DELAY = "delay";
             public static final String GRAVITY = "gravity";
             public static final String COLLISION = "collision";
-            public static final String FULL_BRIGHT = "full_bright";
+            public static final String FULLBRIGHT = "fullbright";
         }
     }
 }

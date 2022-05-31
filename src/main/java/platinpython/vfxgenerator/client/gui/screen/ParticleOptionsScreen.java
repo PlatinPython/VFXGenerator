@@ -66,7 +66,7 @@ public class ParticleOptionsScreen extends Screen {
                         .leftValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorBot()).getRed())
                         .rightValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorTop()).getRed())
                         .prefixSecond(ClientUtils.getGuiTranslationTextComponent("hue"))
-                        .suffixSecond(new StringTextComponent("°"))
+                        .suffixSecond(new StringTextComponent("\u00B0"))
                         .minValueSecond(0F)
                         .maxValueSecond(360F)
                         .setLeftValueFunctionSecond((value) -> this.particleData.setHueBot(value / 360F))
@@ -220,10 +220,10 @@ public class ParticleOptionsScreen extends Screen {
                                          this::sendToServer
         );
 
-        this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("full_bright")
+        this.optionsList.addToggleButton(ClientUtils.getGuiTranslationTextComponent("fullbright")
                                                     .append(": ")
                                                     .append(ClientUtils.getGuiTranslationTextComponent("disabled")),
-                                         ClientUtils.getGuiTranslationTextComponent("full_bright")
+                                         ClientUtils.getGuiTranslationTextComponent("fullbright")
                                                     .append(": ")
                                                     .append(ClientUtils.getGuiTranslationTextComponent("enabled")),
                                          this.particleData::setFullBright, this.particleData::isFullBright,
