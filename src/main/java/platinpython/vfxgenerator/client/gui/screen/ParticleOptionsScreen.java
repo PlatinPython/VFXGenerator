@@ -6,9 +6,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import platinpython.vfxgenerator.client.gui.widget.ToggleButton;
 import platinpython.vfxgenerator.client.gui.widget.VFXGeneratorOptionsList;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
+import platinpython.vfxgenerator.util.BoxRendering;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
 import platinpython.vfxgenerator.util.Constants;
@@ -30,6 +32,10 @@ public class ParticleOptionsScreen extends Screen {
 
     @Override
     protected void init() {
+        addButton(new ExtendedButton(20, 20, 30, 30, ClientUtils.getGuiTranslationTextComponent("area_box"),
+                                     button -> BoxRendering.currentRenderPos = tileEntity.getBlockPos()
+        )); // TODO: finalize position and add Translation
+
         addButton(new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.particleData::setEnabled,
                                    this.particleData::isEnabled, this::sendToServer
         ));
