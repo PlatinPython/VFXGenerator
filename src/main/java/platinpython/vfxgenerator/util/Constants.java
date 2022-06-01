@@ -11,7 +11,16 @@ public final class Constants {
                     Util.createNamespacedResourceLocation("particle/square"),
                     Util.createNamespacedResourceLocation("particle/spark_small"),
                     Util.createNamespacedResourceLocation("particle/spark_mid"),
-                    Util.createNamespacedResourceLocation("particle/spark_big")
+                    Util.createNamespacedResourceLocation("particle/spark_big"),
+                    Util.createNamespacedResourceLocation("particle/spark_queer"),
+                    Util.createNamespacedResourceLocation("particle/heart"),
+                    Util.createNamespacedResourceLocation("particle/big_heart"),
+                    Util.createNamespacedResourceLocation("particle/bubble"),
+                    Util.createNamespacedResourceLocation("particle/bubble_big"),
+                    Util.createNamespacedResourceLocation("particle/drop_1"),
+                    Util.createNamespacedResourceLocation("particle/drop_2"),
+                    Util.createNamespacedResourceLocation("particle/drop_3"),
+                    Util.createNamespacedResourceLocation("particle/totem_otter")
             );
             public static final int MIN_LIFETIME = 0;
             public static final int MAX_LIFETIME = 200;

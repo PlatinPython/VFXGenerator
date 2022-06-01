@@ -8,6 +8,7 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
 
 import java.text.DecimalFormat;
@@ -89,6 +90,27 @@ public class FloatSlider extends UpdateableWidget {
     @Override
     protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
         this.setValueFromMouse(mouseX);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        boolean flag = keyCode == GLFW.GLFW_KEY_LEFT;
+        if (flag || keyCode == GLFW.GLFW_KEY_RIGHT) {
+            if (flag) {
+                if (this.sliderValue != 0D) this.setSliderValue(
+                        Util.clamp((this.getSliderValue() - this.stepSize), this.minValue, this.maxValue,
+                                   this.stepSize
+                        ));
+
+            } else {
+                if (this.sliderValue != 1D) this.setSliderValue(
+                        Util.clamp((this.getSliderValue() + this.stepSize), this.minValue, this.maxValue,
+                                   this.stepSize
+                        ));
+
+            }
+        }
+        return false;
     }
 
     private double getSliderValue() {

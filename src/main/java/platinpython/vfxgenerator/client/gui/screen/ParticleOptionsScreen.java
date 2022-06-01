@@ -3,10 +3,10 @@ package platinpython.vfxgenerator.client.gui.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import platinpython.vfxgenerator.client.gui.widget.ToggleButton;
 import platinpython.vfxgenerator.client.gui.widget.VFXGeneratorOptionsList;
 import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
@@ -32,9 +32,19 @@ public class ParticleOptionsScreen extends Screen {
 
     @Override
     protected void init() {
-        addButton(new ExtendedButton(20, 20, 30, 30, ClientUtils.getGuiTranslationTextComponent("area_box"),
-                                     button -> BoxRendering.currentRenderPos = tileEntity.getBlockPos()
-        )); // TODO: finalize position and add Translation
+        addButton(new Button(6, this.height - 26, 120, 20, ClientUtils.getGuiTranslationTextComponent("areaBox"),
+                             button -> {
+                                 if (tileEntity.getBlockPos().equals(BoxRendering.currentRenderPos))
+                                     BoxRendering.currentRenderPos = null;
+                                 else BoxRendering.currentRenderPos = tileEntity.getBlockPos();
+                             }, (button, matrixStack, mouseX, mouseY) -> this.renderTooltip(matrixStack,
+                                                                                            this.font.split(
+                                                                                                    ClientUtils.getGuiTranslationTextComponent(
+                                                                                                            "areaBox.description"),
+                                                                                                    200
+                                                                                            ), mouseX, mouseY
+        )
+        ));
 
         addButton(new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.particleData::setEnabled,
                                    this.particleData::isEnabled, this::sendToServer
