@@ -12,7 +12,7 @@ public final class Constants {
                     Util.createNamespacedResourceLocation("particle/spark_small"),
                     Util.createNamespacedResourceLocation("particle/spark_mid"),
                     Util.createNamespacedResourceLocation("particle/spark_big"),
-                    Util.createNamespacedResourceLocation("particle/spark_queer"),
+                    Util.createNamespacedResourceLocation("particle/spark_cross"),
                     Util.createNamespacedResourceLocation("particle/heart"),
                     Util.createNamespacedResourceLocation("particle/big_heart"),
                     Util.createNamespacedResourceLocation("particle/bubble"),
