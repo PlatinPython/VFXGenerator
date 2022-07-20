@@ -1,15 +1,15 @@
 package platinpython.vfxgenerator.client.gui.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.phys.Vec3;
+import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.client.gui.widget.ToggleButton;
 import platinpython.vfxgenerator.client.gui.widget.VFXGeneratorOptionsList;
-import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
 import platinpython.vfxgenerator.util.BoxRendering;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
@@ -19,35 +19,32 @@ import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDataSyncPKT;
 
 public class ParticleOptionsScreen extends Screen {
-    protected final VFXGeneratorTileEntity tileEntity;
+    protected final VFXGeneratorBlockEntity tileEntity;
     protected final ParticleData particleData;
 
     private VFXGeneratorOptionsList optionsList;
 
-    public ParticleOptionsScreen(VFXGeneratorTileEntity tileEntity) {
-        super(StringTextComponent.EMPTY);
+    public ParticleOptionsScreen(VFXGeneratorBlockEntity tileEntity) {
+        super(TextComponent.EMPTY);
         this.tileEntity = tileEntity;
         this.particleData = tileEntity.getParticleData();
     }
 
     @Override
     protected void init() {
-        addButton(new Button(6, this.height - 26, 120, 20, ClientUtils.getGuiTranslationTextComponent("areaBox"),
-                             button -> {
-                                 if (tileEntity.getBlockPos().equals(BoxRendering.currentRenderPos))
-                                     BoxRendering.currentRenderPos = null;
-                                 else BoxRendering.currentRenderPos = tileEntity.getBlockPos();
-                             }, (button, matrixStack, mouseX, mouseY) -> this.renderTooltip(matrixStack,
-                                                                                            this.font.split(
-                                                                                                    ClientUtils.getGuiTranslationTextComponent(
-                                                                                                            "areaBox.description"),
-                                                                                                    200
-                                                                                            ), mouseX, mouseY
-        )
-        ));
+        addRenderableWidget(
+                new Button(6, this.height - 26, 120, 20, ClientUtils.getGuiTranslationTextComponent("areaBox"),
+                           button -> {
+                               if (tileEntity.getBlockPos().equals(BoxRendering.currentRenderPos)) {
+                                   BoxRendering.currentRenderPos = null;
+                               } else {
+                                   BoxRendering.currentRenderPos = tileEntity.getBlockPos();
+                               }
+                           }
+                ));
 
-        addButton(new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.particleData::setEnabled,
-                                   this.particleData::isEnabled, this::sendToServer
+        addRenderableWidget(new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.particleData::setEnabled,
+                                             this.particleData::isEnabled, this::sendToServer
         ));
 
         this.optionsList = new VFXGeneratorOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32,
@@ -82,7 +79,7 @@ public class ParticleOptionsScreen extends Screen {
                         .leftValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorBot()).getRed())
                         .rightValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorTop()).getRed())
                         .prefixSecond(ClientUtils.getGuiTranslationTextComponent("hue"))
-                        .suffixSecond(new StringTextComponent("\u00B0"))
+                        .suffixSecond(new TextComponent("\u00B0"))
                         .minValueSecond(0F)
                         .maxValueSecond(360F)
                         .setLeftValueFunctionSecond((value) -> this.particleData.setHueBot(value / 360F))
@@ -110,7 +107,7 @@ public class ParticleOptionsScreen extends Screen {
                         .leftValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorBot()).getGreen())
                         .rightValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorTop()).getGreen())
                         .prefixSecond(ClientUtils.getGuiTranslationTextComponent("saturation"))
-                        .suffixSecond(new StringTextComponent("%"))
+                        .suffixSecond(new TextComponent("%"))
                         .minValueSecond(0F)
                         .maxValueSecond(100F)
                         .setLeftValueFunctionSecond((value) -> this.particleData.setSaturationBot(value / 100F))
@@ -138,7 +135,7 @@ public class ParticleOptionsScreen extends Screen {
                         .leftValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorBot()).getBlue())
                         .rightValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorTop()).getBlue())
                         .prefixSecond(ClientUtils.getGuiTranslationTextComponent("brightness"))
-                        .suffixSecond(new StringTextComponent("%"))
+                        .suffixSecond(new TextComponent("%"))
                         .minValueSecond(0F)
                         .maxValueSecond(100F)
                         .setLeftValueFunctionSecond((value) -> this.particleData.setBrightnessBot(value / 100F))
@@ -157,14 +154,14 @@ public class ParticleOptionsScreen extends Screen {
                                         () -> (float) this.particleData.getLifetimeTop(), this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("size"), StringTextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("size"), TextComponent.EMPTY,
                                         Constants.ParticleConstants.Values.MIN_SIZE,
                                         Constants.ParticleConstants.Values.MAX_SIZE, .1F, this.particleData::setSizeBot,
                                         this.particleData::setSizeTop, this.particleData::getSizeBot,
                                         this.particleData::getSizeTop, this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnX"), StringTextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnX"), TextComponent.EMPTY,
                                         Constants.ParticleConstants.Values.MIN_SPAWN,
                                         Constants.ParticleConstants.Values.MAX_SPAWN, .1F,
                                         this.particleData::setSpawnXBot, this.particleData::setSpawnXTop,
@@ -172,7 +169,7 @@ public class ParticleOptionsScreen extends Screen {
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnY"), StringTextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnY"), TextComponent.EMPTY,
                                         Constants.ParticleConstants.Values.MIN_SPAWN,
                                         Constants.ParticleConstants.Values.MAX_SPAWN, .1F,
                                         this.particleData::setSpawnYBot, this.particleData::setSpawnYTop,
@@ -180,7 +177,7 @@ public class ParticleOptionsScreen extends Screen {
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnZ"), StringTextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnZ"), TextComponent.EMPTY,
                                         Constants.ParticleConstants.Values.MIN_SPAWN,
                                         Constants.ParticleConstants.Values.MAX_SPAWN, .1F,
                                         this.particleData::setSpawnZBot, this.particleData::setSpawnZTop,
@@ -188,24 +185,24 @@ public class ParticleOptionsScreen extends Screen {
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionX"),
-                                        StringTextComponent.EMPTY, Constants.ParticleConstants.Values.MIN_MOTION,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionX"), TextComponent.EMPTY,
+                                        Constants.ParticleConstants.Values.MIN_MOTION,
                                         Constants.ParticleConstants.Values.MAX_MOTION, .01F,
                                         this.particleData::setMotionXBot, this.particleData::setMotionXTop,
                                         this.particleData::getMotionXBot, this.particleData::getMotionXTop,
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionY"),
-                                        StringTextComponent.EMPTY, Constants.ParticleConstants.Values.MIN_MOTION,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionY"), TextComponent.EMPTY,
+                                        Constants.ParticleConstants.Values.MIN_MOTION,
                                         Constants.ParticleConstants.Values.MAX_MOTION, .01F,
                                         this.particleData::setMotionYBot, this.particleData::setMotionYTop,
                                         this.particleData::getMotionYBot, this.particleData::getMotionYTop,
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionZ"),
-                                        StringTextComponent.EMPTY, Constants.ParticleConstants.Values.MIN_MOTION,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionZ"), TextComponent.EMPTY,
+                                        Constants.ParticleConstants.Values.MIN_MOTION,
                                         Constants.ParticleConstants.Values.MAX_MOTION, .01F,
                                         this.particleData::setMotionZBot, this.particleData::setMotionZTop,
                                         this.particleData::getMotionZBot, this.particleData::getMotionZTop,
@@ -220,7 +217,7 @@ public class ParticleOptionsScreen extends Screen {
                                    () -> (float) this.particleData.getDelay(), this::sendToServer
         );
 
-        this.optionsList.addSlider(ClientUtils.getGuiTranslationTextComponent("gravity"), StringTextComponent.EMPTY,
+        this.optionsList.addSlider(ClientUtils.getGuiTranslationTextComponent("gravity"), TextComponent.EMPTY,
                                    Constants.ParticleConstants.Values.MIN_GRAVITY,
                                    Constants.ParticleConstants.Values.MAX_GRAVITY, .01F, this.particleData::setGravity,
                                    this.particleData::getGravity, this::sendToServer
@@ -252,21 +249,21 @@ public class ParticleOptionsScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         this.optionsList.render(matrixStack, mouseX, mouseY, partialTicks);
         if (!this.particleData.isEnabled()) {
             this.fillGradient(matrixStack, 0, 32, this.width, this.height - 32, 0xC0101010, 0xD0101010);
         }
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        AbstractGui.drawCenteredString(matrixStack, this.font, ClientUtils.getGuiTranslationTextComponent("particle"),
-                                       this.width / 2, 10, 0xFFFFFFFF
+        GuiComponent.drawCenteredString(matrixStack, this.font, ClientUtils.getGuiTranslationTextComponent("particle"),
+                                        this.width / 2, 10, 0xFFFFFFFF
         );
     }
 
     @Override
     public void tick() {
-        if (minecraft.player.distanceToSqr(Vector3d.atCenterOf(tileEntity.getBlockPos())) > 64.0D) {
+        if (minecraft.player.distanceToSqr(Vec3.atCenterOf(tileEntity.getBlockPos())) > 64.0D) {
             this.onClose();
         }
         this.optionsList.children().forEach((entry) -> {
@@ -281,7 +278,7 @@ public class ParticleOptionsScreen extends Screen {
     }
 
     protected final void sendToServer() {
-        NetworkHandler.INSTANCE.sendToServer(new VFXGeneratorDataSyncPKT(this.tileEntity.saveToTag(new CompoundNBT()),
+        NetworkHandler.INSTANCE.sendToServer(new VFXGeneratorDataSyncPKT(this.tileEntity.saveToTag(new CompoundTag()),
                                                                          this.tileEntity.getBlockPos()
         ));
     }

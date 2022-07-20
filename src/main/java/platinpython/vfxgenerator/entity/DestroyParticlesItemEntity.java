@@ -1,21 +1,20 @@
 package platinpython.vfxgenerator.entity;
 
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDestroyParticlesPKT;
 
 public class DestroyParticlesItemEntity extends ItemEntity {
 
-    public DestroyParticlesItemEntity(World level, double x, double y, double z, double xd, double yd, double zd,
+    public DestroyParticlesItemEntity(Level level, double x, double y, double z, double xd, double yd, double zd,
                                       int pickUpDelay, ItemStack stack) {
-        super(level, x, y, z);
-        this.setItem(stack);
-        this.lifespan = stack.getItem() == null ? 6000 : stack.getEntityLifespan(level);
+        super(level, x, y, z, stack);
+        this.lifespan = stack.getEntityLifespan(level);
         this.setPickUpDelay(pickUpDelay);
         this.setDeltaMovement(xd, yd, zd);
     }
@@ -34,7 +33,7 @@ public class DestroyParticlesItemEntity extends ItemEntity {
             this.markHurt();
             this.health = (int) (this.health - amount);
             if (this.health <= 0) {
-                this.remove();
+                this.remove(RemovalReason.KILLED);
                 NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
                                              new VFXGeneratorDestroyParticlesPKT(this.position())
                 );

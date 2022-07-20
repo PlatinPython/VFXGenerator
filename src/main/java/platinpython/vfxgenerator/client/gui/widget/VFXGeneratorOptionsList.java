@@ -1,29 +1,30 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.widget.list.AbstractOptionList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import platinpython.vfxgenerator.util.Util;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOptionsList.VFXGeneratorOptionsListEntry> {
+public class VFXGeneratorOptionsList
+        extends ContainerObjectSelectionList<VFXGeneratorOptionsList.VFXGeneratorOptionsListEntry> {
     public VFXGeneratorOptionsList(Minecraft minecraft, int width, int height, int top, int bottom, int itemHeight) {
         super(minecraft, width, height, top, bottom, itemHeight);
         this.setRenderBackground(false);
     }
 
-    public void addButton(ITextComponent displayText, Runnable onPress) {
+    public void addButton(Component displayText, Runnable onPress) {
         this.addEntry(VFXGeneratorOptionsListEntry.addButton(this.width, displayText, onPress));
     }
 
-    public void addToggleButton(ITextComponent displayTextFalse, ITextComponent displayTextTrue,
+    public void addToggleButton(Component displayTextFalse, Component displayTextTrue,
                                 Util.BooleanConsumer setValueFunction, Util.BooleanSupplier valueSupplier,
                                 Runnable applyValueFunction) {
         this.addEntry(VFXGeneratorOptionsListEntry.addToggleButton(this.width, displayTextFalse, displayTextTrue,
@@ -31,25 +32,18 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         ));
     }
 
-    public void addMultipleChoiceButton(ImmutableList<String> options, Consumer<String> setValueFunction,
-                                        Supplier<String> valueSupplier, Runnable applyValueFunction) {
-        this.addEntry(VFXGeneratorOptionsListEntry.addMultipleChoiceButton(this.width, options, setValueFunction,
-                                                                           valueSupplier, applyValueFunction
-        ));
-    }
-
-    public void addSlider(ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue,
-                          float stepSize, Util.FloatConsumer setValueFunction, Util.FloatSupplier valueSupplier,
+    public void addSlider(Component prefix, Component suffix, double minValue, double maxValue, float stepSize,
+                          Util.FloatConsumer setValueFunction, Util.FloatSupplier valueSupplier,
                           Runnable applyValueFunction) {
         this.addEntry(VFXGeneratorOptionsListEntry.addSlider(this.width, prefix, suffix, minValue, maxValue, stepSize,
                                                              setValueFunction, valueSupplier, applyValueFunction
         ));
     }
 
-    public void addRangeSlider(ITextComponent prefix, ITextComponent suffix, double minValue, double maxValue,
-                               float stepSize, Util.FloatConsumer setLeftValueFunction,
-                               Util.FloatConsumer setRightValueFunction, Util.FloatSupplier leftValueSupplier,
-                               Util.FloatSupplier rightValueSupplier, Runnable applyValueFunction) {
+    public void addRangeSlider(Component prefix, Component suffix, double minValue, double maxValue, float stepSize,
+                               Util.FloatConsumer setLeftValueFunction, Util.FloatConsumer setRightValueFunction,
+                               Util.FloatSupplier leftValueSupplier, Util.FloatSupplier rightValueSupplier,
+                               Runnable applyValueFunction) {
         this.addEntry(
                 VFXGeneratorOptionsListEntry.addRangeSlider(this.width, prefix, suffix, minValue, maxValue, stepSize,
                                                             setLeftValueFunction, setRightValueFunction,
@@ -71,25 +65,27 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         return super.getScrollbarPosition() + 32;
     }
 
-    public static class VFXGeneratorOptionsListEntry extends AbstractOptionList.Entry<VFXGeneratorOptionsListEntry> {
+    public static class VFXGeneratorOptionsListEntry
+            extends ContainerObjectSelectionList.Entry<VFXGeneratorOptionsListEntry> {
         private final UpdateableWidget child;
 
         private VFXGeneratorOptionsListEntry(UpdateableWidget child) {
             this.child = child;
         }
 
-        public static VFXGeneratorOptionsListEntry addButton(int guiWidth, ITextComponent displayText,
-                                                             Runnable onPress) {
+        public static VFXGeneratorOptionsListEntry addButton(int guiWidth, Component displayText, Runnable onPress) {
             return new VFXGeneratorOptionsListEntry(new UpdateableWidget(guiWidth / 2 - 155, 0, 310, 20, () -> {
             }) {
                 @Override
                 protected int getYImage(boolean isHovered) {
-                    if (!this.active) return 1;
+                    if (!this.active) {
+                        return 1;
+                    }
                     return isHovered ? 2 : 1;
                 }
 
                 @Override
-                public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+                public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                     this.setMessage(displayText);
                     super.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
@@ -106,11 +102,15 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
                 @Override
                 protected void updateMessage() {
                 }
+
+                @Override
+                public void updateNarration(NarrationElementOutput narrationElementOutput) {
+                }
             });
         }
 
-        public static VFXGeneratorOptionsListEntry addToggleButton(int guiWidth, ITextComponent displayTextFalse,
-                                                                   ITextComponent displayTextTrue,
+        public static VFXGeneratorOptionsListEntry addToggleButton(int guiWidth, Component displayTextFalse,
+                                                                   Component displayTextTrue,
                                                                    Util.BooleanConsumer setValueFunction,
                                                                    Util.BooleanSupplier valueSupplier,
                                                                    Runnable applyValueFunction) {
@@ -120,17 +120,7 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
                     ));
         }
 
-        public static VFXGeneratorOptionsListEntry addMultipleChoiceButton(int guiWidth, ImmutableList<String> options,
-                                                                           Consumer<String> setValueFunction,
-                                                                           Supplier<String> valueSupplier,
-                                                                           Runnable applyValueFunction) {
-            return new VFXGeneratorOptionsListEntry(
-                    new MultipleStringChoiceButton(guiWidth / 2 - 155, 0, 310, 20, options, setValueFunction,
-                                                   valueSupplier, applyValueFunction
-                    ));
-        }
-
-        public static VFXGeneratorOptionsListEntry addSlider(int guiWidth, ITextComponent prefix, ITextComponent suffix,
+        public static VFXGeneratorOptionsListEntry addSlider(int guiWidth, Component prefix, Component suffix,
                                                              double minValue, double maxValue, float stepSize,
                                                              Util.FloatConsumer setValueFunction,
                                                              Util.FloatSupplier valueSupplier,
@@ -141,9 +131,8 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
                     ));
         }
 
-        public static VFXGeneratorOptionsListEntry addRangeSlider(int guiWidth, ITextComponent prefix,
-                                                                  ITextComponent suffix, double minValue,
-                                                                  double maxValue, float stepSize,
+        public static VFXGeneratorOptionsListEntry addRangeSlider(int guiWidth, Component prefix, Component suffix,
+                                                                  double minValue, double maxValue, float stepSize,
                                                                   Util.FloatConsumer setLeftValueFunction,
                                                                   Util.FloatConsumer setRightValueFunction,
                                                                   Util.FloatSupplier leftValueSupplier,
@@ -157,7 +146,7 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
+        public void render(PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
                            int mouseY, boolean isMouseOver, float partialTicks) {
             this.child.y = top;
             this.child.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -172,7 +161,12 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         }
 
         @Override
-        public List<? extends IGuiEventListener> children() {
+        public List<? extends GuiEventListener> children() {
+            return ImmutableList.of(this.child);
+        }
+
+        @Override
+        public List<? extends NarratableEntry> narratables() {
             return ImmutableList.of(this.child);
         }
     }
@@ -193,7 +187,7 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
+        public void render(PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
                            int mouseY, boolean isMouseOver, float partialTicks) {
             this.firstChild.y = top;
             this.secondChild.y = top;
@@ -221,7 +215,12 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         }
 
         @Override
-        public List<? extends IGuiEventListener> children() {
+        public List<? extends GuiEventListener> children() {
+            return ImmutableList.of(this.firstChild, this.secondChild);
+        }
+
+        @Override
+        public List<? extends NarratableEntry> narratables() {
             return ImmutableList.of(this.firstChild, this.secondChild);
         }
     }
@@ -232,8 +231,8 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
 
         private float stepSize = 1F;
 
-        private ITextComponent prefixFirst = StringTextComponent.EMPTY;
-        private ITextComponent suffixFirst = StringTextComponent.EMPTY;
+        private Component prefixFirst = TextComponent.EMPTY;
+        private Component suffixFirst = TextComponent.EMPTY;
         private double minValueFirst = 0F;
         private double maxValueFirst = 0F;
         private Util.FloatConsumer setLeftValueFunctionFirst = (value) -> {
@@ -243,8 +242,8 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
         private Util.FloatSupplier leftValueSupplierFirst = () -> 0F;
         private Util.FloatSupplier rightValueSupplierFirst = () -> 0F;
 
-        private ITextComponent prefixSecond = StringTextComponent.EMPTY;
-        private ITextComponent suffixSecond = StringTextComponent.EMPTY;
+        private Component prefixSecond = TextComponent.EMPTY;
+        private Component suffixSecond = TextComponent.EMPTY;
         private double minValueSecond = 0F;
         private double maxValueSecond = 0F;
         private Util.FloatConsumer setLeftValueFunctionSecond = (value) -> {
@@ -268,12 +267,12 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
             return this;
         }
 
-        public ToggleableRangeSliderBuilder prefixFirst(ITextComponent prefixFirst) {
+        public ToggleableRangeSliderBuilder prefixFirst(Component prefixFirst) {
             this.prefixFirst = prefixFirst;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder suffixFirst(ITextComponent suffixFirst) {
+        public ToggleableRangeSliderBuilder suffixFirst(Component suffixFirst) {
             this.suffixFirst = suffixFirst;
             return this;
         }
@@ -308,12 +307,12 @@ public class VFXGeneratorOptionsList extends AbstractOptionList<VFXGeneratorOpti
             return this;
         }
 
-        public ToggleableRangeSliderBuilder prefixSecond(ITextComponent prefixSecond) {
+        public ToggleableRangeSliderBuilder prefixSecond(Component prefixSecond) {
             this.prefixSecond = prefixSecond;
             return this;
         }
 
-        public ToggleableRangeSliderBuilder suffixSecond(ITextComponent suffixSecond) {
+        public ToggleableRangeSliderBuilder suffixSecond(Component suffixSecond) {
             this.suffixSecond = suffixSecond;
             return this;
         }

@@ -1,7 +1,6 @@
 {
   "block.vfxgenerator.vfx_generator": "VFX Generator",
   "gui.vfxgenerator.areaBox": "Show working area",
-  "gui.vfxgenerator.areaBox.description": "This will not work in Fabulous graphics mode.",
   "gui.vfxgenerator.blue": "Blue",
   "gui.vfxgenerator.brightness": "Brightness",
   "gui.vfxgenerator.collision": "Collision",

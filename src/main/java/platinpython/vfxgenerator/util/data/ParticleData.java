@@ -1,11 +1,12 @@
 package platinpython.vfxgenerator.util.data;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import platinpython.vfxgenerator.util.Constants;
 import platinpython.vfxgenerator.util.Util;
 
@@ -15,7 +16,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class ParticleData {
-    private final TileEntity owner;
+    private final BlockEntity owner;
 
     private boolean enabled = true;
     private TreeSet<ResourceLocation> selected = Util.createTreeSetFromCollectionWithComparator(
@@ -53,15 +54,15 @@ public class ParticleData {
     private boolean collision = false;
     private boolean fullBright = false;
 
-    public ParticleData(TileEntity owner) {
+    public ParticleData(BlockEntity owner) {
         this.owner = owner;
     }
 
-    public CompoundNBT saveToTag() {
-        CompoundNBT particleTag = new CompoundNBT();
+    public CompoundTag saveToTag() {
+        CompoundTag particleTag = new CompoundTag();
         particleTag.putBoolean(Constants.ParticleConstants.Keys.ENABLED, isEnabled());
-        ListNBT listNBT = new ListNBT();
-        getSelected().forEach((location) -> listNBT.add(StringNBT.valueOf(location.toString())));
+        ListTag listNBT = new ListTag();
+        getSelected().forEach((location) -> listNBT.add(StringTag.valueOf(location.toString())));
         particleTag.put(Constants.ParticleConstants.Keys.SELECTED, listNBT);
         particleTag.putBoolean(Constants.ParticleConstants.Keys.USE_HSB, useHSB());
         particleTag.putInt(Constants.ParticleConstants.Keys.RGB_COLOR_BOT, getRGBColorBot());
@@ -95,25 +96,27 @@ public class ParticleData {
         return particleTag;
     }
 
-    public void loadFromTag(CompoundNBT particleTag) {
+    public void loadFromTag(CompoundTag particleTag) {
         enabled = particleTag.getBoolean(Constants.ParticleConstants.Keys.ENABLED);
-        if (particleTag.getTagType(
-                Constants.ParticleConstants.Keys.SELECTED) == net.minecraftforge.common.util.Constants.NBT.TAG_LIST) {
+        if (particleTag.getTagType(Constants.ParticleConstants.Keys.SELECTED) == Tag.TAG_LIST) {
             selected = Util.createTreeSetFromCollectionWithComparator(
-                    ((ListNBT) particleTag.get(Constants.ParticleConstants.Keys.SELECTED)).stream()
+                    ((ListTag) particleTag.get(Constants.ParticleConstants.Keys.SELECTED)).stream()
                                                                                           .map((nbt) -> ResourceLocation.tryParse(
                                                                                                   nbt.getAsString()))
                                                                                           .filter(Constants.ParticleConstants.Values.PARTICLE_OPTIONS::contains)
                                                                                           .collect(Collectors.toList()),
                     ResourceLocation::compareNamespaced
             );
-            if (selected.isEmpty()) selected = Util.createTreeSetFromCollectionWithComparator(
-                    Collections.singletonList(Util.createNamespacedResourceLocation("particle/circle")),
-                    ResourceLocation::compareNamespaced
-            );
-            if (selected.size() > Constants.ParticleConstants.Values.PARTICLE_OPTIONS.size())
+            if (selected.isEmpty()) {
+                selected = Util.createTreeSetFromCollectionWithComparator(
+                        Collections.singletonList(Util.createNamespacedResourceLocation("particle/circle")),
+                        ResourceLocation::compareNamespaced
+                );
+            }
+            if (selected.size() > Constants.ParticleConstants.Values.PARTICLE_OPTIONS.size()) {
                 selected = Util.createTreeSetFromCollectionWithComparator(
                         Constants.ParticleConstants.Values.PARTICLE_OPTIONS, ResourceLocation::compareNamespaced);
+            }
         } else {
             selected = Util.createTreeSetFromCollectionWithComparator(Collections.singletonList(
                     Constants.ParticleConstants.Values.PARTICLE_OPTIONS.contains(Util.createNamespacedResourceLocation(
@@ -123,89 +126,80 @@ public class ParticleData {
                     Util.createNamespacedResourceLocation("particle/circle")), ResourceLocation::compareNamespaced);
         }
         useHSB = particleTag.getBoolean(Constants.ParticleConstants.Keys.USE_HSB);
-        RGBColorBot = MathHelper.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_BOT), 0xFF000000,
-                                       0xFFFFFFFF
+        RGBColorBot = Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_BOT), 0xFF000000,
+                                0xFFFFFFFF
         );
-        RGBColorTop = MathHelper.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_TOP), 0xFF000000,
-                                       0xFFFFFFFF
+        RGBColorTop = Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_TOP), 0xFF000000,
+                                0xFFFFFFFF
         );
-        hueBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.HUE_BOT), 0F, 1F);
-        saturationBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SATURATION_BOT), 0F, 1F);
-        brightnessBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.BRIGHTNESS_BOT), 0F, 1F);
-        hueTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.HUE_TOP), 0F, 1F);
-        saturationTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SATURATION_TOP), 0F, 1F);
-        brightnessTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.BRIGHTNESS_TOP), 0F, 1F);
-        lifetimeBot = MathHelper.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.LIFETIME_BOT),
-                                       Constants.ParticleConstants.Values.MIN_LIFETIME,
-                                       Constants.ParticleConstants.Values.MAX_LIFETIME
+        hueBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.HUE_BOT), 0F, 1F);
+        saturationBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SATURATION_BOT), 0F, 1F);
+        brightnessBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.BRIGHTNESS_BOT), 0F, 1F);
+        hueTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.HUE_TOP), 0F, 1F);
+        saturationTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SATURATION_TOP), 0F, 1F);
+        brightnessTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.BRIGHTNESS_TOP), 0F, 1F);
+        lifetimeBot = Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.LIFETIME_BOT),
+                                Constants.ParticleConstants.Values.MIN_LIFETIME,
+                                Constants.ParticleConstants.Values.MAX_LIFETIME
         );
-        lifetimeTop = MathHelper.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.LIFETIME_TOP),
-                                       Constants.ParticleConstants.Values.MIN_LIFETIME,
-                                       Constants.ParticleConstants.Values.MAX_LIFETIME
+        lifetimeTop = Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.LIFETIME_TOP),
+                                Constants.ParticleConstants.Values.MIN_LIFETIME,
+                                Constants.ParticleConstants.Values.MAX_LIFETIME
         );
-        sizeBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SIZE_BOT),
-                                   Constants.ParticleConstants.Values.MIN_SIZE,
-                                   Constants.ParticleConstants.Values.MAX_SIZE
+        sizeBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SIZE_BOT),
+                            Constants.ParticleConstants.Values.MIN_SIZE, Constants.ParticleConstants.Values.MAX_SIZE
         );
-        sizeTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SIZE_TOP),
-                                   Constants.ParticleConstants.Values.MIN_SIZE,
-                                   Constants.ParticleConstants.Values.MAX_SIZE
+        sizeTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SIZE_TOP),
+                            Constants.ParticleConstants.Values.MIN_SIZE, Constants.ParticleConstants.Values.MAX_SIZE
         );
-        spawnXBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_X_BOT),
-                                     Constants.ParticleConstants.Values.MIN_SPAWN,
-                                     Constants.ParticleConstants.Values.MAX_SPAWN
+        spawnXBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_X_BOT),
+                              Constants.ParticleConstants.Values.MIN_SPAWN, Constants.ParticleConstants.Values.MAX_SPAWN
         );
-        spawnXTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_X_TOP),
-                                     Constants.ParticleConstants.Values.MIN_SPAWN,
-                                     Constants.ParticleConstants.Values.MAX_SPAWN
+        spawnXTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_X_TOP),
+                              Constants.ParticleConstants.Values.MIN_SPAWN, Constants.ParticleConstants.Values.MAX_SPAWN
         );
-        spawnYBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_Y_BOT),
-                                     Constants.ParticleConstants.Values.MIN_SPAWN,
-                                     Constants.ParticleConstants.Values.MAX_SPAWN
+        spawnYBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_Y_BOT),
+                              Constants.ParticleConstants.Values.MIN_SPAWN, Constants.ParticleConstants.Values.MAX_SPAWN
         );
-        spawnYTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_Y_TOP),
-                                     Constants.ParticleConstants.Values.MIN_SPAWN,
-                                     Constants.ParticleConstants.Values.MAX_SPAWN
+        spawnYTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_Y_TOP),
+                              Constants.ParticleConstants.Values.MIN_SPAWN, Constants.ParticleConstants.Values.MAX_SPAWN
         );
-        spawnZBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_Z_BOT),
-                                     Constants.ParticleConstants.Values.MIN_SPAWN,
-                                     Constants.ParticleConstants.Values.MAX_SPAWN
+        spawnZBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_Z_BOT),
+                              Constants.ParticleConstants.Values.MIN_SPAWN, Constants.ParticleConstants.Values.MAX_SPAWN
         );
-        spawnZTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_Z_TOP),
-                                     Constants.ParticleConstants.Values.MIN_SPAWN,
-                                     Constants.ParticleConstants.Values.MAX_SPAWN
+        spawnZTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SPAWN_Z_TOP),
+                              Constants.ParticleConstants.Values.MIN_SPAWN, Constants.ParticleConstants.Values.MAX_SPAWN
         );
-        motionXBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_X_BOT),
-                                      Constants.ParticleConstants.Values.MIN_MOTION,
-                                      Constants.ParticleConstants.Values.MAX_MOTION
+        motionXBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_X_BOT),
+                               Constants.ParticleConstants.Values.MIN_MOTION,
+                               Constants.ParticleConstants.Values.MAX_MOTION
         );
-        motionXTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_X_TOP),
-                                      Constants.ParticleConstants.Values.MIN_MOTION,
-                                      Constants.ParticleConstants.Values.MAX_MOTION
+        motionXTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_X_TOP),
+                               Constants.ParticleConstants.Values.MIN_MOTION,
+                               Constants.ParticleConstants.Values.MAX_MOTION
         );
-        motionYBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_Y_BOT),
-                                      Constants.ParticleConstants.Values.MIN_MOTION,
-                                      Constants.ParticleConstants.Values.MAX_MOTION
+        motionYBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_Y_BOT),
+                               Constants.ParticleConstants.Values.MIN_MOTION,
+                               Constants.ParticleConstants.Values.MAX_MOTION
         );
-        motionYTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_Y_TOP),
-                                      Constants.ParticleConstants.Values.MIN_MOTION,
-                                      Constants.ParticleConstants.Values.MAX_MOTION
+        motionYTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_Y_TOP),
+                               Constants.ParticleConstants.Values.MIN_MOTION,
+                               Constants.ParticleConstants.Values.MAX_MOTION
         );
-        motionZBot = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_Z_BOT),
-                                      Constants.ParticleConstants.Values.MIN_MOTION,
-                                      Constants.ParticleConstants.Values.MAX_MOTION
+        motionZBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_Z_BOT),
+                               Constants.ParticleConstants.Values.MIN_MOTION,
+                               Constants.ParticleConstants.Values.MAX_MOTION
         );
-        motionZTop = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_Z_TOP),
-                                      Constants.ParticleConstants.Values.MIN_MOTION,
-                                      Constants.ParticleConstants.Values.MAX_MOTION
+        motionZTop = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.MOTION_Z_TOP),
+                               Constants.ParticleConstants.Values.MIN_MOTION,
+                               Constants.ParticleConstants.Values.MAX_MOTION
         );
-        delay = MathHelper.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.DELAY),
-                                 Constants.ParticleConstants.Values.MIN_DELAY,
-                                 Constants.ParticleConstants.Values.MAX_DELAY
+        delay = Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.DELAY),
+                          Constants.ParticleConstants.Values.MIN_DELAY, Constants.ParticleConstants.Values.MAX_DELAY
         );
-        gravity = MathHelper.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.GRAVITY),
-                                   Constants.ParticleConstants.Values.MIN_GRAVITY,
-                                   Constants.ParticleConstants.Values.MAX_GRAVITY
+        gravity = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.GRAVITY),
+                            Constants.ParticleConstants.Values.MIN_GRAVITY,
+                            Constants.ParticleConstants.Values.MAX_GRAVITY
         );
         collision = particleTag.getBoolean(Constants.ParticleConstants.Keys.COLLISION);
         fullBright = particleTag.getBoolean(Constants.ParticleConstants.Keys.FULLBRIGHT);
@@ -214,34 +208,30 @@ public class ParticleData {
     }
 
     private void ensureDataOrder() {
-        RGBColorBot = MathHelper.clamp(getRGBColorBot(), 0xFF000000, getRGBColorTop());
-        RGBColorTop = MathHelper.clamp(getRGBColorTop(), getRGBColorBot(), 0xFFFFFFFF);
-        hueBot = MathHelper.clamp(getHueBot(), 0F, getHueTop());
-        saturationBot = MathHelper.clamp(getSaturationBot(), 0F, getSaturationTop());
-        brightnessBot = MathHelper.clamp(getBrightnessBot(), 0F, getBrightnessTop());
-        hueTop = MathHelper.clamp(getHueTop(), getHueBot(), 1F);
-        saturationTop = MathHelper.clamp(getSaturationTop(), getSaturationBot(), 1F);
-        brightnessTop = MathHelper.clamp(getBrightnessTop(), getBrightnessBot(), 1F);
-        lifetimeBot = MathHelper.clamp(getLifetimeBot(), Constants.ParticleConstants.Values.MIN_LIFETIME,
-                                       getLifetimeTop()
-        );
-        lifetimeTop = MathHelper.clamp(getLifetimeTop(), getLifetimeBot(),
-                                       Constants.ParticleConstants.Values.MAX_LIFETIME
-        );
-        sizeBot = MathHelper.clamp(getSizeBot(), Constants.ParticleConstants.Values.MIN_SIZE, getSizeTop());
-        sizeTop = MathHelper.clamp(getSizeTop(), getSizeBot(), Constants.ParticleConstants.Values.MAX_SIZE);
-        spawnXBot = MathHelper.clamp(getSpawnXBot(), Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnXTop());
-        spawnXTop = MathHelper.clamp(getSpawnXTop(), getSpawnXBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
-        spawnYBot = MathHelper.clamp(getSpawnYBot(), Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnYTop());
-        spawnYTop = MathHelper.clamp(getSpawnYTop(), getSpawnYBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
-        spawnZBot = MathHelper.clamp(getSpawnZBot(), Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnZTop());
-        spawnZTop = MathHelper.clamp(getSpawnZTop(), getSpawnZBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
-        motionXBot = MathHelper.clamp(getMotionXBot(), Constants.ParticleConstants.Values.MIN_MOTION, getMotionXTop());
-        motionXTop = MathHelper.clamp(getMotionXTop(), getMotionXBot(), Constants.ParticleConstants.Values.MAX_MOTION);
-        motionYBot = MathHelper.clamp(getMotionYBot(), Constants.ParticleConstants.Values.MIN_MOTION, getMotionYTop());
-        motionYTop = MathHelper.clamp(getMotionYTop(), getMotionYBot(), Constants.ParticleConstants.Values.MAX_MOTION);
-        motionZBot = MathHelper.clamp(getMotionZBot(), Constants.ParticleConstants.Values.MIN_MOTION, getMotionZTop());
-        motionZTop = MathHelper.clamp(getMotionZTop(), getMotionZBot(), Constants.ParticleConstants.Values.MAX_MOTION);
+        RGBColorBot = Mth.clamp(getRGBColorBot(), 0xFF000000, getRGBColorTop());
+        RGBColorTop = Mth.clamp(getRGBColorTop(), getRGBColorBot(), 0xFFFFFFFF);
+        hueBot = Mth.clamp(getHueBot(), 0F, getHueTop());
+        saturationBot = Mth.clamp(getSaturationBot(), 0F, getSaturationTop());
+        brightnessBot = Mth.clamp(getBrightnessBot(), 0F, getBrightnessTop());
+        hueTop = Mth.clamp(getHueTop(), getHueBot(), 1F);
+        saturationTop = Mth.clamp(getSaturationTop(), getSaturationBot(), 1F);
+        brightnessTop = Mth.clamp(getBrightnessTop(), getBrightnessBot(), 1F);
+        lifetimeBot = Mth.clamp(getLifetimeBot(), Constants.ParticleConstants.Values.MIN_LIFETIME, getLifetimeTop());
+        lifetimeTop = Mth.clamp(getLifetimeTop(), getLifetimeBot(), Constants.ParticleConstants.Values.MAX_LIFETIME);
+        sizeBot = Mth.clamp(getSizeBot(), Constants.ParticleConstants.Values.MIN_SIZE, getSizeTop());
+        sizeTop = Mth.clamp(getSizeTop(), getSizeBot(), Constants.ParticleConstants.Values.MAX_SIZE);
+        spawnXBot = Mth.clamp(getSpawnXBot(), Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnXTop());
+        spawnXTop = Mth.clamp(getSpawnXTop(), getSpawnXBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
+        spawnYBot = Mth.clamp(getSpawnYBot(), Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnYTop());
+        spawnYTop = Mth.clamp(getSpawnYTop(), getSpawnYBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
+        spawnZBot = Mth.clamp(getSpawnZBot(), Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnZTop());
+        spawnZTop = Mth.clamp(getSpawnZTop(), getSpawnZBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
+        motionXBot = Mth.clamp(getMotionXBot(), Constants.ParticleConstants.Values.MIN_MOTION, getMotionXTop());
+        motionXTop = Mth.clamp(getMotionXTop(), getMotionXBot(), Constants.ParticleConstants.Values.MAX_MOTION);
+        motionYBot = Mth.clamp(getMotionYBot(), Constants.ParticleConstants.Values.MIN_MOTION, getMotionYTop());
+        motionYTop = Mth.clamp(getMotionYTop(), getMotionYBot(), Constants.ParticleConstants.Values.MAX_MOTION);
+        motionZBot = Mth.clamp(getMotionZBot(), Constants.ParticleConstants.Values.MIN_MOTION, getMotionZTop());
+        motionZTop = Mth.clamp(getMotionZTop(), getMotionZBot(), Constants.ParticleConstants.Values.MAX_MOTION);
     }
 
     public boolean isEnabled() {
@@ -263,10 +253,12 @@ public class ParticleData {
                                                                                .collect(Collectors.toList()),
                                                                        ResourceLocation::compareNamespaced
         );
-        if (this.selected.isEmpty()) this.selected = Util.createTreeSetFromCollectionWithComparator(
-                Collections.singletonList(Util.createNamespacedResourceLocation("particle/circle")),
-                ResourceLocation::compareNamespaced
-        );
+        if (this.selected.isEmpty()) {
+            this.selected = Util.createTreeSetFromCollectionWithComparator(
+                    Collections.singletonList(Util.createNamespacedResourceLocation("particle/circle")),
+                    ResourceLocation::compareNamespaced
+            );
+        }
         owner.setChanged();
     }
 
@@ -284,7 +276,7 @@ public class ParticleData {
     }
 
     public void setRGBColorBot(int RGBColorBot) {
-        this.RGBColorBot = MathHelper.clamp(RGBColorBot, 0xFF000000, getRGBColorTop());
+        this.RGBColorBot = Mth.clamp(RGBColorBot, 0xFF000000, getRGBColorTop());
         owner.setChanged();
     }
 
@@ -293,7 +285,7 @@ public class ParticleData {
     }
 
     public void setRGBColorTop(int RGBColorTop) {
-        this.RGBColorTop = MathHelper.clamp(RGBColorTop, getRGBColorBot(), 0xFFFFFFFF);
+        this.RGBColorTop = Mth.clamp(RGBColorTop, getRGBColorBot(), 0xFFFFFFFF);
         owner.setChanged();
     }
 
@@ -302,7 +294,7 @@ public class ParticleData {
     }
 
     public void setHueBot(float hueBot) {
-        this.hueBot = MathHelper.clamp(hueBot, 0F, getHueTop());
+        this.hueBot = Mth.clamp(hueBot, 0F, getHueTop());
     }
 
     public float getSaturationBot() {
@@ -310,7 +302,7 @@ public class ParticleData {
     }
 
     public void setSaturationBot(float saturationBot) {
-        this.saturationBot = MathHelper.clamp(saturationBot, 0F, getSaturationTop());
+        this.saturationBot = Mth.clamp(saturationBot, 0F, getSaturationTop());
     }
 
     public float getBrightnessBot() {
@@ -318,7 +310,7 @@ public class ParticleData {
     }
 
     public void setBrightnessBot(float brightnessBot) {
-        this.brightnessBot = MathHelper.clamp(brightnessBot, 0F, getBrightnessTop());
+        this.brightnessBot = Mth.clamp(brightnessBot, 0F, getBrightnessTop());
     }
 
     public float getHueTop() {
@@ -326,7 +318,7 @@ public class ParticleData {
     }
 
     public void setHueTop(float hueTop) {
-        this.hueTop = MathHelper.clamp(hueTop, getHueBot(), 1F);
+        this.hueTop = Mth.clamp(hueTop, getHueBot(), 1F);
     }
 
     public float getSaturationTop() {
@@ -334,7 +326,7 @@ public class ParticleData {
     }
 
     public void setSaturationTop(float saturationTop) {
-        this.saturationTop = MathHelper.clamp(saturationTop, getSaturationBot(), 1F);
+        this.saturationTop = Mth.clamp(saturationTop, getSaturationBot(), 1F);
     }
 
     public float getBrightnessTop() {
@@ -342,7 +334,7 @@ public class ParticleData {
     }
 
     public void setBrightnessTop(float brightnessTop) {
-        this.brightnessTop = MathHelper.clamp(brightnessTop, getBrightnessBot(), 1F);
+        this.brightnessTop = Mth.clamp(brightnessTop, getBrightnessBot(), 1F);
     }
 
     public int getLifetimeBot() {
@@ -350,9 +342,7 @@ public class ParticleData {
     }
 
     public void setLifetimeBot(int lifetimeBot) {
-        this.lifetimeBot = MathHelper.clamp(lifetimeBot, Constants.ParticleConstants.Values.MIN_LIFETIME,
-                                            getLifetimeTop()
-        );
+        this.lifetimeBot = Mth.clamp(lifetimeBot, Constants.ParticleConstants.Values.MIN_LIFETIME, getLifetimeTop());
         owner.setChanged();
     }
 
@@ -361,9 +351,7 @@ public class ParticleData {
     }
 
     public void setLifetimeTop(int lifetimeTop) {
-        this.lifetimeTop = MathHelper.clamp(lifetimeTop, getLifetimeBot(),
-                                            Constants.ParticleConstants.Values.MAX_LIFETIME
-        );
+        this.lifetimeTop = Mth.clamp(lifetimeTop, getLifetimeBot(), Constants.ParticleConstants.Values.MAX_LIFETIME);
         owner.setChanged();
     }
 
@@ -372,7 +360,7 @@ public class ParticleData {
     }
 
     public void setSizeBot(float sizeBot) {
-        this.sizeBot = MathHelper.clamp(sizeBot, Constants.ParticleConstants.Values.MIN_SIZE, getSizeTop());
+        this.sizeBot = Mth.clamp(sizeBot, Constants.ParticleConstants.Values.MIN_SIZE, getSizeTop());
         owner.setChanged();
     }
 
@@ -381,7 +369,7 @@ public class ParticleData {
     }
 
     public void setSizeTop(float sizeTop) {
-        this.sizeTop = MathHelper.clamp(sizeTop, getSizeBot(), Constants.ParticleConstants.Values.MAX_SIZE);
+        this.sizeTop = Mth.clamp(sizeTop, getSizeBot(), Constants.ParticleConstants.Values.MAX_SIZE);
         owner.setChanged();
     }
 
@@ -390,7 +378,7 @@ public class ParticleData {
     }
 
     public void setSpawnXBot(float spawnXBot) {
-        this.spawnXBot = MathHelper.clamp(spawnXBot, Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnXTop());
+        this.spawnXBot = Mth.clamp(spawnXBot, Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnXTop());
         owner.setChanged();
     }
 
@@ -399,7 +387,7 @@ public class ParticleData {
     }
 
     public void setSpawnXTop(float spawnXTop) {
-        this.spawnXTop = MathHelper.clamp(spawnXTop, getSpawnXBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
+        this.spawnXTop = Mth.clamp(spawnXTop, getSpawnXBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
         owner.setChanged();
     }
 
@@ -408,7 +396,7 @@ public class ParticleData {
     }
 
     public void setSpawnYBot(float spawnYBot) {
-        this.spawnYBot = MathHelper.clamp(spawnYBot, Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnYTop());
+        this.spawnYBot = Mth.clamp(spawnYBot, Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnYTop());
         owner.setChanged();
     }
 
@@ -417,7 +405,7 @@ public class ParticleData {
     }
 
     public void setSpawnYTop(float spawnYTop) {
-        this.spawnYTop = MathHelper.clamp(spawnYTop, getSpawnYBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
+        this.spawnYTop = Mth.clamp(spawnYTop, getSpawnYBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
         owner.setChanged();
     }
 
@@ -426,7 +414,7 @@ public class ParticleData {
     }
 
     public void setSpawnZBot(float spawnZBot) {
-        this.spawnZBot = MathHelper.clamp(spawnZBot, Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnZTop());
+        this.spawnZBot = Mth.clamp(spawnZBot, Constants.ParticleConstants.Values.MIN_SPAWN, getSpawnZTop());
         owner.setChanged();
     }
 
@@ -435,7 +423,7 @@ public class ParticleData {
     }
 
     public void setSpawnZTop(float spawnZTop) {
-        this.spawnZTop = MathHelper.clamp(spawnZTop, getSpawnZBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
+        this.spawnZTop = Mth.clamp(spawnZTop, getSpawnZBot(), Constants.ParticleConstants.Values.MAX_SPAWN);
         owner.setChanged();
     }
 
@@ -444,7 +432,7 @@ public class ParticleData {
     }
 
     public void setMotionXBot(float motionXBot) {
-        this.motionXBot = MathHelper.clamp(motionXBot, Constants.ParticleConstants.Values.MIN_MOTION, getMotionXTop());
+        this.motionXBot = Mth.clamp(motionXBot, Constants.ParticleConstants.Values.MIN_MOTION, getMotionXTop());
         owner.setChanged();
     }
 
@@ -453,7 +441,7 @@ public class ParticleData {
     }
 
     public void setMotionXTop(float motionXTop) {
-        this.motionXTop = MathHelper.clamp(motionXTop, getMotionXBot(), Constants.ParticleConstants.Values.MAX_MOTION);
+        this.motionXTop = Mth.clamp(motionXTop, getMotionXBot(), Constants.ParticleConstants.Values.MAX_MOTION);
         owner.setChanged();
     }
 
@@ -462,7 +450,7 @@ public class ParticleData {
     }
 
     public void setMotionYBot(float motionYBot) {
-        this.motionYBot = MathHelper.clamp(motionYBot, Constants.ParticleConstants.Values.MIN_MOTION, getMotionYTop());
+        this.motionYBot = Mth.clamp(motionYBot, Constants.ParticleConstants.Values.MIN_MOTION, getMotionYTop());
         owner.setChanged();
     }
 
@@ -471,7 +459,7 @@ public class ParticleData {
     }
 
     public void setMotionYTop(float motionYTop) {
-        this.motionYTop = MathHelper.clamp(motionYTop, getMotionYBot(), Constants.ParticleConstants.Values.MAX_MOTION);
+        this.motionYTop = Mth.clamp(motionYTop, getMotionYBot(), Constants.ParticleConstants.Values.MAX_MOTION);
         owner.setChanged();
     }
 
@@ -480,7 +468,7 @@ public class ParticleData {
     }
 
     public void setMotionZBot(float motionZBot) {
-        this.motionZBot = MathHelper.clamp(motionZBot, Constants.ParticleConstants.Values.MIN_MOTION, getMotionZTop());
+        this.motionZBot = Mth.clamp(motionZBot, Constants.ParticleConstants.Values.MIN_MOTION, getMotionZTop());
         owner.setChanged();
     }
 
@@ -489,7 +477,7 @@ public class ParticleData {
     }
 
     public void setMotionZTop(float motionZTop) {
-        this.motionZTop = MathHelper.clamp(motionZTop, getMotionZBot(), Constants.ParticleConstants.Values.MAX_MOTION);
+        this.motionZTop = Mth.clamp(motionZTop, getMotionZBot(), Constants.ParticleConstants.Values.MAX_MOTION);
         owner.setChanged();
     }
 
@@ -498,8 +486,8 @@ public class ParticleData {
     }
 
     public void setDelay(int delay) {
-        this.delay = MathHelper.clamp(delay, Constants.ParticleConstants.Values.MIN_DELAY,
-                                      Constants.ParticleConstants.Values.MAX_DELAY
+        this.delay = Mth.clamp(delay, Constants.ParticleConstants.Values.MIN_DELAY,
+                               Constants.ParticleConstants.Values.MAX_DELAY
         );
         owner.setChanged();
     }
@@ -509,8 +497,8 @@ public class ParticleData {
     }
 
     public void setGravity(float gravity) {
-        this.gravity = MathHelper.clamp(gravity, Constants.ParticleConstants.Values.MIN_GRAVITY,
-                                        Constants.ParticleConstants.Values.MAX_GRAVITY
+        this.gravity = Mth.clamp(gravity, Constants.ParticleConstants.Values.MIN_GRAVITY,
+                                 Constants.ParticleConstants.Values.MAX_GRAVITY
         );
         owner.setChanged();
     }

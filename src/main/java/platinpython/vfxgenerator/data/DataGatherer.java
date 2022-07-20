@@ -2,7 +2,7 @@ package platinpython.vfxgenerator.data;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 public class DataGatherer {
     public static void onGatherData(GatherDataEvent event) {

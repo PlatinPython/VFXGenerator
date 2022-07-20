@@ -1,15 +1,15 @@
 package platinpython.vfxgenerator.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import platinpython.vfxgenerator.VFXGenerator;
+import platinpython.vfxgenerator.util.registries.BlockEntityRegistry;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
 import platinpython.vfxgenerator.util.registries.ItemRegistry;
-import platinpython.vfxgenerator.util.registries.TileEntityRegistry;
 
 public class RegistryHandler {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS,
@@ -20,16 +20,16 @@ public class RegistryHandler {
                                                                                VFXGenerator.MOD_ID
     );
 
-    public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(
-            ForgeRegistries.TILE_ENTITIES, VFXGenerator.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(
+            ForgeRegistries.BLOCK_ENTITIES, VFXGenerator.MOD_ID);
 
     public static void register() {
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        TILE_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        BLOCK_ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         BlockRegistry.register();
         ItemRegistry.register();
-        TileEntityRegistry.register();
+        BlockEntityRegistry.register();
     }
 }

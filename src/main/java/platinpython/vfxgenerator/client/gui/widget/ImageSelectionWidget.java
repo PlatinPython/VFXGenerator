@@ -1,21 +1,18 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraftforge.fml.client.gui.GuiUtils;
-import org.lwjgl.opengl.GL11C;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.gui.GuiUtils;
 import platinpython.vfxgenerator.util.Util;
 
 import java.util.Collections;
@@ -41,12 +38,12 @@ public class ImageSelectionWidget extends UpdateableWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height,
-                         this.selected ? 0xFFFFFFFF : 0xFF000000
+    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        GuiComponent.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height,
+                          this.selected ? 0xFFFFFFFF : 0xFF000000
         );
-        AbstractGui.fill(matrixStack, this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1,
-                         0xFF000000
+        GuiComponent.fill(matrixStack, this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1,
+                          0xFF000000
         );
         GuiUtils.drawContinuousTexturedBox(matrixStack, WIDGETS_LOCATION, this.x, this.y, 0, this.selected ? 86 : 66,
                                            this.width, this.height, 200, 20, 2, 3, 2, 2, this.getBlitOffset()
@@ -59,14 +56,14 @@ public class ImageSelectionWidget extends UpdateableWidget {
     @SuppressWarnings("deprecation")
     private void renderImage(Matrix4f matrix, int minX, int minY, int maxX, int maxY) {
         Minecraft minecraft = Minecraft.getInstance();
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuilder();
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO,
                                        DestFactor.ZERO
         );
-        minecraft.getTextureManager().bind(AtlasTexture.LOCATION_PARTICLES);
-        bufferBuilder.begin(GL11C.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         TextureAtlasSprite sprite = minecraft.particleEngine.textureAtlas.getSprite(imageLocation);
 
         float u0 = sprite.getU0();
@@ -112,4 +109,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
     protected void updateMessage() {
     }
 
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+    }
 }

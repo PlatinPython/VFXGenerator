@@ -60,7 +60,6 @@ public class ModLanguageProvider extends LanguageProvider {
         addGui("ticks", "Ticks");
 
         addGui("areaBox", "Show working area");
-        addGui("areaBox.description", "This will not work in Fabulous graphics mode.");
     }
 
     private void addGui(String suffix, String text) {

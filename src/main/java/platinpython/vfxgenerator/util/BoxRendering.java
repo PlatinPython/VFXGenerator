@@ -1,26 +1,25 @@
 package platinpython.vfxgenerator.util;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderState;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.opengl.GL11C;
 import platinpython.vfxgenerator.VFXGenerator;
-import platinpython.vfxgenerator.tileentity.VFXGeneratorTileEntity;
+import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.util.data.ParticleData;
 
 @Mod.EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -28,24 +27,31 @@ public class BoxRendering {
     public static BlockPos currentRenderPos;
 
     @SubscribeEvent
-    public static void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (currentRenderPos == null) return;
-        TileEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(currentRenderPos);
-        if (!(tileEntity instanceof VFXGeneratorTileEntity)) return;
-        ParticleData particleData = ((VFXGeneratorTileEntity) tileEntity).getParticleData();
+    public static void onRenderWorldLast(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
+            return;
+        }
+        if (currentRenderPos == null) {
+            return;
+        }
+        BlockEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(currentRenderPos);
+        if (!(tileEntity instanceof VFXGeneratorBlockEntity)) {
+            return;
+        }
+        ParticleData particleData = ((VFXGeneratorBlockEntity) tileEntity).getParticleData();
 
-        MatrixStack matrixStack = event.getMatrixStack();
-        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+        PoseStack poseStack = event.getPoseStack();
+        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 
-        matrixStack.pushPose();
-        Vector3d projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        matrixStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
+        poseStack.pushPose();
+        Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
 
-        Matrix4f matrix = matrixStack.last().pose();
+        Matrix4f matrix = poseStack.last().pose();
 
-        Vector3f pos = new Vector3f(Vector3d.atCenterOf(currentRenderPos));
+        Vector3f pos = new Vector3f(Vec3.atCenterOf(currentRenderPos));
 
-        IVertexBuilder builder = buffer.getBuffer(BoxRenderType.TRANSLUCENT_NO_CULL);
+        VertexConsumer builder = buffer.getBuffer(BoxRenderType.TRANSLUCENT_NO_CULL);
         renderBoxSides(builder, matrix, pos.x() + particleData.getSpawnXBot(), pos.y() + particleData.getSpawnYBot(),
                        pos.z() + particleData.getSpawnZBot(), pos.x() + particleData.getSpawnXTop(),
                        pos.y() + particleData.getSpawnYTop(), pos.z() + particleData.getSpawnZTop()
@@ -63,10 +69,10 @@ public class BoxRendering {
         renderBoxEdgesFullbright(builder, matrix, pos);
         buffer.endBatch(BoxRenderType.LINES_LIGHTMAP);
 
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 
-    private static void renderBoxSides(IVertexBuilder builder, Matrix4f matrix, float minX, float minY, float minZ,
+    private static void renderBoxSides(VertexConsumer builder, Matrix4f matrix, float minX, float minY, float minZ,
                                        float maxX, float maxY, float maxZ) {
         int red = 0;
         int green = 128;
@@ -74,43 +80,43 @@ public class BoxRendering {
         int alpha = 128;
 
         // Top side
-        builder.vertex(matrix, minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, minY, minZ).color(red, green, blue, alpha).endVertex();
 
         // Bottom side
-        builder.vertex(matrix, maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
 
         // North side
-        builder.vertex(matrix, maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
 
         // East side
-        builder.vertex(matrix, maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, minY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
 
         // South side
-        builder.vertex(matrix, minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, minY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
 
         // West side
-        builder.vertex(matrix, minX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        builder.vertex(matrix, minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
+        builder.vertex(matrix, maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
     }
 
-    private static void renderBoxEdges(IVertexBuilder builder, Matrix4f matrix, float minX, float minY, float minZ,
+    private static void renderBoxEdges(VertexConsumer builder, Matrix4f matrix, float minX, float minY, float minZ,
                                        float maxX, float maxY, float maxZ) {
         int red = 0;
         int green = 0;
@@ -158,7 +164,7 @@ public class BoxRendering {
         builder.vertex(matrix, minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
     }
 
-    private static void renderBoxEdgesFullbright(IVertexBuilder builder, Matrix4f matrix, Vector3f center) {
+    private static void renderBoxEdgesFullbright(VertexConsumer builder, Matrix4f matrix, Vector3f center) {
         float minX = center.x() - 0.5001F;
         float minY = center.y() - 0.5001F;
         float minZ = center.z() - 0.5001F;
@@ -286,68 +292,68 @@ public class BoxRendering {
 
     private static class BoxRenderType extends RenderType {
 
-        public BoxRenderType(String p_i225992_1_, VertexFormat p_i225992_2_, int p_i225992_3_, int p_i225992_4_,
-                             boolean p_i225992_5_, boolean p_i225992_6_, Runnable p_i225992_7_, Runnable p_i225992_8_) {
-            super(p_i225992_1_, p_i225992_2_, p_i225992_3_, p_i225992_4_, p_i225992_5_, p_i225992_6_, p_i225992_7_,
-                  p_i225992_8_
-            );
+        public BoxRenderType(String name, VertexFormat format, VertexFormat.Mode mode, int bufferSize,
+                             boolean affectsCrumbling, boolean sortOnUpload, Runnable setupState, Runnable clearState) {
+            super(name, format, mode, bufferSize, affectsCrumbling, sortOnUpload, setupState, clearState);
         }
 
         public static final RenderType TRANSLUCENT_NO_CULL = RenderType.create(
                 Util.createNamespacedResourceLocation("translucent_no_cull").toString(),
-                DefaultVertexFormats.POSITION_COLOR, GL11C.GL_QUADS, 256, RenderType.State.builder()
-                                                                                          .setLayeringState(
-                                                                                                  LayerState.VIEW_OFFSET_Z_LAYERING)
-                                                                                          .setTransparencyState(
-                                                                                                  RenderState.TRANSLUCENT_TRANSPARENCY)
-                                                                                          .setTextureState(
-                                                                                                  RenderState.NO_TEXTURE)
-                                                                                          .setDepthTestState(
-                                                                                                  RenderState.NO_DEPTH_TEST)
-                                                                                          .setCullState(
-                                                                                                  RenderState.NO_CULL)
-                                                                                          .setLightmapState(
-                                                                                                  RenderState.NO_LIGHTMAP)
-                                                                                          .setWriteMaskState(
-                                                                                                  RenderState.COLOR_WRITE)
-                                                                                          .createCompositeState(false)
+                DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, false, true,
+                RenderType.CompositeState.builder()
+                                         .setOutputState(RenderStateShard.TRANSLUCENT_TARGET)
+                                         .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
+                                         .setLayeringState(LayeringStateShard.VIEW_OFFSET_Z_LAYERING)
+                                         .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                                         .setTextureState(RenderStateShard.NO_TEXTURE)
+                                         .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
+                                         .setCullState(RenderStateShard.NO_CULL)
+                                         .setLightmapState(RenderStateShard.NO_LIGHTMAP)
+                                         .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                                         .createCompositeState(false)
         );
 
         public static final RenderType LINES = RenderType.create(
-                Util.createNamespacedResourceLocation("lines").toString(), DefaultVertexFormats.POSITION_COLOR,
-                GL11C.GL_LINES, 256, RenderType.State.builder()
-                                                     .setLineState(LineState.DEFAULT_LINE)
-                                                     .setLayeringState(LayerState.VIEW_OFFSET_Z_LAYERING)
-                                                     .setTransparencyState(RenderState.NO_TRANSPARENCY)
-                                                     .setTextureState(RenderState.NO_TEXTURE)
-                                                     .setDepthTestState(RenderState.NO_DEPTH_TEST)
-                                                     .setCullState(RenderState.CULL)
-                                                     .setLightmapState(RenderState.NO_LIGHTMAP)
-                                                     .setWriteMaskState(RenderState.COLOR_WRITE)
-                                                     .createCompositeState(false)
+                Util.createNamespacedResourceLocation("lines").toString(), DefaultVertexFormat.POSITION_COLOR,
+                VertexFormat.Mode.DEBUG_LINES, 256, false, false, RenderType.CompositeState.builder()
+                                                                                           .setOutputState(
+                                                                                                   RenderStateShard.MAIN_TARGET)
+                                                                                           .setShaderState(
+                                                                                                   RenderStateShard.RENDERTYPE_LINES_SHADER)
+                                                                                           .setLineState(
+                                                                                                   LineStateShard.DEFAULT_LINE)
+                                                                                           .setLayeringState(
+                                                                                                   LayeringStateShard.VIEW_OFFSET_Z_LAYERING)
+                                                                                           .setTransparencyState(
+                                                                                                   RenderStateShard.NO_TRANSPARENCY)
+                                                                                           .setTextureState(
+                                                                                                   RenderStateShard.NO_TEXTURE)
+                                                                                           .setDepthTestState(
+                                                                                                   RenderStateShard.LEQUAL_DEPTH_TEST)
+                                                                                           .setCullState(
+                                                                                                   RenderStateShard.CULL)
+                                                                                           .setLightmapState(
+                                                                                                   RenderStateShard.NO_LIGHTMAP)
+                                                                                           .setWriteMaskState(
+                                                                                                   RenderStateShard.COLOR_DEPTH_WRITE)
+                                                                                           .createCompositeState(false)
         );
 
         public static final RenderType LINES_LIGHTMAP = RenderType.create(
                 Util.createNamespacedResourceLocation("lines_lightmap").toString(),
-                DefaultVertexFormats.POSITION_COLOR_LIGHTMAP, GL11C.GL_LINES, 256, RenderType.State.builder()
-                                                                                                   .setLineState(
-                                                                                                           LineState.DEFAULT_LINE)
-                                                                                                   .setLayeringState(
-                                                                                                           LayerState.VIEW_OFFSET_Z_LAYERING)
-                                                                                                   .setTransparencyState(
-                                                                                                           RenderState.NO_TRANSPARENCY)
-                                                                                                   .setTextureState(
-                                                                                                           RenderState.NO_TEXTURE)
-                                                                                                   .setDepthTestState(
-                                                                                                           RenderState.NO_DEPTH_TEST)
-                                                                                                   .setCullState(
-                                                                                                           RenderState.NO_CULL)
-                                                                                                   .setLightmapState(
-                                                                                                           RenderState.LIGHTMAP)
-                                                                                                   .setWriteMaskState(
-                                                                                                           RenderState.COLOR_WRITE)
-                                                                                                   .createCompositeState(
-                                                                                                           false)
+                DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.DEBUG_LINES, 256, false, false,
+                RenderType.CompositeState.builder()
+                                         .setOutputState(RenderStateShard.MAIN_TARGET)
+                                         .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)
+                                         .setLineState(LineStateShard.DEFAULT_LINE)
+                                         .setLayeringState(LayeringStateShard.VIEW_OFFSET_Z_LAYERING)
+                                         .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
+                                         .setTextureState(RenderStateShard.NO_TEXTURE)
+                                         .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
+                                         .setCullState(RenderStateShard.CULL)
+                                         .setLightmapState(RenderStateShard.LIGHTMAP)
+                                         .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                                         .createCompositeState(false)
         );
     }
 }

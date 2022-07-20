@@ -1,10 +1,11 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.list.AbstractOptionList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.resources.ResourceLocation;
 import platinpython.vfxgenerator.util.Constants;
 import platinpython.vfxgenerator.util.Util;
 
@@ -14,7 +15,7 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.TextureOptionsListEntry> {
+public class TextureOptionsList extends ContainerObjectSelectionList<TextureOptionsList.TextureOptionsListEntry> {
     public TextureOptionsList(Minecraft minecraft, int width, int height, int top, int bottom, int itemHeight,
                               Consumer<TreeSet<ResourceLocation>> setValueFunction,
                               Supplier<TreeSet<ResourceLocation>> valueSupplier, Runnable applyValueFunction) {
@@ -61,7 +62,7 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
         return this.width / 2 + 76;
     }
 
-    public static class TextureOptionsListEntry extends AbstractOptionList.Entry<TextureOptionsListEntry> {
+    public static class TextureOptionsListEntry extends ContainerObjectSelectionList.Entry<TextureOptionsListEntry> {
         private final ImageSelectionWidget child1, child2, child3;
 
         private TextureOptionsListEntry(ImageSelectionWidget child1, ImageSelectionWidget child2,
@@ -128,7 +129,7 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
+        public void render(PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
                            int mouseY, boolean isMouseOver, float partialTicks) {
             if (child1 != null) {
                 this.child1.y = top;
@@ -142,6 +143,11 @@ public class TextureOptionsList extends AbstractOptionList<TextureOptionsList.Te
                 this.child3.y = top;
                 this.child3.render(matrixStack, mouseX, mouseY, partialTicks);
             }
+        }
+
+        @Override
+        public List<? extends NarratableEntry> narratables() {
+            return children();
         }
     }
 }

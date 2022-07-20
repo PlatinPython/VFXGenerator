@@ -1,18 +1,19 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
 import platinpython.vfxgenerator.util.Util;
 
 public class ToggleTextButton extends UpdateableWidget {
-    private final ITextComponent displayTextFalse;
-    private final ITextComponent displayTextTrue;
+    private final Component displayTextFalse;
+    private final Component displayTextTrue;
 
     private final Util.BooleanConsumer setValueFunction;
     private final Util.BooleanSupplier valueSupplier;
 
-    public ToggleTextButton(int x, int y, int width, int height, ITextComponent displayTextFalse,
-                            ITextComponent displayTextTrue, Util.BooleanConsumer setValueFunction,
-                            Util.BooleanSupplier valueSupplier, Runnable applyValueFunction) {
+    public ToggleTextButton(int x, int y, int width, int height, Component displayTextFalse, Component displayTextTrue,
+                            Util.BooleanConsumer setValueFunction, Util.BooleanSupplier valueSupplier,
+                            Runnable applyValueFunction) {
         super(x, y, width, height, applyValueFunction);
         this.displayTextFalse = displayTextFalse;
         this.displayTextTrue = displayTextTrue;
@@ -23,7 +24,9 @@ public class ToggleTextButton extends UpdateableWidget {
 
     @Override
     protected int getYImage(boolean isHovered) {
-        if (!this.active) return 1;
+        if (!this.active) {
+            return 1;
+        }
         return isHovered ? 2 : 1;
     }
 
@@ -42,5 +45,9 @@ public class ToggleTextButton extends UpdateableWidget {
     @Override
     protected void updateMessage() {
         this.setMessage(valueSupplier.get() ? displayTextTrue : displayTextFalse);
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
     }
 }

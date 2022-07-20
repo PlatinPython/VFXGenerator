@@ -1,24 +1,22 @@
 package platinpython.vfxgenerator.client.particle;
 
-import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ReuseableStream;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
-import java.util.stream.Stream;
+import java.util.List;
 
-public class VFXParticle extends SpriteTexturedParticle {
+public class VFXParticle extends TextureSheetParticle {
     private final boolean fullbright;
 
     private boolean stoppedByCollision;
 
-    public VFXParticle(ClientWorld clientWorld, TextureAtlasSprite sprite, int color, int lifetime, float size,
-                       Vector3d pos, Vector3d motion, float gravity, boolean collision, boolean fullbright) {
+    public VFXParticle(ClientLevel clientWorld, TextureAtlasSprite sprite, int color, int lifetime, float size,
+                       Vec3 pos, Vec3 motion, float gravity, boolean collision, boolean fullbright) {
         super(clientWorld, pos.x, pos.y, pos.z);
         this.setSprite(sprite);
         this.rCol = (color >> 16 & 0xFF) / 255f;
@@ -68,10 +66,8 @@ public class VFXParticle extends SpriteTexturedParticle {
             double dY = y;
             double dZ = z;
             if (this.hasPhysics && (x != 0.0D || y != 0.0D || z != 0.0D)) {
-                Vector3d vector3d = Entity.collideBoundingBoxHeuristically(null, new Vector3d(x, y, z),
-                                                                           this.getBoundingBox(), this.level,
-                                                                           ISelectionContext.empty(),
-                                                                           new ReuseableStream<>(Stream.empty())
+                Vec3 vector3d = Entity.collideBoundingBox(null, new Vec3(x, y, z), this.getBoundingBox(), this.level,
+                                                          List.of()
                 );
                 x = vector3d.x;
                 y = vector3d.y;
@@ -100,7 +96,7 @@ public class VFXParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 }

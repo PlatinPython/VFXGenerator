@@ -1,13 +1,13 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.TextComponent;
 
-public abstract class UpdateableWidget extends Widget {
+public abstract class UpdateableWidget extends AbstractWidget {
     protected final Runnable applyValueFunction;
 
     public UpdateableWidget(int x, int y, int width, int height, Runnable applyValueFunction) {
-        super(x, y, width, height, StringTextComponent.EMPTY);
+        super(x, y, width, height, TextComponent.EMPTY);
         this.applyValueFunction = applyValueFunction;
     }
 

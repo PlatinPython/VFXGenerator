@@ -1,13 +1,13 @@
 package platinpython.vfxgenerator.client.model;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
@@ -16,10 +16,10 @@ import platinpython.vfxgenerator.util.registries.BlockRegistry;
 import java.util.List;
 import java.util.Random;
 
-public class FullbrightBakedModel implements IBakedModel {
-    private final IBakedModel base;
+public class FullbrightBakedModel implements BakedModel {
+    private final BakedModel base;
 
-    public FullbrightBakedModel(IBakedModel base) {
+    public FullbrightBakedModel(BakedModel base) {
         this.base = base;
     }
 
@@ -71,11 +71,11 @@ public class FullbrightBakedModel implements IBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return base.getParticleTexture(EmptyModelData.INSTANCE);
+        return base.getParticleIcon(EmptyModelData.INSTANCE);
     }
 
     @Override
-    public ItemOverrideList getOverrides() {
+    public ItemOverrides getOverrides() {
         return base.getOverrides();
     }
 }

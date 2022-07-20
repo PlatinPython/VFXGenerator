@@ -1,7 +1,7 @@
 package platinpython.vfxgenerator.util;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public final class Constants {
     public static final class ParticleConstants {

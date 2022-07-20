@@ -1,13 +1,15 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
 
@@ -17,14 +19,14 @@ public class FloatSlider extends UpdateableWidget {
     private final double minValue, maxValue;
     private final float stepSize;
     private final DecimalFormat format;
-    private final ITextComponent prefix;
-    private final ITextComponent suffix;
+    private final Component prefix;
+    private final Component suffix;
     private final Util.FloatConsumer setValueFunction;
     private final Util.FloatSupplier valueSupplier;
     private double sliderValue;
 
-    public FloatSlider(int x, int y, int width, int height, ITextComponent prefix, ITextComponent suffix,
-                       double minValue, double maxValue, float stepSize, Util.FloatConsumer setValueFunction,
+    public FloatSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue,
+                       double maxValue, float stepSize, Util.FloatConsumer setValueFunction,
                        Util.FloatSupplier valueSupplier, Runnable applyValueFunction) {
         super(x, y, width, height, applyValueFunction);
         this.minValue = minValue;
@@ -54,19 +56,21 @@ public class FloatSlider extends UpdateableWidget {
     }
 
     private int getYImageNoDisabled(boolean isHovered) {
-        if (!this.active) return 1;
+        if (!this.active) {
+            return 1;
+        }
         return isHovered ? 2 : 1;
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    protected void renderBg(MatrixStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)), this.y, 0,
-                  46 + this.getYImageNoDisabled(isHovered()) * 20, 4, this.height
+                  46 + this.getYImageNoDisabled(isHovered) * 20, 4, this.height
         );
         this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)) + 4, this.y, 196,
-                  46 + this.getYImageNoDisabled(isHovered()) * 20, 4, this.height
+                  46 + this.getYImageNoDisabled(isHovered) * 20, 4, this.height
         );
     }
 
@@ -97,16 +101,20 @@ public class FloatSlider extends UpdateableWidget {
         boolean flag = keyCode == GLFW.GLFW_KEY_LEFT;
         if (flag || keyCode == GLFW.GLFW_KEY_RIGHT) {
             if (flag) {
-                if (this.sliderValue != 0D) this.setSliderValue(
-                        Util.clamp((this.getSliderValue() - this.stepSize), this.minValue, this.maxValue,
-                                   this.stepSize
-                        ));
+                if (this.sliderValue != 0D) {
+                    this.setSliderValue(
+                            Util.clamp((this.getSliderValue() - this.stepSize), this.minValue, this.maxValue,
+                                       this.stepSize
+                            ));
+                }
 
             } else {
-                if (this.sliderValue != 1D) this.setSliderValue(
-                        Util.clamp((this.getSliderValue() + this.stepSize), this.minValue, this.maxValue,
-                                   this.stepSize
-                        ));
+                if (this.sliderValue != 1D) {
+                    this.setSliderValue(
+                            Util.clamp((this.getSliderValue() + this.stepSize), this.minValue, this.maxValue,
+                                       this.stepSize
+                            ));
+                }
 
             }
         }
@@ -129,7 +137,7 @@ public class FloatSlider extends UpdateableWidget {
     }
 
     @Override
-    public void playDownSound(SoundHandler handler) {
+    public void playDownSound(SoundManager handler) {
     }
 
     @Override
@@ -139,15 +147,31 @@ public class FloatSlider extends UpdateableWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(new StringTextComponent("").append(prefix)
-                                              .append(": ")
-                                              .append(format.format(getSliderValue()))
-                                              .append(suffix.getString().isEmpty() ? "" : " ")
-                                              .append(suffix));
+        setMessage(new TextComponent("").append(prefix)
+                                        .append(": ")
+                                        .append(format.format(getSliderValue()))
+                                        .append(suffix.getString().isEmpty() ? "" : " ")
+                                        .append(suffix));
     }
 
     @Override
-    protected IFormattableTextComponent createNarrationMessage() {
-        return new TranslationTextComponent("gui.narrate.slider", this.getMessage());
+    protected MutableComponent createNarrationMessage() {
+        return new TranslatableComponent("gui.narrate.slider", this.getMessage());
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        narrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
+        if (this.active) {
+            if (this.isFocused()) {
+                narrationElementOutput.add(NarratedElementType.USAGE,
+                                           new TranslatableComponent("narration.slider.usage.focused")
+                );
+            } else {
+                narrationElementOutput.add(NarratedElementType.USAGE,
+                                           new TranslatableComponent("narration.slider.usage.hovered")
+                );
+            }
+        }
     }
 }

@@ -1,15 +1,17 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraftforge.client.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
 
@@ -19,8 +21,8 @@ public class FloatRangeSlider extends UpdateableWidget {
     private final double minValue, maxValue;
     private final float stepSize;
     private final DecimalFormat format;
-    private final ITextComponent prefix;
-    private final ITextComponent suffix;
+    private final Component prefix;
+    private final Component suffix;
     private final Util.FloatConsumer setLeftValueFunction;
     private final Util.FloatConsumer setRightValueFunction;
     private final Util.FloatSupplier leftValueSupplier;
@@ -29,8 +31,8 @@ public class FloatRangeSlider extends UpdateableWidget {
     private boolean isLeftSelected;
     private boolean stopped;
 
-    public FloatRangeSlider(int x, int y, int width, int height, ITextComponent prefix, ITextComponent suffix,
-                            double minValue, double maxValue, float stepSize, Util.FloatConsumer setLeftValueFunction,
+    public FloatRangeSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue,
+                            double maxValue, float stepSize, Util.FloatConsumer setLeftValueFunction,
                             Util.FloatConsumer setRightValueFunction, Util.FloatSupplier leftValueSupplier,
                             Util.FloatSupplier rightValueSupplier, Runnable applyValueFunction) {
         super(x, y, width, height, applyValueFunction);
@@ -53,11 +55,11 @@ public class FloatRangeSlider extends UpdateableWidget {
     private void setupSliderValues(double leftValue, double rightValue) {
         this.leftSliderValue = Util.clamp(leftValue, this.minValue, this.maxValue, this.stepSize);
         this.rightSliderValue = Util.clamp(rightValue, this.minValue, this.maxValue, this.stepSize);
-        this.leftSliderValue = Util.toValue(MathHelper.clamp(this.leftSliderValue, 0D, this.rightSliderValue),
-                                            this.minValue, this.maxValue, this.stepSize
+        this.leftSliderValue = Util.toValue(Mth.clamp(this.leftSliderValue, 0D, this.rightSliderValue), this.minValue,
+                                            this.maxValue, this.stepSize
         );
-        this.rightSliderValue = Util.toValue(MathHelper.clamp(this.rightSliderValue, this.leftSliderValue, 1D),
-                                             this.minValue, this.maxValue, this.stepSize
+        this.rightSliderValue = Util.toValue(Mth.clamp(this.rightSliderValue, this.leftSliderValue, 1D), this.minValue,
+                                             this.maxValue, this.stepSize
         );
         this.setLeftValueFunction.accept((float) this.getLeftSliderValue());
         this.setRightValueFunction.accept((float) this.getRightSliderValue());
@@ -71,22 +73,24 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     private int getYImageNoDisabled(boolean isHovered) {
-        if (!this.active) return 1;
+        if (!this.active) {
+            return 1;
+        }
         return isHovered ? 2 : 1;
     }
 
     public boolean isLeftHovered(int mouseX) {
-        return this.isHovered() && mouseX < (this.x + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
+        return this.isHovered && mouseX < (this.x + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
     }
 
     public boolean isRightHovered(int mouseX) {
-        return this.isHovered() && mouseX > (this.x + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
+        return this.isHovered && mouseX > (this.x + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    protected void renderBg(MatrixStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GuiUtils.drawContinuousTexturedBox(matrixStack,
                                            this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4,
                                            this.y + 3, 0, 66,
@@ -202,8 +206,8 @@ public class FloatRangeSlider extends UpdateableWidget {
 
     private void setLeftSliderValue(double value) {
         double d0 = this.leftSliderValue;
-        this.leftSliderValue = Util.toValue(MathHelper.clamp(value, 0.0D, this.rightSliderValue), this.minValue,
-                                            this.maxValue, this.stepSize
+        this.leftSliderValue = Util.toValue(Mth.clamp(value, 0.0D, this.rightSliderValue), this.minValue, this.maxValue,
+                                            this.stepSize
         );
         if (d0 != this.leftSliderValue) {
             this.setLeftValueFunction.accept((float) this.getLeftSliderValue());
@@ -219,8 +223,8 @@ public class FloatRangeSlider extends UpdateableWidget {
 
     private void setRightSliderValue(double value) {
         double d0 = this.rightSliderValue;
-        this.rightSliderValue = Util.toValue(MathHelper.clamp(value, this.leftSliderValue, 1.0D), this.minValue,
-                                             this.maxValue, this.stepSize
+        this.rightSliderValue = Util.toValue(Mth.clamp(value, this.leftSliderValue, 1.0D), this.minValue, this.maxValue,
+                                             this.stepSize
         );
         if (d0 != this.rightSliderValue) {
             this.setRightValueFunction.accept((float) this.getRightSliderValue());
@@ -231,7 +235,7 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     @Override
-    public void playDownSound(SoundHandler handler) {
+    public void playDownSound(SoundManager handler) {
     }
 
     @Override
@@ -241,27 +245,43 @@ public class FloatRangeSlider extends UpdateableWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(new StringTextComponent("").append(prefix)
-                                              .append(": ")
-                                              .append(format.format(getLeftSliderValue()))
-                                              .append(suffix.getString().isEmpty() || suffix.getString()
-                                                                                            .equals("\u00B0") || suffix.getString()
-                                                                                                                       .equals("%") ?
-                                                      "" :
-                                                      " ")
-                                              .append(suffix)
-                                              .append(" - ")
-                                              .append(format.format(getRightSliderValue()))
-                                              .append(suffix.getString().isEmpty() || suffix.getString()
-                                                                                            .equals("\u00B0") || suffix.getString()
-                                                                                                                       .equals("%") ?
-                                                      "" :
-                                                      " ")
-                                              .append(suffix));
+        setMessage(new TextComponent("").append(prefix)
+                                        .append(": ")
+                                        .append(format.format(getLeftSliderValue()))
+                                        .append(suffix.getString().isEmpty() || suffix.getString()
+                                                                                      .equals("\u00B0") || suffix.getString()
+                                                                                                                 .equals("%") ?
+                                                "" :
+                                                " ")
+                                        .append(suffix)
+                                        .append(" - ")
+                                        .append(format.format(getRightSliderValue()))
+                                        .append(suffix.getString().isEmpty() || suffix.getString()
+                                                                                      .equals("\u00B0") || suffix.getString()
+                                                                                                                 .equals("%") ?
+                                                "" :
+                                                " ")
+                                        .append(suffix));
     }
 
     @Override
-    protected IFormattableTextComponent createNarrationMessage() {
-        return new TranslationTextComponent("gui.narrate.slider", this.getMessage());
+    protected MutableComponent createNarrationMessage() {
+        return new TranslatableComponent("gui.narrate.slider", this.getMessage());
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        narrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
+        if (this.active) {
+            if (this.isFocused()) {
+                narrationElementOutput.add(NarratedElementType.USAGE,
+                                           new TranslatableComponent("narration.slider.usage.focused")
+                );
+            } else {
+                narrationElementOutput.add(NarratedElementType.USAGE,
+                                           new TranslatableComponent("narration.slider.usage.hovered")
+                );
+            }
+        }
     }
 }

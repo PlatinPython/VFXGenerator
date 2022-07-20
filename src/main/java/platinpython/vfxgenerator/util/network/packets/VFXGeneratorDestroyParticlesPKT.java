@@ -1,10 +1,10 @@
 package platinpython.vfxgenerator.util.network.packets;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkEvent;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
@@ -14,21 +14,21 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public class VFXGeneratorDestroyParticlesPKT {
-    private final Vector3d pos;
+    private final Vec3 pos;
 
-    public VFXGeneratorDestroyParticlesPKT(Vector3d pos) {
+    public VFXGeneratorDestroyParticlesPKT(Vec3 pos) {
         this.pos = pos;
     }
 
-    public static void encode(VFXGeneratorDestroyParticlesPKT message, PacketBuffer buffer) {
+    public static void encode(VFXGeneratorDestroyParticlesPKT message, FriendlyByteBuf buffer) {
         buffer.writeDouble(message.pos.x);
         buffer.writeDouble(message.pos.y);
         buffer.writeDouble(message.pos.z);
     }
 
-    public static VFXGeneratorDestroyParticlesPKT decode(PacketBuffer buffer) {
+    public static VFXGeneratorDestroyParticlesPKT decode(FriendlyByteBuf buffer) {
         return new VFXGeneratorDestroyParticlesPKT(
-                new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
+                new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
     }
 
     public static class Handler {
@@ -45,7 +45,7 @@ public class VFXGeneratorDestroyParticlesPKT {
                         double motionX = (random.nextFloat() * (.2F)) - .1F;
                         double motionY = (random.nextFloat() * (.2F)) - .1F;
                         double motionZ = (random.nextFloat() * (.2F)) - .1F;
-                        Vector3d motion = new Vector3d(motionX, motionY, motionZ);
+                        Vec3 motion = new Vec3(motionX, motionY, motionZ);
                         ClientUtils.addParticle(list.get(random.nextInt(list.size())),
                                                 Color.HSBtoRGB(random.nextFloat(), 1F, 1F),
                                                 Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos,
