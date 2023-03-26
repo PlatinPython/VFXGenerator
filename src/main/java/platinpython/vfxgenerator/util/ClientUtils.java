@@ -1,20 +1,13 @@
 package platinpython.vfxgenerator.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -24,7 +17,6 @@ import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.client.gui.screen.ParticleOptionsScreen;
-import platinpython.vfxgenerator.client.model.FullbrightBakedModel;
 import platinpython.vfxgenerator.client.particle.VFXParticle;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
 
@@ -32,8 +24,6 @@ import platinpython.vfxgenerator.util.registries.BlockRegistry;
 public class ClientUtils {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VFX_GENERATOR.get(), RenderType.cutout());
-
         event.enqueueWork(() -> ItemProperties.register(BlockRegistry.VFX_GENERATOR.get().asItem(),
                                                         Util.createNamespacedResourceLocation(
                                                                 VFXGeneratorBlock.INVERTED_KEY),
@@ -43,27 +33,6 @@ public class ClientUtils {
                                                                                         1F :
                                                                                         0F
         ));
-    }
-
-    @SubscribeEvent
-    public static void onModelBake(ModelBakeEvent event) {
-        makeEmissive(BlockRegistry.VFX_GENERATOR.get(), event);
-    }
-
-    private static void makeEmissive(Block block, ModelBakeEvent event) {
-        for (BlockState blockState : block.getStateDefinition().getPossibleStates()) {
-            ModelResourceLocation modelResourceLocation = BlockModelShaper.stateToModelLocation(blockState);
-            BakedModel existingModel = event.getModelRegistry().get(modelResourceLocation);
-            if (existingModel == null) {
-                VFXGenerator.LOGGER.warn(
-                        "Did not find the expected vanilla baked model(s) for" + block + "in registry");
-            } else if (existingModel instanceof FullbrightBakedModel) {
-                VFXGenerator.LOGGER.warn("Tried to replace FullBrightModel twice");
-            } else {
-                FullbrightBakedModel customModel = new FullbrightBakedModel(existingModel);
-                event.getModelRegistry().put(modelResourceLocation, customModel);
-            }
-        }
     }
 
     @SuppressWarnings("deprecation")
@@ -88,7 +57,7 @@ public class ClientUtils {
         Minecraft.getInstance().setScreen(new ParticleOptionsScreen(tileEntity));
     }
 
-    public static TranslatableComponent getGuiTranslationTextComponent(String suffix) {
-        return new TranslatableComponent("gui." + VFXGenerator.MOD_ID + "." + suffix);
+    public static MutableComponent getGuiTranslationTextComponent(String suffix) {
+        return Component.translatable("gui." + VFXGenerator.MOD_ID + "." + suffix);
     }
 }

@@ -8,8 +8,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
 
@@ -62,7 +60,6 @@ public class FloatSlider extends UpdateableWidget {
         return isHovered ? 2 : 1;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -147,16 +144,17 @@ public class FloatSlider extends UpdateableWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(new TextComponent("").append(prefix)
-                                        .append(": ")
-                                        .append(format.format(getSliderValue()))
-                                        .append(suffix.getString().isEmpty() ? "" : " ")
-                                        .append(suffix));
+        setMessage(Component.empty()
+                            .append(prefix)
+                            .append(": ")
+                            .append(format.format(getSliderValue()))
+                            .append(suffix.getString().isEmpty() ? "" : " ")
+                            .append(suffix));
     }
 
     @Override
     protected MutableComponent createNarrationMessage() {
-        return new TranslatableComponent("gui.narrate.slider", this.getMessage());
+        return Component.translatable("gui.narrate.slider", this.getMessage());
     }
 
     @Override
@@ -165,11 +163,11 @@ public class FloatSlider extends UpdateableWidget {
         if (this.active) {
             if (this.isFocused()) {
                 narrationElementOutput.add(NarratedElementType.USAGE,
-                                           new TranslatableComponent("narration.slider.usage.focused")
+                                           Component.translatable("narration.slider.usage.focused")
                 );
             } else {
                 narrationElementOutput.add(NarratedElementType.USAGE,
-                                           new TranslatableComponent("narration.slider.usage.hovered")
+                                           Component.translatable("narration.slider.usage.hovered")
                 );
             }
         }

@@ -8,7 +8,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import platinpython.vfxgenerator.util.Util;
 
 import java.util.List;
@@ -231,8 +230,8 @@ public class VFXGeneratorOptionsList
 
         private float stepSize = 1F;
 
-        private Component prefixFirst = TextComponent.EMPTY;
-        private Component suffixFirst = TextComponent.EMPTY;
+        private Component prefixFirst = Component.empty();
+        private Component suffixFirst = Component.empty();
         private double minValueFirst = 0F;
         private double maxValueFirst = 0F;
         private Util.FloatConsumer setLeftValueFunctionFirst = (value) -> {
@@ -242,8 +241,8 @@ public class VFXGeneratorOptionsList
         private Util.FloatSupplier leftValueSupplierFirst = () -> 0F;
         private Util.FloatSupplier rightValueSupplierFirst = () -> 0F;
 
-        private Component prefixSecond = TextComponent.EMPTY;
-        private Component suffixSecond = TextComponent.EMPTY;
+        private Component prefixSecond = Component.empty();
+        private Component suffixSecond = Component.empty();
         private double minValueSecond = 0F;
         private double maxValueSecond = 0F;
         private Util.FloatConsumer setLeftValueFunctionSecond = (value) -> {

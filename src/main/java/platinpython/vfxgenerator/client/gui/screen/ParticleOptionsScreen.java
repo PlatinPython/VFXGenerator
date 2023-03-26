@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.client.gui.widget.ToggleButton;
@@ -25,7 +25,7 @@ public class ParticleOptionsScreen extends Screen {
     private VFXGeneratorOptionsList optionsList;
 
     public ParticleOptionsScreen(VFXGeneratorBlockEntity tileEntity) {
-        super(TextComponent.EMPTY);
+        super(Component.empty());
         this.tileEntity = tileEntity;
         this.particleData = tileEntity.getParticleData();
     }
@@ -79,7 +79,7 @@ public class ParticleOptionsScreen extends Screen {
                         .leftValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorBot()).getRed())
                         .rightValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorTop()).getRed())
                         .prefixSecond(ClientUtils.getGuiTranslationTextComponent("hue"))
-                        .suffixSecond(new TextComponent("\u00B0"))
+                        .suffixSecond(Component.literal("°"))
                         .minValueSecond(0F)
                         .maxValueSecond(360F)
                         .setLeftValueFunctionSecond((value) -> this.particleData.setHueBot(value / 360F))
@@ -107,7 +107,7 @@ public class ParticleOptionsScreen extends Screen {
                         .leftValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorBot()).getGreen())
                         .rightValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorTop()).getGreen())
                         .prefixSecond(ClientUtils.getGuiTranslationTextComponent("saturation"))
-                        .suffixSecond(new TextComponent("%"))
+                        .suffixSecond(Component.literal("%"))
                         .minValueSecond(0F)
                         .maxValueSecond(100F)
                         .setLeftValueFunctionSecond((value) -> this.particleData.setSaturationBot(value / 100F))
@@ -135,7 +135,7 @@ public class ParticleOptionsScreen extends Screen {
                         .leftValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorBot()).getBlue())
                         .rightValueSupplierFirst(() -> (float) new Color(this.particleData.getRGBColorTop()).getBlue())
                         .prefixSecond(ClientUtils.getGuiTranslationTextComponent("brightness"))
-                        .suffixSecond(new TextComponent("%"))
+                        .suffixSecond(Component.literal("%"))
                         .minValueSecond(0F)
                         .maxValueSecond(100F)
                         .setLeftValueFunctionSecond((value) -> this.particleData.setBrightnessBot(value / 100F))
@@ -154,14 +154,14 @@ public class ParticleOptionsScreen extends Screen {
                                         () -> (float) this.particleData.getLifetimeTop(), this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("size"), TextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("size"), Component.empty(),
                                         Constants.ParticleConstants.Values.MIN_SIZE,
                                         Constants.ParticleConstants.Values.MAX_SIZE, .1F, this.particleData::setSizeBot,
                                         this.particleData::setSizeTop, this.particleData::getSizeBot,
                                         this.particleData::getSizeTop, this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnX"), TextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnX"), Component.empty(),
                                         Constants.ParticleConstants.Values.MIN_SPAWN,
                                         Constants.ParticleConstants.Values.MAX_SPAWN, .1F,
                                         this.particleData::setSpawnXBot, this.particleData::setSpawnXTop,
@@ -169,7 +169,7 @@ public class ParticleOptionsScreen extends Screen {
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnY"), TextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnY"), Component.empty(),
                                         Constants.ParticleConstants.Values.MIN_SPAWN,
                                         Constants.ParticleConstants.Values.MAX_SPAWN, .1F,
                                         this.particleData::setSpawnYBot, this.particleData::setSpawnYTop,
@@ -177,7 +177,7 @@ public class ParticleOptionsScreen extends Screen {
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnZ"), TextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("spawnZ"), Component.empty(),
                                         Constants.ParticleConstants.Values.MIN_SPAWN,
                                         Constants.ParticleConstants.Values.MAX_SPAWN, .1F,
                                         this.particleData::setSpawnZBot, this.particleData::setSpawnZTop,
@@ -185,7 +185,7 @@ public class ParticleOptionsScreen extends Screen {
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionX"), TextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionX"), Component.empty(),
                                         Constants.ParticleConstants.Values.MIN_MOTION,
                                         Constants.ParticleConstants.Values.MAX_MOTION, .01F,
                                         this.particleData::setMotionXBot, this.particleData::setMotionXTop,
@@ -193,7 +193,7 @@ public class ParticleOptionsScreen extends Screen {
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionY"), TextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionY"), Component.empty(),
                                         Constants.ParticleConstants.Values.MIN_MOTION,
                                         Constants.ParticleConstants.Values.MAX_MOTION, .01F,
                                         this.particleData::setMotionYBot, this.particleData::setMotionYTop,
@@ -201,7 +201,7 @@ public class ParticleOptionsScreen extends Screen {
                                         this::sendToServer
         );
 
-        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionZ"), TextComponent.EMPTY,
+        this.optionsList.addRangeSlider(ClientUtils.getGuiTranslationTextComponent("motionZ"), Component.empty(),
                                         Constants.ParticleConstants.Values.MIN_MOTION,
                                         Constants.ParticleConstants.Values.MAX_MOTION, .01F,
                                         this.particleData::setMotionZBot, this.particleData::setMotionZTop,
@@ -217,7 +217,7 @@ public class ParticleOptionsScreen extends Screen {
                                    () -> (float) this.particleData.getDelay(), this::sendToServer
         );
 
-        this.optionsList.addSlider(ClientUtils.getGuiTranslationTextComponent("gravity"), TextComponent.EMPTY,
+        this.optionsList.addSlider(ClientUtils.getGuiTranslationTextComponent("gravity"), Component.empty(),
                                    Constants.ParticleConstants.Values.MIN_GRAVITY,
                                    Constants.ParticleConstants.Values.MAX_GRAVITY, .01F, this.particleData::setGravity,
                                    this.particleData::getGravity, this::sendToServer

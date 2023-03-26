@@ -1,40 +1,40 @@
 {
   "type": "minecraft:block",
-  "pools": [
-    {
-      "rolls": 1.0,
-      "bonus_rolls": 0.0,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "vfxgenerator:vfx_generator"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
-    }
-  ],
   "functions": [
     {
-      "function": "minecraft:copy_state",
       "block": "vfxgenerator:vfx_generator",
+      "function": "minecraft:copy_state",
       "properties": [
         "inverted"
       ]
     },
     {
       "function": "minecraft:copy_nbt",
-      "source": "block_entity",
       "ops": [
         {
+          "op": "replace",
           "source": "particleData",
-          "target": "particleData",
-          "op": "replace"
+          "target": "particleData"
         }
-      ]
+      ],
+      "source": "block_entity"
+    }
+  ],
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vfxgenerator:vfx_generator"
+        }
+      ],
+      "rolls": 1.0
     }
   ]
 }

@@ -8,10 +8,8 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
 
@@ -87,43 +85,39 @@ public class FloatRangeSlider extends UpdateableWidget {
         return this.isHovered && mouseX > (this.x + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        GuiUtils.drawContinuousTexturedBox(matrixStack,
-                                           this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4,
-                                           this.y + 3, 0, 66,
-                                           ((int) (this.rightSliderValue * (double) (this.width - 8))) - ((int) (this.leftSliderValue * (double) (this.width - 8))),
-                                           this.height - 6, 200, 20, 2, 2, 2, 2, this.getBlitOffset()
+        ScreenUtils.blitWithBorder(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4,
+                                   this.y + 3, 0, 66,
+                                   ((int) (this.rightSliderValue * (double) (this.width - 8))) - ((int) (this.leftSliderValue * (double) (this.width - 8))),
+                                   this.height - 6, 200, 20, 2, 2, 2, 2, this.getBlitOffset()
         );
         if (isLeftHovered(mouseX)) {
-            this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0,
-                      46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
-            );
-            this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196,
-                      46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
-            );
-            this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0,
-                      46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
-            );
-            this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196,
-                      46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
-            );
+            renderRightBg(matrixStack, mouseX);
+            renderLeftBg(matrixStack, mouseX);
         } else {
-            this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0,
-                      46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
-            );
-            this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196,
-                      46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
-            );
-            this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0,
-                      46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
-            );
-            this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196,
-                      46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
-            );
+            renderLeftBg(matrixStack, mouseX);
+            renderRightBg(matrixStack, mouseX);
         }
+    }
+
+    private void renderRightBg(PoseStack matrixStack, int mouseX) {
+        this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0,
+                  46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
+        );
+        this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196,
+                  46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
+        );
+    }
+
+    private void renderLeftBg(PoseStack matrixStack, int mouseX) {
+        this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0,
+                  46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
+        );
+        this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196,
+                  46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
+        );
     }
 
     private boolean getIsLeftClicked(double mouseX) {
@@ -245,28 +239,27 @@ public class FloatRangeSlider extends UpdateableWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(new TextComponent("").append(prefix)
-                                        .append(": ")
-                                        .append(format.format(getLeftSliderValue()))
-                                        .append(suffix.getString().isEmpty() || suffix.getString()
-                                                                                      .equals("\u00B0") || suffix.getString()
-                                                                                                                 .equals("%") ?
-                                                "" :
-                                                " ")
-                                        .append(suffix)
-                                        .append(" - ")
-                                        .append(format.format(getRightSliderValue()))
-                                        .append(suffix.getString().isEmpty() || suffix.getString()
-                                                                                      .equals("\u00B0") || suffix.getString()
-                                                                                                                 .equals("%") ?
-                                                "" :
-                                                " ")
-                                        .append(suffix));
+        setMessage(Component.empty()
+                            .append(prefix)
+                            .append(": ")
+                            .append(format.format(getLeftSliderValue()))
+                            .append(suffix.getString().isEmpty() || suffix.getString().equals("°") || suffix.getString()
+                                                                                                            .equals("%") ?
+                                    "" :
+                                    " ")
+                            .append(suffix)
+                            .append(" - ")
+                            .append(format.format(getRightSliderValue()))
+                            .append(suffix.getString().isEmpty() || suffix.getString().equals("°") || suffix.getString()
+                                                                                                            .equals("%") ?
+                                    "" :
+                                    " ")
+                            .append(suffix));
     }
 
     @Override
     protected MutableComponent createNarrationMessage() {
-        return new TranslatableComponent("gui.narrate.slider", this.getMessage());
+        return Component.translatable("gui.narrate.slider", this.getMessage());
     }
 
     @Override
@@ -275,11 +268,11 @@ public class FloatRangeSlider extends UpdateableWidget {
         if (this.active) {
             if (this.isFocused()) {
                 narrationElementOutput.add(NarratedElementType.USAGE,
-                                           new TranslatableComponent("narration.slider.usage.focused")
+                                           Component.translatable("narration.slider.usage.focused")
                 );
             } else {
                 narrationElementOutput.add(NarratedElementType.USAGE,
-                                           new TranslatableComponent("narration.slider.usage.hovered")
+                                           Component.translatable("narration.slider.usage.hovered")
                 );
             }
         }

@@ -3,11 +3,11 @@
     "inverted=false,powered=false": {
       "model": "vfxgenerator:block/vfx_generator_off"
     },
-    "inverted=true,powered=false": {
-      "model": "vfxgenerator:block/vfx_generator_off_inverted"
-    },
     "inverted=false,powered=true": {
       "model": "vfxgenerator:block/vfx_generator_on"
+    },
+    "inverted=true,powered=false": {
+      "model": "vfxgenerator:block/vfx_generator_off_inverted"
     },
     "inverted=true,powered=true": {
       "model": "vfxgenerator:block/vfx_generator_on_inverted"

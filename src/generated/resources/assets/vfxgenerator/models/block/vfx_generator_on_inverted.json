@@ -1,5 +1,5 @@
 {
-  "parent": "vfxgenerator:block/vfx_generator",
+  "parent": "vfxgenerator:block/vfx_generator_base_on",
   "textures": {
     "frame": "minecraft:block/smooth_stone",
     "glass": "vfxgenerator:block/vfx_generator_glass",

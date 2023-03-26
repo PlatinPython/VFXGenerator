@@ -3,7 +3,7 @@ package platinpython.vfxgenerator.client.gui.widget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.client.gui.ScreenUtils;
 import platinpython.vfxgenerator.util.Util;
 
 public class ToggleButton extends UpdateableWidget {
@@ -24,17 +24,17 @@ public class ToggleButton extends UpdateableWidget {
             GuiComponent.fill(matrixStack, this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1,
                               0xFF00FF00
             );
-            GuiUtils.drawContinuousTexturedBox(matrixStack, WIDGETS_LOCATION, this.x + this.width / 2, this.y, 0,
-                                               46 + this.getYImage(isHovered) * 20, this.width / 2, this.height, 200,
-                                               20, 2, 2, 2, 2, this.getBlitOffset()
+            ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.x + this.width / 2, this.y, 0,
+                                       46 + this.getYImage(isHovered) * 20, this.width / 2, this.height, 200, 20, 2, 2,
+                                       2, 2, this.getBlitOffset()
             );
         } else {
             GuiComponent.fill(matrixStack, this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1,
                               0xFFFF0000
             );
-            GuiUtils.drawContinuousTexturedBox(matrixStack, WIDGETS_LOCATION, this.x, this.y, 0,
-                                               46 + this.getYImage(isHovered) * 20, this.width / 2, this.height, 200,
-                                               20, 2, 2, 2, 2, this.getBlitOffset()
+            ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.x, this.y, 0,
+                                       46 + this.getYImage(isHovered) * 20, this.width / 2, this.height, 200, 20, 2, 2,
+                                       2, 2, this.getBlitOffset()
             );
         }
     }

@@ -34,6 +34,7 @@ public class BoxRendering {
         if (currentRenderPos == null) {
             return;
         }
+        //noinspection DataFlowIssue
         BlockEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(currentRenderPos);
         if (!(tileEntity instanceof VFXGeneratorBlockEntity)) {
             return;
@@ -339,7 +340,7 @@ public class BoxRendering {
                                                                                            .createCompositeState(false)
         );
 
-        public static final RenderType LINES_LIGHTMAP = RenderType.create(
+        public static RenderType LINES_LIGHTMAP = RenderType.create(
                 Util.createNamespacedResourceLocation("lines_lightmap").toString(),
                 DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.DEBUG_LINES, 256, false, false,
                 RenderType.CompositeState.builder()

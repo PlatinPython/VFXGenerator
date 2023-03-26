@@ -2,7 +2,7 @@ package platinpython.vfxgenerator.client.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import platinpython.vfxgenerator.client.gui.widget.TextureOptionsList;
 
@@ -12,7 +12,7 @@ public class ParticleTextureSelectionScreen extends Screen {
     private TextureOptionsList textureOptionsList;
 
     protected ParticleTextureSelectionScreen(ParticleOptionsScreen parent) {
-        super(TextComponent.EMPTY);
+        super(Component.empty());
         this.parent = parent;
     }
 

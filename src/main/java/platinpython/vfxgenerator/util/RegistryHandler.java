@@ -21,7 +21,7 @@ public class RegistryHandler {
     );
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(
-            ForgeRegistries.BLOCK_ENTITIES, VFXGenerator.MOD_ID);
+            ForgeRegistries.BLOCK_ENTITY_TYPES, VFXGenerator.MOD_ID);
 
     public static void register() {
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());

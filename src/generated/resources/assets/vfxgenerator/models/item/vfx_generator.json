@@ -2,10 +2,10 @@
   "parent": "vfxgenerator:block/vfx_generator_off",
   "overrides": [
     {
+      "model": "vfxgenerator:block/vfx_generator_off_inverted",
       "predicate": {
         "vfxgenerator:inverted": 1.0
-      },
-      "model": "vfxgenerator:block/vfx_generator_off_inverted"
+      }
     }
   ]
 }
