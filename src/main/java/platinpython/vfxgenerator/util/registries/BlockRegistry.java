@@ -19,8 +19,9 @@ public class BlockRegistry {
 
     private static <T extends Block> RegistryObject<T> register(String name, Supplier<T> block) {
         RegistryObject<T> ret = registerNoItem(name, block);
-        RegistryHandler.ITEMS.register(name, () -> new VFXGeneratorBlockItem(ret.get(), new Item.Properties().tab(
-                CreativeModeTab.TAB_REDSTONE).rarity(Rarity.RARE)));
+        RegistryHandler.ITEMS.register(name, () -> new VFXGeneratorBlockItem(ret.get(),
+                                                                             new Item.Properties().rarity(Rarity.RARE)
+        ));
         return ret;
     }
 

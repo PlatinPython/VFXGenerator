@@ -18,6 +18,8 @@ import platinpython.vfxgenerator.util.data.ParticleData;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDataSyncPKT;
 
+import java.util.function.Supplier;
+
 public class ParticleOptionsScreen extends Screen {
     protected final VFXGeneratorBlockEntity tileEntity;
     protected final ParticleData particleData;
@@ -32,16 +34,13 @@ public class ParticleOptionsScreen extends Screen {
 
     @Override
     protected void init() {
-        addRenderableWidget(
-                new Button(6, this.height - 26, 120, 20, ClientUtils.getGuiTranslationTextComponent("areaBox"),
-                           button -> {
-                               if (tileEntity.getBlockPos().equals(BoxRendering.currentRenderPos)) {
-                                   BoxRendering.currentRenderPos = null;
-                               } else {
-                                   BoxRendering.currentRenderPos = tileEntity.getBlockPos();
-                               }
-                           }
-                ));
+        addRenderableWidget(Button.builder(ClientUtils.getGuiTranslationTextComponent("areaBox"), button -> {
+            if (tileEntity.getBlockPos().equals(BoxRendering.currentRenderPos)) {
+                BoxRendering.currentRenderPos = null;
+            } else {
+                BoxRendering.currentRenderPos = tileEntity.getBlockPos();
+            }
+        }).bounds(6, this.height - 26, 120, 20).build());
 
         addRenderableWidget(new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.particleData::setEnabled,
                                              this.particleData::isEnabled, this::sendToServer

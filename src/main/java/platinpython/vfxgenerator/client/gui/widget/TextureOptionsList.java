@@ -132,15 +132,15 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
         public void render(PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
                            int mouseY, boolean isMouseOver, float partialTicks) {
             if (child1 != null) {
-                this.child1.y = top;
+                this.child1.setY(top);
                 this.child1.render(matrixStack, mouseX, mouseY, partialTicks);
             }
             if (child2 != null) {
-                this.child2.y = top;
+                this.child2.setY(top);
                 this.child2.render(matrixStack, mouseX, mouseY, partialTicks);
             }
             if (child3 != null) {
-                this.child3.y = top;
+                this.child3.setY(top);
                 this.child3.render(matrixStack, mouseX, mouseY, partialTicks);
             }
         }

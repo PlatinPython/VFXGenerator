@@ -103,7 +103,7 @@ public class VFXGeneratorOptionsList
                 }
 
                 @Override
-                public void updateNarration(NarrationElementOutput narrationElementOutput) {
+                public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
                 }
             });
         }
@@ -147,7 +147,7 @@ public class VFXGeneratorOptionsList
         @Override
         public void render(PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
                            int mouseY, boolean isMouseOver, float partialTicks) {
-            this.child.y = top;
+            this.child.setY(top);
             this.child.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
@@ -188,8 +188,8 @@ public class VFXGeneratorOptionsList
         @Override
         public void render(PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
                            int mouseY, boolean isMouseOver, float partialTicks) {
-            this.firstChild.y = top;
-            this.secondChild.y = top;
+            this.firstChild.setY(top);
+            this.secondChild.setY(top);
             this.firstChild.render(matrixStack, mouseX, mouseY, partialTicks);
             this.secondChild.render(matrixStack, mouseX, mouseY, partialTicks);
         }

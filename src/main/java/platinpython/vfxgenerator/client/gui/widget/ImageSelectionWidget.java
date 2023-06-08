@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -18,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.ScreenUtils;
+import org.joml.Matrix4f;
 import platinpython.vfxgenerator.util.Util;
 
 import java.util.Collections;
@@ -44,17 +44,17 @@ public class ImageSelectionWidget extends UpdateableWidget {
 
     @Override
     public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        GuiComponent.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height,
+        GuiComponent.fill(matrixStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height,
                           this.selected ? 0xFFFFFFFF : 0xFF000000
         );
-        GuiComponent.fill(matrixStack, this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1,
-                          0xFF000000
+        GuiComponent.fill(matrixStack, this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
+                          this.getY() + this.height - 1, 0xFF000000
         );
-        ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.x, this.y, 0, this.selected ? 86 : 66,
+        ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.selected ? 86 : 66,
                                    this.width, this.height, 200, 20, 2, 3, 2, 2, this.getBlitOffset()
         );
-        this.renderImage(matrixStack.last().pose(), this.x + 5, this.y + 5, this.x + this.width - 5,
-                         this.y + this.height - 5
+        this.renderImage(matrixStack.last().pose(), this.getX() + 5, this.getY() + 5, this.getX() + this.width - 5,
+                         this.getY() + this.height - 5
         );
     }
 
@@ -118,6 +118,6 @@ public class ImageSelectionWidget extends UpdateableWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 }

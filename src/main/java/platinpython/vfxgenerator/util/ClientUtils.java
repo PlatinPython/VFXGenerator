@@ -2,13 +2,11 @@ package platinpython.vfxgenerator.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -33,14 +31,6 @@ public class ClientUtils {
                                                                                         1F :
                                                                                         0F
         ));
-    }
-
-    @SuppressWarnings("deprecation")
-    @SubscribeEvent
-    public static void onTextureStich(TextureStitchEvent.Pre event) {
-        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_PARTICLES)) {
-            Constants.ParticleConstants.Values.PARTICLE_OPTIONS.forEach(event::addSprite);
-        }
     }
 
     public static void addParticle(ResourceLocation spriteLocation, int color, int lifetime, float size, Vec3 pos,

@@ -4,8 +4,6 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,6 +16,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.util.data.ParticleData;
@@ -50,7 +50,7 @@ public class BoxRendering {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        Vector3f pos = new Vector3f(Vec3.atCenterOf(currentRenderPos));
+        Vector3f pos = Vec3.atCenterOf(currentRenderPos).toVector3f();
 
         VertexConsumer builder = buffer.getBuffer(BoxRenderType.TRANSLUCENT_NO_CULL);
         renderBoxSides(builder, matrix, pos.x() + particleData.getSpawnXBot(), pos.y() + particleData.getSpawnYBot(),

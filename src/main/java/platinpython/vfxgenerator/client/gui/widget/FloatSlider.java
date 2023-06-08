@@ -63,10 +63,10 @@ public class FloatSlider extends UpdateableWidget {
     @Override
     protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)), this.y, 0,
+        this.blit(matrixStack, this.getX() + (int) (this.sliderValue * (double) (this.width - 8)), this.getY(), 0,
                   46 + this.getYImageNoDisabled(isHovered) * 20, 4, this.height
         );
-        this.blit(matrixStack, this.x + (int) (this.sliderValue * (double) (this.width - 8)) + 4, this.y, 196,
+        this.blit(matrixStack, this.getX() + (int) (this.sliderValue * (double) (this.width - 8)) + 4, this.getY(), 196,
                   46 + this.getYImageNoDisabled(isHovered) * 20, 4, this.height
         );
     }
@@ -80,7 +80,7 @@ public class FloatSlider extends UpdateableWidget {
     }
 
     private void setValueFromMouse(double mouseX) {
-        this.setSliderValue((mouseX - (double) (this.x + 4)) / (double) (this.width - 8));
+        this.setSliderValue((mouseX - (double) (this.getX() + 4)) / (double) (this.width - 8));
     }
 
     @Override
@@ -158,7 +158,7 @@ public class FloatSlider extends UpdateableWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
         if (this.active) {
             if (this.isFocused()) {

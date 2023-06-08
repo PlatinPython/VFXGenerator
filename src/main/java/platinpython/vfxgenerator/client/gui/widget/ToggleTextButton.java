@@ -48,6 +48,6 @@ public class ToggleTextButton extends UpdateableWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 }

@@ -1,14 +1,14 @@
 package platinpython.vfxgenerator.data;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
 import platinpython.vfxgenerator.util.registries.ItemRegistry;
 
 public class ModLanguageProvider extends LanguageProvider {
-    public ModLanguageProvider(DataGenerator gen) {
-        super(gen, VFXGenerator.MOD_ID, "en_us");
+    public ModLanguageProvider(PackOutput output) {
+        super(output, VFXGenerator.MOD_ID, "en_us");
     }
 
     @Override

@@ -78,18 +78,19 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     public boolean isLeftHovered(int mouseX) {
-        return this.isHovered && mouseX < (this.x + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
+        return this.isHovered && mouseX < (this.getX() + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
     }
 
     public boolean isRightHovered(int mouseX) {
-        return this.isHovered && mouseX > (this.x + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
+        return this.isHovered && mouseX > (this.getX() + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
     }
 
     @Override
     protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        ScreenUtils.blitWithBorder(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4,
-                                   this.y + 3, 0, 66,
+        ScreenUtils.blitWithBorder(matrixStack,
+                                   this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4,
+                                   this.getY() + 3, 0, 66,
                                    ((int) (this.rightSliderValue * (double) (this.width - 8))) - ((int) (this.leftSliderValue * (double) (this.width - 8))),
                                    this.height - 6, 200, 20, 2, 2, 2, 2, this.getBlitOffset()
         );
@@ -103,25 +104,25 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     private void renderRightBg(PoseStack matrixStack, int mouseX) {
-        this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)), this.y, 0,
+        this.blit(matrixStack, this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)), this.getY(), 0,
                   46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
         );
-        this.blit(matrixStack, this.x + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.y, 196,
-                  46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
+        this.blit(matrixStack, this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.getY(),
+                  196, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
         );
     }
 
     private void renderLeftBg(PoseStack matrixStack, int mouseX) {
-        this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)), this.y, 0,
+        this.blit(matrixStack, this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)), this.getY(), 0,
                   46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
         );
-        this.blit(matrixStack, this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.y, 196,
-                  46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
+        this.blit(matrixStack, this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.getY(),
+                  196, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
         );
     }
 
     private boolean getIsLeftClicked(double mouseX) {
-        return (mouseX < this.x + (int) (this.leftSliderValue * (double) (this.width - 8)) + 8 || mouseX < ((this.x + this.leftSliderValue * this.width) + (this.x + this.rightSliderValue * this.width)) / 2);
+        return (mouseX < this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 8 || mouseX < ((this.getX() + this.leftSliderValue * this.width) + (this.getX() + this.rightSliderValue * this.width)) / 2);
     }
 
     @Override
@@ -129,9 +130,9 @@ public class FloatRangeSlider extends UpdateableWidget {
         this.isLeftSelected = getIsLeftClicked(mouseX);
         this.stopped = false;
         if (this.isLeftSelected) {
-            this.setLeftSliderValue((mouseX - (double) (this.x + 4)) / (double) (this.width - 8));
+            this.setLeftSliderValue((mouseX - (double) (this.getX() + 4)) / (double) (this.width - 8));
         } else {
-            this.setRightSliderValue((mouseX - (double) (this.x + 4)) / (double) (this.width - 8));
+            this.setRightSliderValue((mouseX - (double) (this.getX() + 4)) / (double) (this.width - 8));
         }
     }
 
@@ -141,9 +142,9 @@ public class FloatRangeSlider extends UpdateableWidget {
             this.isLeftSelected = dragX < 0;
         }
         if (this.isLeftSelected) {
-            this.setLeftSliderValue((mouseX - (double) (this.x + 4)) / (double) (this.width - 8));
+            this.setLeftSliderValue((mouseX - (double) (this.getX() + 4)) / (double) (this.width - 8));
         } else {
-            this.setRightSliderValue((mouseX - (double) (this.x + 4)) / (double) (this.width - 8));
+            this.setRightSliderValue((mouseX - (double) (this.getX() + 4)) / (double) (this.width - 8));
         }
         this.stopped = this.leftSliderValue == this.rightSliderValue;
     }
@@ -263,7 +264,7 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         narrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
         if (this.active) {
             if (this.isFocused()) {

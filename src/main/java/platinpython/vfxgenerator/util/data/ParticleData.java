@@ -20,9 +20,9 @@ public class ParticleData {
 
     private boolean enabled = true;
     private TreeSet<ResourceLocation> selected = Util.createTreeSetFromCollectionWithComparator(
-            Arrays.asList(Util.createNamespacedResourceLocation("particle/spark_small"),
-                          Util.createNamespacedResourceLocation("particle/spark_mid"),
-                          Util.createNamespacedResourceLocation("particle/spark_big")
+            Arrays.asList(Util.createNamespacedResourceLocation("spark_small"),
+                          Util.createNamespacedResourceLocation("spark_mid"),
+                          Util.createNamespacedResourceLocation("spark_big")
             ), ResourceLocation::compareNamespaced);
     private boolean useHSB = false;
     private int RGBColorBot = 0xFF000000;
@@ -100,16 +100,14 @@ public class ParticleData {
         enabled = particleTag.getBoolean(Constants.ParticleConstants.Keys.ENABLED);
         if (particleTag.getTagType(Constants.ParticleConstants.Keys.SELECTED) == Tag.TAG_LIST) {
             selected = Util.createTreeSetFromCollectionWithComparator(
-                    ((ListTag) particleTag.get(Constants.ParticleConstants.Keys.SELECTED)).stream()
-                                                                                          .map((nbt) -> ResourceLocation.tryParse(
-                                                                                                  nbt.getAsString()))
-                                                                                          .filter(Constants.ParticleConstants.Values.PARTICLE_OPTIONS::contains)
-                                                                                          .collect(Collectors.toList()),
-                    ResourceLocation::compareNamespaced
-            );
+                    particleTag.getList(Constants.ParticleConstants.Keys.SELECTED, Tag.TAG_STRING)
+                               .stream()
+                               .map(nbt -> ResourceLocation.tryParse(nbt.getAsString().replace(":particle/", ":")))
+                               .filter(Constants.ParticleConstants.Values.PARTICLE_OPTIONS::contains)
+                               .collect(Collectors.toList()), ResourceLocation::compareNamespaced);
             if (selected.isEmpty()) {
                 selected = Util.createTreeSetFromCollectionWithComparator(
-                        Collections.singletonList(Util.createNamespacedResourceLocation("particle/circle")),
+                        Collections.singletonList(Util.createNamespacedResourceLocation("circle")),
                         ResourceLocation::compareNamespaced
                 );
             }
@@ -120,10 +118,10 @@ public class ParticleData {
         } else {
             selected = Util.createTreeSetFromCollectionWithComparator(Collections.singletonList(
                     Constants.ParticleConstants.Values.PARTICLE_OPTIONS.contains(Util.createNamespacedResourceLocation(
-                            "particle/" + particleTag.getString(Constants.ParticleConstants.Keys.SELECTED))) ?
+                            particleTag.getString(Constants.ParticleConstants.Keys.SELECTED))) ?
                     Util.createNamespacedResourceLocation(
-                            "particle/" + particleTag.getString(Constants.ParticleConstants.Keys.SELECTED)) :
-                    Util.createNamespacedResourceLocation("particle/circle")), ResourceLocation::compareNamespaced);
+                            particleTag.getString(Constants.ParticleConstants.Keys.SELECTED)) :
+                    Util.createNamespacedResourceLocation("circle")), ResourceLocation::compareNamespaced);
         }
         useHSB = particleTag.getBoolean(Constants.ParticleConstants.Keys.USE_HSB);
         RGBColorBot = Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_BOT), 0xFF000000,
@@ -255,7 +253,7 @@ public class ParticleData {
         );
         if (this.selected.isEmpty()) {
             this.selected = Util.createTreeSetFromCollectionWithComparator(
-                    Collections.singletonList(Util.createNamespacedResourceLocation("particle/circle")),
+                    Collections.singletonList(Util.createNamespacedResourceLocation("circle")),
                     ResourceLocation::compareNamespaced
             );
         }

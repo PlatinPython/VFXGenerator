@@ -37,9 +37,9 @@ public class VFXGeneratorDestroyParticlesPKT {
                 if (context.get().getDirection().getOriginationSide().isServer()) {
                     Random random = new Random();
                     List<ResourceLocation> list = ImmutableList.of(
-                            new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_small"),
-                            new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_mid"),
-                            new ResourceLocation(VFXGenerator.MOD_ID, "particle/spark_big")
+                            new ResourceLocation(VFXGenerator.MOD_ID, "spark_small"),
+                            new ResourceLocation(VFXGenerator.MOD_ID, "spark_mid"),
+                            new ResourceLocation(VFXGenerator.MOD_ID, "spark_big")
                     );
                     for (int i = 0; i < 100; i++) {
                         double motionX = (random.nextFloat() * (.2F)) - .1F;
