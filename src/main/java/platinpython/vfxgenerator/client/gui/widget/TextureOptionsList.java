@@ -1,7 +1,6 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -37,19 +36,14 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
             ));
         }
         switch (list.size() % 3) {
-            case 1:
-                addEntry(TextureOptionsListEntry.addOneTexture(this.width, list.get(list.size() - 1), setValueFunction,
-                                                               valueSupplier, applyValueFunction
-                ));
-                break;
-            case 2:
-                addEntry(TextureOptionsListEntry.addTwoTextures(this.width, list.get(list.size() - 2),
-                                                                list.get(list.size() - 1), setValueFunction,
-                                                                valueSupplier, applyValueFunction
-                ));
-                break;
-            default:
-                break;
+            case 1 -> addEntry(
+                    TextureOptionsListEntry.addOneTexture(this.width, list.get(list.size() - 1), setValueFunction,
+                                                          valueSupplier, applyValueFunction
+                    ));
+            case 2 -> addEntry(TextureOptionsListEntry.addTwoTextures(this.width, list.get(list.size() - 2),
+                                                                      list.get(list.size() - 1), setValueFunction,
+                                                                      valueSupplier, applyValueFunction
+            ));
         }
     }
 

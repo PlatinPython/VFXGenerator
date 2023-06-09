@@ -1,6 +1,5 @@
 package platinpython.vfxgenerator.util.registries;
 
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.item.Rarity;

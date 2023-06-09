@@ -28,7 +28,9 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        if (!(blockEntity instanceof VFXGeneratorBlockEntity generatorBlockEntity)) return;
+        if (!(blockEntity instanceof VFXGeneratorBlockEntity generatorBlockEntity)) {
+            return;
+        }
         if ((state.getValue(VFXGeneratorBlock.INVERTED) && !state.getValue(
                 VFXGeneratorBlock.POWERED)) || (!state.getValue(VFXGeneratorBlock.INVERTED) && state.getValue(
                 VFXGeneratorBlock.POWERED))) {
