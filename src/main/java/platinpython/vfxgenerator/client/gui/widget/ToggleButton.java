@@ -1,9 +1,7 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraftforge.client.gui.ScreenUtils;
 import platinpython.vfxgenerator.util.Util;
 
 public class ToggleButton extends UpdateableWidget {
@@ -18,23 +16,21 @@ public class ToggleButton extends UpdateableWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        GuiComponent.fill(matrixStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height,
-                          0xFF000000
-        );
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        guiGraphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0xFF000000);
         if (this.valueSupplier.get()) {
-            GuiComponent.fill(matrixStack, this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
-                              this.getY() + this.height - 1, 0xFF00FF00
+            guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
+                             this.getY() + this.height - 1, 0xFF00FF00
             );
-            ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 0,
-                                       this.getTextureY(), this.width / 2, this.height, 200, 20, 2, 2, 2, 2, 0
+            guiGraphics.blitWithBorder(WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 0,
+                                       this.getTextureY(), this.width / 2, this.height, 200, 20, 2
             );
         } else {
-            GuiComponent.fill(matrixStack, this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
-                              this.getY() + this.height - 1, 0xFFFF0000
+            guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
+                             this.getY() + this.height - 1, 0xFFFF0000
             );
-            ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.getTextureY(),
-                                       this.width / 2, this.height, 200, 20, 2, 2, 2, 2, 0
+            guiGraphics.blitWithBorder(WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.getTextureY(),
+                                       this.width / 2, this.height, 200, 20, 2
             );
         }
     }

@@ -1,18 +1,15 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.gui.ScreenUtils;
 import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
 
@@ -53,30 +50,24 @@ public class FloatSlider extends UpdateableWidget {
         this.updateMessage();
     }
 
-    private int getYImageNoDisabled(boolean isHovered) {
-        if (!this.active) {
-            return 1;
-        }
-        return isHovered ? 2 : 1;
-    }
-
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShaderTexture(0, AbstractSliderButton.SLIDER_LOCATION);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blitNineSliced(poseStack, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0,
-                       this.isFocused() ? 20 : 0
+        guiGraphics.blitNineSliced(AbstractSliderButton.SLIDER_LOCATION, this.getX(), this.getY(), this.getWidth(),
+                                   this.getHeight(), 20, 4, 200, 20, 0, this.isFocused() ? 20 : 0
         );
-        blitNineSliced(poseStack, this.getX() + (int) (this.sliderValue * (double) (this.width - 8)), this.getY(), 8,
-                       20, 20, 4, 200, 20, 0, this.isActive() && this.isHovered ? 60 : 40
+        guiGraphics.blitNineSliced(AbstractSliderButton.SLIDER_LOCATION,
+                                   this.getX() + (int) (this.sliderValue * (double) (this.width - 8)), this.getY(), 8,
+                                   20, 20, 4, 200, 20, 0, this.isActive() && this.isHovered ? 60 : 40
         );
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = this.active ? 16777215 : 10526880;
-        this.renderScrollingString(poseStack, minecraft.font, 2, i | Mth.ceil(this.alpha * 255.0F) << 24);
+        this.renderScrollingString(guiGraphics, minecraft.font, 2, i | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
     @Override

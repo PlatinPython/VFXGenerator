@@ -1,7 +1,7 @@
 package platinpython.vfxgenerator;
 
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -27,8 +27,8 @@ public class VFXGenerator {
         NetworkHandler.register();
     }
 
-    public static void addItemsToTab(CreativeModeTabEvent.BuildContents event) {
-        if (event.getTab() != CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+    public static void addItemsToTab(BuildCreativeModeTabContentsEvent event) {
+        if (!event.getTabKey().equals(CreativeModeTabs.FUNCTIONAL_BLOCKS)) {
             return;
         }
         event.accept(BlockRegistry.VFX_GENERATOR);

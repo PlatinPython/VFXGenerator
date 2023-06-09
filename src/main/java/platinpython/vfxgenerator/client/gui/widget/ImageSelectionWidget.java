@@ -5,18 +5,16 @@ import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.ScreenUtils;
 import org.joml.Matrix4f;
 import platinpython.vfxgenerator.util.Util;
 
@@ -43,18 +41,18 @@ public class ImageSelectionWidget extends UpdateableWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        GuiComponent.fill(matrixStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height,
-                          this.selected ? 0xFFFFFFFF : 0xFF000000
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        guiGraphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height,
+                         this.selected ? 0xFFFFFFFF : 0xFF000000
         );
-        GuiComponent.fill(matrixStack, this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
-                          this.getY() + this.height - 1, 0xFF000000
+        guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1,
+                         0xFF000000
         );
-        ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.selected ? 86 : 66,
-                                   this.width, this.height, 200, 20, 2, 3, 2, 2, 0
+        guiGraphics.blitWithBorder(WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.selected ? 86 : 66, this.width,
+                                   this.height, 200, 20, 2, 3, 2, 2
         );
-        this.renderImage(matrixStack.last().pose(), this.getX() + 5, this.getY() + 5, this.getX() + this.width - 5,
-                         this.getY() + this.height - 5
+        this.renderImage(guiGraphics.pose().last().pose(), this.getX() + 5, this.getY() + 5,
+                         this.getX() + this.width - 5, this.getY() + this.height - 5
         );
     }
 

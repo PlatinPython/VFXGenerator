@@ -1,6 +1,6 @@
 package platinpython.vfxgenerator.client.gui.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
@@ -28,9 +28,9 @@ public class ParticleTextureSelectionScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        this.textureOptionsList.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(guiGraphics);
+        this.textureOptionsList.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

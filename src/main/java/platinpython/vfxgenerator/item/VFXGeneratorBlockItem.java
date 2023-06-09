@@ -12,9 +12,10 @@ public class VFXGeneratorBlockItem extends BlockItem {
         super(block, properties);
     }
 
+    @SuppressWarnings("resource")
     @Override
     public void onDestroyed(ItemEntity itemEntity) {
-        if (!itemEntity.level.isClientSide) {
+        if (!itemEntity.level().isClientSide) {
             NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> itemEntity),
                                          new VFXGeneratorDestroyParticlesPKT(itemEntity.position())
             );

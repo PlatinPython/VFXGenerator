@@ -1,7 +1,6 @@
 package platinpython.vfxgenerator.client.gui.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -17,8 +16,6 @@ import platinpython.vfxgenerator.util.Constants;
 import platinpython.vfxgenerator.util.data.ParticleData;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDataSyncPKT;
-
-import java.util.function.Supplier;
 
 public class ParticleOptionsScreen extends Screen {
     protected final VFXGeneratorBlockEntity tileEntity;
@@ -248,15 +245,15 @@ public class ParticleOptionsScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        this.optionsList.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(guiGraphics);
+        this.optionsList.render(guiGraphics, mouseX, mouseY, partialTicks);
         if (!this.particleData.isEnabled()) {
-            this.fillGradient(matrixStack, 0, 32, this.width, this.height - 32, 0xC0101010, 0xD0101010);
+            guiGraphics.fillGradient(0, 32, this.width, this.height - 32, 0xC0101010, 0xD0101010);
         }
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        GuiComponent.drawCenteredString(matrixStack, this.font, ClientUtils.getGuiTranslationTextComponent("particle"),
-                                        this.width / 2, 10, 0xFFFFFFFF
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.drawCenteredString(this.font, ClientUtils.getGuiTranslationTextComponent("particle"),
+                                       this.width / 2, 10, 0xFFFFFFFF
         );
     }
 

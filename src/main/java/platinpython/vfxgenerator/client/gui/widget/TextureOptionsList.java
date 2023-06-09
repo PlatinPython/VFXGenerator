@@ -3,6 +3,7 @@ package platinpython.vfxgenerator.client.gui.widget;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.resources.ResourceLocation;
@@ -129,19 +130,19 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
         }
 
         @Override
-        public void render(PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX,
+        public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX,
                            int mouseY, boolean isMouseOver, float partialTicks) {
             if (child1 != null) {
                 this.child1.setY(top);
-                this.child1.render(matrixStack, mouseX, mouseY, partialTicks);
+                this.child1.render(guiGraphics, mouseX, mouseY, partialTicks);
             }
             if (child2 != null) {
                 this.child2.setY(top);
-                this.child2.render(matrixStack, mouseX, mouseY, partialTicks);
+                this.child2.render(guiGraphics, mouseX, mouseY, partialTicks);
             }
             if (child3 != null) {
                 this.child3.setY(top);
-                this.child3.render(matrixStack, mouseX, mouseY, partialTicks);
+                this.child3.render(guiGraphics, mouseX, mouseY, partialTicks);
             }
         }
 

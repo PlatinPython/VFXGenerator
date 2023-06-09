@@ -30,5 +30,6 @@
     "recipes": [
       "vfxgenerator:vfx_generator"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

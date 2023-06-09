@@ -1,19 +1,16 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.gui.ScreenUtils;
 import org.lwjgl.glfw.GLFW;
 import platinpython.vfxgenerator.util.Util;
 
@@ -85,54 +82,58 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, AbstractSliderButton.SLIDER_LOCATION);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blit(poseStack, this.getX(), this.getY(), 0, this.isFocused() ? 20 : 0, this.width / 2, this.height);
-        blit(poseStack, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, this.isFocused() ? 20 : 0,
-             this.width / 2, this.height
+        guiGraphics.blit(AbstractSliderButton.SLIDER_LOCATION, this.getX(), this.getY(), 0, this.isFocused() ? 20 : 0,
+                         this.width / 2, this.height
+        );
+        guiGraphics.blit(AbstractSliderButton.SLIDER_LOCATION, this.getX() + this.width / 2, this.getY(),
+                         200 - this.width / 2, this.isFocused() ? 20 : 0, this.width / 2, this.height
         );
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        ScreenUtils.blitWithBorder(poseStack,
+        guiGraphics.blitWithBorder(AbstractSliderButton.SLIDER_LOCATION,
                                    this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4,
                                    this.getY() + 3, 0, 40,
                                    ((int) (this.rightSliderValue * (double) (this.width - 8))) - ((int) (this.leftSliderValue * (double) (this.width - 8))),
-                                   this.height - 6, 200, 20, 2, 2, 2, 2, 0
+                                   this.height - 6, 200, 20, 2
         );
         if (isLeftHovered(mouseX)) {
-            renderRightBg(poseStack, mouseX);
-            renderLeftBg(poseStack, mouseX);
+            renderRightBg(guiGraphics, mouseX);
+            renderLeftBg(guiGraphics, mouseX);
         } else {
-            renderLeftBg(poseStack, mouseX);
-            renderRightBg(poseStack, mouseX);
+            renderLeftBg(guiGraphics, mouseX);
+            renderRightBg(guiGraphics, mouseX);
         }
         int j = getFGColor();
-        drawCenteredString(poseStack, font, this.getMessage(), this.getX() + this.width / 2,
-                           this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24
+        guiGraphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2,
+                                       this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24
         );
     }
 
-    private void renderRightBg(PoseStack poseStack, int mouseX) {
-        blit(poseStack, this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)), this.getY(), 0,
-             this.getTextureY(isRightHovered(mouseX)), 4, this.height
+    private void renderRightBg(GuiGraphics guiGraphics, int mouseX) {
+        guiGraphics.blit(AbstractSliderButton.SLIDER_LOCATION,
+                         this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)), this.getY(), 0,
+                         this.getTextureY(isRightHovered(mouseX)), 4, this.height
         );
-        blit(poseStack, this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.getY(), 196,
-             this.getTextureY(isRightHovered(mouseX)), 4, this.height
+        guiGraphics.blit(AbstractSliderButton.SLIDER_LOCATION,
+                         this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.getY(), 196,
+                         this.getTextureY(isRightHovered(mouseX)), 4, this.height
         );
     }
 
-    private void renderLeftBg(PoseStack poseStack, int mouseX) {
-        blit(poseStack, this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)), this.getY(), 0,
-             this.getTextureY(isLeftHovered(mouseX)), 4, this.height
+    private void renderLeftBg(GuiGraphics guiGraphics, int mouseX) {
+        guiGraphics.blit(AbstractSliderButton.SLIDER_LOCATION,
+                         this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)), this.getY(), 0,
+                         this.getTextureY(isLeftHovered(mouseX)), 4, this.height
         );
-        blit(poseStack, this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.getY(), 196,
-             this.getTextureY(isLeftHovered(mouseX)), 4, this.height
+        guiGraphics.blit(AbstractSliderButton.SLIDER_LOCATION,
+                         this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.getY(), 196,
+                         this.getTextureY(isLeftHovered(mouseX)), 4, this.height
         );
     }
 
