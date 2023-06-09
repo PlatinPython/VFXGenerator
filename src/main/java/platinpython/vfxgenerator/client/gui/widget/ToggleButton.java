@@ -18,7 +18,7 @@ public class ToggleButton extends UpdateableWidget {
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         GuiComponent.fill(matrixStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height,
                           0xFF000000
         );
@@ -27,16 +27,14 @@ public class ToggleButton extends UpdateableWidget {
                               this.getY() + this.height - 1, 0xFF00FF00
             );
             ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 0,
-                                       46 + this.getYImage(isHovered) * 20, this.width / 2, this.height, 200, 20, 2, 2,
-                                       2, 2, this.getBlitOffset()
+                                       this.getTextureY(), this.width / 2, this.height, 200, 20, 2, 2, 2, 2, 0
             );
         } else {
             GuiComponent.fill(matrixStack, this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
                               this.getY() + this.height - 1, 0xFFFF0000
             );
-            ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.getX(), this.getY(), 0,
-                                       46 + this.getYImage(isHovered) * 20, this.width / 2, this.height, 200, 20, 2, 2,
-                                       2, 2, this.getBlitOffset()
+            ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.getTextureY(),
+                                       this.width / 2, this.height, 200, 20, 2, 2, 2, 2, 0
             );
         }
     }

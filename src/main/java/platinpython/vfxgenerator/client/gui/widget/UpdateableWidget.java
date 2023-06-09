@@ -18,4 +18,8 @@ public abstract class UpdateableWidget extends AbstractWidget {
     protected void applyValue() {
         this.applyValueFunction.run();
     }
+
+    protected int getTextureY() {
+        return 46 + (this.active && this.isHoveredOrFocused() ? 40 : 20);
+    }
 }

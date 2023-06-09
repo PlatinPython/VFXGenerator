@@ -3,8 +3,12 @@ package platinpython.vfxgenerator.client.gui.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -65,16 +69,11 @@ public class FloatRangeSlider extends UpdateableWidget {
         this.updateMessage();
     }
 
-    @Override
-    protected int getYImage(boolean isHovered) {
-        return 0;
-    }
-
-    private int getYImageNoDisabled(boolean isHovered) {
+    private int getTextureY(boolean isHovered) {
         if (!this.active) {
-            return 1;
+            return 40;
         }
-        return isHovered ? 2 : 1;
+        return isHovered ? 60 : 40;
     }
 
     public boolean isLeftHovered(int mouseX) {
@@ -86,38 +85,54 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Font font = minecraft.font;
+//        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, AbstractSliderButton.SLIDER_LOCATION);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        blit(poseStack, this.getX(), this.getY(), 0, this.isFocused() ? 20 : 0, this.width / 2, this.height);
+        blit(poseStack, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, this.isFocused() ? 20 : 0,
+             this.width / 2, this.height
+        );
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        ScreenUtils.blitWithBorder(matrixStack,
+        ScreenUtils.blitWithBorder(poseStack,
                                    this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4,
-                                   this.getY() + 3, 0, 66,
+                                   this.getY() + 3, 0, 40,
                                    ((int) (this.rightSliderValue * (double) (this.width - 8))) - ((int) (this.leftSliderValue * (double) (this.width - 8))),
-                                   this.height - 6, 200, 20, 2, 2, 2, 2, this.getBlitOffset()
+                                   this.height - 6, 200, 20, 2, 2, 2, 2, 0
         );
         if (isLeftHovered(mouseX)) {
-            renderRightBg(matrixStack, mouseX);
-            renderLeftBg(matrixStack, mouseX);
+            renderRightBg(poseStack, mouseX);
+            renderLeftBg(poseStack, mouseX);
         } else {
-            renderLeftBg(matrixStack, mouseX);
-            renderRightBg(matrixStack, mouseX);
+            renderLeftBg(poseStack, mouseX);
+            renderRightBg(poseStack, mouseX);
         }
-    }
-
-    private void renderRightBg(PoseStack matrixStack, int mouseX) {
-        this.blit(matrixStack, this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)), this.getY(), 0,
-                  46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
-        );
-        this.blit(matrixStack, this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.getY(),
-                  196, 46 + this.getYImageNoDisabled(isRightHovered(mouseX)) * 20, 4, this.height
+        int j = getFGColor();
+        drawCenteredString(poseStack, font, this.getMessage(), this.getX() + this.width / 2,
+                           this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24
         );
     }
 
-    private void renderLeftBg(PoseStack matrixStack, int mouseX) {
-        this.blit(matrixStack, this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)), this.getY(), 0,
-                  46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
+    private void renderRightBg(PoseStack poseStack, int mouseX) {
+        blit(poseStack, this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)), this.getY(), 0,
+             this.getTextureY(isRightHovered(mouseX)), 4, this.height
         );
-        this.blit(matrixStack, this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.getY(),
-                  196, 46 + this.getYImageNoDisabled(isLeftHovered(mouseX)) * 20, 4, this.height
+        blit(poseStack, this.getX() + (int) (this.rightSliderValue * (double) (this.width - 8)) + 4, this.getY(), 196,
+             this.getTextureY(isRightHovered(mouseX)), 4, this.height
+        );
+    }
+
+    private void renderLeftBg(PoseStack poseStack, int mouseX) {
+        blit(poseStack, this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)), this.getY(), 0,
+             this.getTextureY(isLeftHovered(mouseX)), 4, this.height
+        );
+        blit(poseStack, this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.getY(), 196,
+             this.getTextureY(isLeftHovered(mouseX)), 4, this.height
         );
     }
 

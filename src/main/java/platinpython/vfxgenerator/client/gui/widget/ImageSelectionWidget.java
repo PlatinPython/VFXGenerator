@@ -43,7 +43,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         GuiComponent.fill(matrixStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height,
                           this.selected ? 0xFFFFFFFF : 0xFF000000
         );
@@ -51,7 +51,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
                           this.getY() + this.height - 1, 0xFF000000
         );
         ScreenUtils.blitWithBorder(matrixStack, WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.selected ? 86 : 66,
-                                   this.width, this.height, 200, 20, 2, 3, 2, 2, this.getBlitOffset()
+                                   this.width, this.height, 200, 20, 2, 3, 2, 2, 0
         );
         this.renderImage(matrixStack.last().pose(), this.getX() + 5, this.getY() + 5, this.getX() + this.width - 5,
                          this.getY() + this.height - 5

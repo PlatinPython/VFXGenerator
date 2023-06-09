@@ -1,7 +1,11 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import platinpython.vfxgenerator.util.Util;
 
 public class ToggleTextButton extends UpdateableWidget {
@@ -23,11 +27,17 @@ public class ToggleTextButton extends UpdateableWidget {
     }
 
     @Override
-    protected int getYImage(boolean isHovered) {
-        if (!this.active) {
-            return 1;
-        }
-        return isHovered ? 2 : 1;
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        Minecraft minecraft = Minecraft.getInstance();
+        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+        RenderSystem.enableBlend();
+        RenderSystem.enableDepthTest();
+        blitNineSliced(poseStack, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0,
+                       this.getTextureY()
+        );
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        this.renderScrollingString(poseStack, minecraft.font, 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
     @Override

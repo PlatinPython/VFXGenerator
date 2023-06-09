@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "vfxgenerator:vfx_generator"
-  }
+  },
+  "show_notification": true
 }

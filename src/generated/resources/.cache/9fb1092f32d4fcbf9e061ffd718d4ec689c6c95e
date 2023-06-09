@@ -1,5 +1,5 @@
-// 1.19.3	2023-06-09T00:34:58.6080366	Recipes
+// 1.19.4	2023-06-09T02:28:49.466508	Recipes
 a26f7efa6051b21c68dd0738798e04ef76e82487 data/vfxgenerator/advancements/recipes/misc/vfx_generator.json
 fc7846aa189a07a2435eb3c2e4d204c39289d9f1 data/vfxgenerator/advancements/recipes/misc/vfx_generator_core.json
-52afec9414f665226f78f4e2a76107658eb1c16d data/vfxgenerator/recipes/vfx_generator.json
-44fe23c0d5dd7aef6b5f48c075e593b45220ff81 data/vfxgenerator/recipes/vfx_generator_core.json
+cc4bfeb20506666f8d3e841c2406e803c1e27303 data/vfxgenerator/recipes/vfx_generator.json
+7b3c094e78c127056948d739c2570e0f7fbf56d5 data/vfxgenerator/recipes/vfx_generator_core.json

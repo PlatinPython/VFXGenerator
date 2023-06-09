@@ -1,13 +1,17 @@
 package platinpython.vfxgenerator.client.gui.widget;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import platinpython.vfxgenerator.util.Util;
 
 import java.util.List;
@@ -76,17 +80,24 @@ public class VFXGeneratorOptionsList
             return new VFXGeneratorOptionsListEntry(new UpdateableWidget(guiWidth / 2 - 155, 0, 310, 20, () -> {
             }) {
                 @Override
-                protected int getYImage(boolean isHovered) {
-                    if (!this.active) {
-                        return 1;
-                    }
-                    return isHovered ? 2 : 1;
-                }
-
-                @Override
                 public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
                     this.setMessage(displayText);
                     super.render(matrixStack, mouseX, mouseY, partialTicks);
+                }
+
+                @Override
+                public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    Font font = minecraft.font;
+                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                    RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+                    RenderSystem.enableBlend();
+                    RenderSystem.defaultBlendFunc();
+                    RenderSystem.enableDepthTest();
+                    blit(poseStack, this.getX(), this.getY(), 0, this.getTextureY(), this.width / 2, this.height);
+                    blit(poseStack, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, this.getTextureY(), this.width / 2, this.height);
+                    drawCenteredString(poseStack, font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);
                 }
 
                 @Override
