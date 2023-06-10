@@ -30,9 +30,9 @@ public class ParticleData {
     private float hueBot = 0F;
     private float saturationBot = 0F;
     private float brightnessBot = 0F;
-    private float hueTop = 0F;
-    private float saturationTop = 0F;
-    private float brightnessTop = 0F;
+    private float hueTop = 1F;
+    private float saturationTop = 1F;
+    private float brightnessTop = 1F;
     private int lifetimeBot = 20;
     private int lifetimeTop = 80;
     private float sizeBot = 1F;
