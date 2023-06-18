@@ -16,14 +16,15 @@ public record ParticleOptions(List<ResourceLocation> particles, boolean replace)
     ).apply(instance, ParticleOptions::new));
 
     // TODO Remove once no longer needed
-    public void debug() {
-        VFXGenerator.LOGGER.debug("Loaded VFXGenerator Particle Options: {}",
-                                  ToStringBuilder.reflectionToString(this, new MultilineRecursiveToStringStyle() {
-                                      {
-                                          this.setUseShortClassName(true);
-                                          this.setUseIdentityHashCode(false);
-                                      }
-                                  })
+    public void debug(ResourceLocation location, String sourcePackId) {
+        VFXGenerator.LOGGER.debug(
+                "Loaded VFXGenerator Particle Options: {} from {} in {}",
+                ToStringBuilder.reflectionToString(this, new MultilineRecursiveToStringStyle() {
+                    {
+                        this.setUseShortClassName(true);
+                        this.setUseIdentityHashCode(false);
+                    }
+                }), location, sourcePackId
         );
     }
 }
