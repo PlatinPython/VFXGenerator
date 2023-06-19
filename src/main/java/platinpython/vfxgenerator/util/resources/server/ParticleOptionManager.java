@@ -17,49 +17,82 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.slf4j.Logger;
 import platinpython.vfxgenerator.VFXGenerator;
+import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.resources.common.ParticleOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class ParticleOptionManager
-        extends SimplePreparableReloadListener<Multimap<ResourceLocation, Pair<String, ParticleOptions>>> {
-    private static final Logger LOGGER = LogUtils.getLogger();
+public class ParticleOptionManager extends
+                                   SimplePreparableReloadListener<Multimap<ResourceLocation, Pair<String, Pair<ParticleOptions, Map<ResourceLocation, ParticleType>>>>> {
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public ParticleOptionManager() {
     }
 
     @Override
-    protected Multimap<ResourceLocation, Pair<String, ParticleOptions>> prepare(
-            ResourceManager resourceManager,
-            ProfilerFiller profiler
+    protected Multimap<ResourceLocation, Pair<String, Pair<ParticleOptions, Map<ResourceLocation, ParticleType>>>> prepare(
+            ResourceManager resourceManager, ProfilerFiller profiler
     ) {
-        FileToIdConverter converter = FileToIdConverter.json(VFXGenerator.MOD_ID);
-        Multimap<ResourceLocation, Pair<String, ParticleOptions>> map = ArrayListMultimap.create();
+        FileToIdConverter particleListConverter = FileToIdConverter.json(VFXGenerator.MOD_ID);
+        Multimap<ResourceLocation, Pair<String, ParticleOptions>> optionsMap = ArrayListMultimap.create();
         Map<ResourceLocation, List<Resource>> resourceStacks = resourceManager.listResourceStacks(
                 VFXGenerator.MOD_ID, resourceLocation -> resourceLocation.getPath()
                                                                          .equals(VFXGenerator.MOD_ID + "/particle.json"));
         resourceStacks.forEach((key, value) -> value.forEach(
                 resource -> parseJsonResource(ParticleOptions.CODEC, key, resource, LOGGER::error,
-                                              options -> map.put(
-                                                      converter.fileToId(key),
+                                              options -> optionsMap.put(
+                                                      particleListConverter.fileToId(key),
                                                       Pair.of(resource.sourcePackId(), options)
                                               )
                 )));
-        return map;
+        FileToIdConverter particleConverter = FileToIdConverter.json(VFXGenerator.MOD_ID + "/particle");
+        Multimap<ResourceLocation, Pair<String, Pair<ParticleOptions, Map<ResourceLocation, ParticleType>>>> particleTypeMap = ArrayListMultimap.create();
+        optionsMap.forEach((key, value) -> {
+            Map<ResourceLocation, ParticleType> map = new HashMap<>();
+            value.getSecond()
+                 .particles()
+                 .forEach(location -> resourceManager.getResource(particleConverter.idToFile(location))
+                                                     .ifPresentOrElse(
+                                                             resource -> parseJsonResource(ParticleType.CODEC,
+                                                                                           particleConverter.idToFile(
+                                                                                                   location), resource,
+                                                                                           LOGGER::error,
+                                                                                           type -> map.put(
+                                                                                                   location, type)
+                                                             ), () -> LOGGER.error(
+                                                                     "Failed to load resource {}, specified in {} from {}",
+                                                                     particleConverter.idToFile(location),
+                                                                     particleListConverter.idToFile(key),
+                                                                     value.getFirst()
+                                                             )));
+            particleTypeMap.put(key, Pair.of(value.getFirst(), Pair.of(value.getSecond(), map)));
+        });
+        return particleTypeMap;
     }
 
     @Override
     protected void apply(
-            Multimap<ResourceLocation, Pair<String, ParticleOptions>> data,
+            Multimap<ResourceLocation, Pair<String, Pair<ParticleOptions, Map<ResourceLocation, ParticleType>>>> data,
             ResourceManager resourceManager,
             ProfilerFiller profiler
     ) {
-        data.forEach((location, sourceOptionsPair) -> sourceOptionsPair.getSecond()
-                                                                       .debug(location, sourceOptionsPair.getFirst()));
+        data.forEach((optionsLocation, sourceOptionsTypesPairPair) -> {
+            sourceOptionsTypesPairPair.getSecond()
+                                      .getFirst()
+                                      .debug(optionsLocation, sourceOptionsTypesPairPair.getFirst());
+            sourceOptionsTypesPairPair.getSecond()
+                                      .getSecond()
+                                      .forEach((typeLocation, particleType) -> particleType.debug(
+                                              typeLocation,
+                                              optionsLocation,
+                                              sourceOptionsTypesPairPair.getFirst()
+                                      ));
+        });
     }
 
     private <T> void parseJsonResource(
