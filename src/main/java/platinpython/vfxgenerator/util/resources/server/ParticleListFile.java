@@ -1,4 +1,4 @@
-package platinpython.vfxgenerator.util.resources.common;
+package platinpython.vfxgenerator.util.resources.server;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,11 +9,11 @@ import platinpython.vfxgenerator.VFXGenerator;
 
 import java.util.List;
 
-public record ParticleOptions(List<ResourceLocation> particles, boolean replace) {
-    public static final Codec<ParticleOptions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.listOf().fieldOf("values").forGetter(ParticleOptions::particles),
-            Codec.BOOL.optionalFieldOf("replace", Boolean.FALSE).forGetter(ParticleOptions::replace)
-    ).apply(instance, ParticleOptions::new));
+public record ParticleListFile(List<ResourceLocation> particles, boolean replace) {
+    public static final Codec<ParticleListFile> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ResourceLocation.CODEC.listOf().fieldOf("values").forGetter(ParticleListFile::particles),
+            Codec.BOOL.optionalFieldOf("replace", Boolean.FALSE).forGetter(ParticleListFile::replace)
+    ).apply(instance, ParticleListFile::new));
 
     // TODO Remove once no longer needed
     public void debug(ResourceLocation location, String sourcePackId) {
