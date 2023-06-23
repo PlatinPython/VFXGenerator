@@ -1,17 +1,29 @@
 package platinpython.vfxgenerator.util.particle.types;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.particle.ParticleTypes;
+import platinpython.vfxgenerator.util.resources.ResourceCodec;
+import platinpython.vfxgenerator.util.resources.ResourceUtil;
 
 public class SingleParticle extends ParticleType {
-    public static final Codec<SingleParticle> CODEC = ResourceLocation.CODEC.xmap(
-            SingleParticle::new, SingleParticle::value).fieldOf("value").codec();
+    public static final Codec<SingleParticle> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                                        ResourceLocation.CODEC.fieldOf("value").forGetter(SingleParticle::value),
+                                        new ResourceCodec().flatXmap(ResourceUtil::supportsColor, i -> DataResult.error(
+                                                                   () -> "Serializing not supported"))
+                                                           .fieldOf("value")
+                                                           .forGetter(i -> null)
+                                )
+                                .apply(instance, SingleParticle::new));
 
     private final ResourceLocation value;
 
-    public SingleParticle(ResourceLocation value) {
+    public SingleParticle(ResourceLocation value, boolean supportsColor) {
+        super(supportsColor);
         this.value = value;
     }
 

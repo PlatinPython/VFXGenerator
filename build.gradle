@@ -11,6 +11,8 @@ archivesBaseName = 'VFX Generator'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+jarJar.enable()
+
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
     mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.20'
@@ -70,9 +72,20 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20-46.0.12'
+
+    minecraftLibrary 'org.l33tlabs.twl:pngdecoder:1.0'
+    jarJar('org.l33tlabs.twl:pngdecoder:[1.0,)') {
+        transitive(false)
+    }
+}
+
+tasks.jarJar.configure {
+    archiveClassifier = ''
 }
 
 jar {
+    archiveClassifier = 'slim'
+
     manifest {
         attributes([
                 "Specification-Title"     : "vfxgenerator",

@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import org.slf4j.Logger;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.particle.ParticleType;
+import platinpython.vfxgenerator.util.resources.ResourceOps;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +45,7 @@ public class ParticleListLoader extends
                 VFXGenerator.MOD_ID, resourceLocation -> resourceLocation.getPath()
                                                                          .equals(VFXGenerator.MOD_ID + "/particle.json"));
         resourceStacks.forEach((key, value) -> value.forEach(
-                resource -> parseJsonResource(ParticleListFile.CODEC, key, resource, LOGGER::error,
+                resource -> parseJsonResource(JsonOps.INSTANCE, ParticleListFile.CODEC, key, resource, LOGGER::error,
                                               options -> optionsMap.put(
                                                       particleListConverter.fileToId(key),
                                                       Pair.of(resource.sourcePackId(), options)
@@ -56,19 +58,20 @@ public class ParticleListLoader extends
             value.getSecond()
                  .particles()
                  .forEach(location -> resourceManager.getResource(particleConverter.idToFile(location))
-                                                     .ifPresentOrElse(
-                                                             resource -> parseJsonResource(ParticleType.CODEC,
-                                                                                           particleConverter.idToFile(
-                                                                                                   location), resource,
-                                                                                           LOGGER::error,
-                                                                                           type -> map.put(
-                                                                                                   location, type)
-                                                             ), () -> LOGGER.error(
-                                                                     "Failed to load resource {}, specified in {} from {}",
-                                                                     particleConverter.idToFile(location),
-                                                                     particleListConverter.idToFile(key),
-                                                                     value.getFirst()
-                                                             )));
+                                                     .ifPresentOrElse(resource -> parseJsonResource(
+                                                             new ResourceOps<>(JsonOps.INSTANCE, resourceManager,
+                                                                               new FileToIdConverter(
+                                                                                       VFXGenerator.MOD_ID + "/particle/textures",
+                                                                                       ".png"
+                                                                               )
+                                                             ), ParticleType.CODEC,
+                                                             particleConverter.idToFile(location), resource,
+                                                             LOGGER::error, type -> map.put(location, type)
+                                                     ), () -> LOGGER.error(
+                                                             "Failed to load resource {}, specified in {} from {}",
+                                                             particleConverter.idToFile(location),
+                                                             particleListConverter.idToFile(key), value.getFirst()
+                                                     )));
             particleTypeMap.put(key, Pair.of(value.getFirst(), Pair.of(value.getSecond(), map)));
         });
         return particleTypeMap;
@@ -95,6 +98,7 @@ public class ParticleListLoader extends
     }
 
     private <T> void parseJsonResource(
+            DynamicOps<JsonElement> ops,
             Codec<T> codec,
             ResourceLocation origin,
             Resource resource,
@@ -103,7 +107,7 @@ public class ParticleListLoader extends
     ) {
         try (BufferedReader reader = resource.openAsReader()) {
             JsonElement jsonElement = JsonParser.parseReader(reader);
-            codec.parse(JsonOps.INSTANCE, jsonElement).resultOrPartial(failureAction).ifPresent(successfulAction);
+            codec.parse(ops, jsonElement).resultOrPartial(failureAction).ifPresent(successfulAction);
         } catch (IOException | JsonParseException e) {
             LOGGER.error("Failed to parse data file {} from {}", origin, resource.sourcePackId(), e);
         }
