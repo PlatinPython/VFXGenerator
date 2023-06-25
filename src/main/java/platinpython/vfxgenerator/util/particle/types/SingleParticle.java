@@ -10,7 +10,7 @@ import platinpython.vfxgenerator.util.resources.ResourceCodec;
 import platinpython.vfxgenerator.util.resources.ResourceUtil;
 
 public class SingleParticle extends ParticleType {
-    public static final Codec<SingleParticle> CODEC = RecordCodecBuilder.create(
+    public static final Codec<SingleParticle> FILE_DECODER = RecordCodecBuilder.create(
             instance -> instance.group(
                                         ResourceLocation.CODEC.fieldOf("value").forGetter(SingleParticle::value),
                                         new ResourceCodec().flatXmap(ResourceUtil::supportsColor, i -> DataResult.error(

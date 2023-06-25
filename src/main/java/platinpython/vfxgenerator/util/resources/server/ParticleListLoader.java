@@ -7,7 +7,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.Decoder;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.FileToIdConverter;
@@ -45,7 +45,8 @@ public class ParticleListLoader extends
                 VFXGenerator.MOD_ID, resourceLocation -> resourceLocation.getPath()
                                                                          .equals(VFXGenerator.MOD_ID + "/particle.json"));
         resourceStacks.forEach((key, value) -> value.forEach(
-                resource -> parseJsonResource(JsonOps.INSTANCE, ParticleListFile.CODEC, key, resource, LOGGER::error,
+                resource -> parseJsonResource(JsonOps.INSTANCE, ParticleListFile.FILE_DECODER, key, resource,
+                                              LOGGER::error,
                                               options -> optionsMap.put(
                                                       particleListConverter.fileToId(key),
                                                       Pair.of(resource.sourcePackId(), options)
@@ -64,7 +65,7 @@ public class ParticleListLoader extends
                                                                                        VFXGenerator.MOD_ID + "/particle/textures",
                                                                                        ".png"
                                                                                )
-                                                             ), ParticleType.CODEC,
+                                                             ), ParticleType.FILE_DECODER,
                                                              particleConverter.idToFile(location), resource,
                                                              LOGGER::error, type -> map.put(location, type)
                                                      ), () -> LOGGER.error(
@@ -99,7 +100,7 @@ public class ParticleListLoader extends
 
     private <T> void parseJsonResource(
             DynamicOps<JsonElement> ops,
-            Codec<T> codec,
+            Decoder<T> codec,
             ResourceLocation origin,
             Resource resource,
             Consumer<String> failureAction,

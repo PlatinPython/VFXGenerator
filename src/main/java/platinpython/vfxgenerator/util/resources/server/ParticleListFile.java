@@ -1,6 +1,7 @@
 package platinpython.vfxgenerator.util.resources.server;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.Decoder;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.builder.MultilineRecursiveToStringStyle;
@@ -10,7 +11,7 @@ import platinpython.vfxgenerator.VFXGenerator;
 import java.util.List;
 
 public record ParticleListFile(List<ResourceLocation> particles, boolean replace) {
-    public static final Codec<ParticleListFile> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Decoder<ParticleListFile> FILE_DECODER = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.listOf().fieldOf("values").forGetter(ParticleListFile::particles),
             Codec.BOOL.optionalFieldOf("replace", Boolean.FALSE).forGetter(ParticleListFile::replace)
     ).apply(instance, ParticleListFile::new));
