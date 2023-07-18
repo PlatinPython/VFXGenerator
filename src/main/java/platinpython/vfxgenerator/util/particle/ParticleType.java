@@ -1,5 +1,6 @@
 package platinpython.vfxgenerator.util.particle;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.Decoder;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.builder.MultilineRecursiveToStringStyle;
@@ -7,8 +8,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import platinpython.vfxgenerator.VFXGenerator;
 
 public abstract class ParticleType {
-    public static final Decoder<ParticleType> FILE_DECODER = ParticleTypes.FILE_DECODER.dispatch(
+    public static final Decoder<ParticleType> FILE_DECODER = ParticleTypes.CODEC.dispatch(
             ParticleType::type, ParticleTypes::fileDecoder);
+
+    public static final Codec<ParticleType> CODEC = ParticleTypes.CODEC.dispatch(
+            ParticleType::type, ParticleTypes::codec);
 
     private final boolean supportsColor;
 
@@ -21,6 +25,17 @@ public abstract class ParticleType {
     }
 
     public abstract ParticleTypes type();
+
+    // TODO Remove once no longer needed
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, new MultilineRecursiveToStringStyle() {
+            {
+                this.setUseShortClassName(true);
+                this.setUseIdentityHashCode(false);
+            }
+        });
+    }
 
     // TODO Remove once no longer needed
     public void debug(ResourceLocation location, ResourceLocation optionsLocation, String sourcePackId) {

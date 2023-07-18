@@ -20,6 +20,12 @@ public class SingleParticle extends ParticleType {
                                 )
                                 .apply(instance, SingleParticle::new));
 
+    public static final Codec<SingleParticle> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    ResourceLocation.CODEC.fieldOf("value").forGetter(SingleParticle::value),
+                    Codec.BOOL.fieldOf("supportsColor").forGetter(SingleParticle::supportsColor)
+            ).apply(instance, SingleParticle::new));
+
     private final ResourceLocation value;
 
     public SingleParticle(ResourceLocation value, boolean supportsColor) {

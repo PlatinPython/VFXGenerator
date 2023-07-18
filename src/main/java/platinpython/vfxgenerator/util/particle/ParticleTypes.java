@@ -8,18 +8,24 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public enum ParticleTypes implements StringRepresentable {
-    SINGLE(() -> SingleParticle.FILE_DECODER);
+    SINGLE(() -> SingleParticle.FILE_DECODER, () -> SingleParticle.CODEC);
 
-    public static final Codec<ParticleTypes> FILE_DECODER = StringRepresentable.fromEnum(ParticleTypes::values);
+    public static final Codec<ParticleTypes> CODEC = StringRepresentable.fromEnum(ParticleTypes::values);
 
     private final Supplier<Codec<? extends ParticleType>> fileDecoder;
+    private final Supplier<Codec<? extends ParticleType>> codec;
 
-    ParticleTypes(Supplier<Codec<? extends ParticleType>> fileDecoder) {
+    ParticleTypes(Supplier<Codec<? extends ParticleType>> fileDecoder, Supplier<Codec<? extends ParticleType>> codec) {
         this.fileDecoder = fileDecoder;
+        this.codec = codec;
     }
 
     public Codec<? extends ParticleType> fileDecoder() {
         return this.fileDecoder.get();
+    }
+
+    public Codec<? extends ParticleType> codec() {
+        return this.codec.get();
     }
 
     @Override

@@ -24,6 +24,6 @@ public class ResourceOps<T> extends DelegatingOps<T> {
     }
 
     public Optional<Resource> getResource(ResourceLocation resourceLocation) {
-        return this.resourceManager.getResource(this.converter.idToFile(resourceLocation));
+        return this.resourceManager.getResource(idToFile(resourceLocation));
     }
 }

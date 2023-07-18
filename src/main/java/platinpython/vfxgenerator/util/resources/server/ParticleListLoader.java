@@ -1,6 +1,7 @@
 package platinpython.vfxgenerator.util.resources.server;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -19,6 +20,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import org.slf4j.Logger;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.particle.ParticleType;
+import platinpython.vfxgenerator.util.resources.DataManager;
 import platinpython.vfxgenerator.util.resources.ResourceOps;
 
 import java.io.BufferedReader;
@@ -96,6 +98,15 @@ public class ParticleListLoader extends
                                               sourceOptionsTypesPairPair.getFirst()
                                       ));
         });
+        DataManager.SELECTABLE_PARTICLES = data.values()
+                                               .stream()
+                                               .flatMap(stringPairPair -> stringPairPair.getSecond()
+                                                                                    .getSecond()
+                                                                                    .entrySet()
+                                                                                    .stream())
+                                               .collect(
+                                                   ImmutableMap.toImmutableMap(Map.Entry::getKey, Map.Entry::getValue));
+        VFXGenerator.LOGGER.debug("Loaded Selectable VFXGenerator Particles: {}", DataManager.SELECTABLE_PARTICLES);
     }
 
     private <T> void parseJsonResource(
