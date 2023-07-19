@@ -31,20 +31,17 @@ public class VFXGeneratorDataSyncPKT {
     public static class Handler {
         @SuppressWarnings("resource")
         public static void handle(VFXGeneratorDataSyncPKT message, Supplier<NetworkEvent.Context> context) {
-            context.get().enqueueWork(() -> {
-                BlockEntity tileEntity = context.get().getSender().level().getBlockEntity(message.pos);
-                if (tileEntity instanceof VFXGeneratorBlockEntity) {
-                    ((VFXGeneratorBlockEntity) tileEntity).loadFromTag(message.tag);
-                    tileEntity.setChanged();
-                }
-                context.get()
-                       .getSender()
-                       .level()
-                       .sendBlockUpdated(message.pos, context.get().getSender().level().getBlockState(message.pos),
-                                         context.get().getSender().level().getBlockState(message.pos), Block.UPDATE_ALL
-                       );
-            });
-            context.get().setPacketHandled(true);
+            BlockEntity tileEntity = context.get().getSender().level().getBlockEntity(message.pos);
+            if (tileEntity instanceof VFXGeneratorBlockEntity) {
+                ((VFXGeneratorBlockEntity) tileEntity).loadFromTag(message.tag);
+                tileEntity.setChanged();
+            }
+            context.get()
+                   .getSender()
+                   .level()
+                   .sendBlockUpdated(message.pos, context.get().getSender().level().getBlockState(message.pos),
+                                     context.get().getSender().level().getBlockState(message.pos), Block.UPDATE_ALL
+                   );
         }
     }
 }

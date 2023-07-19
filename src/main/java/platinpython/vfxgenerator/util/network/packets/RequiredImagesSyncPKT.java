@@ -36,8 +36,7 @@ public class RequiredImagesSyncPKT {
     public static class Handler {
         public static void handle(RequiredImagesSyncPKT message, Supplier<NetworkEvent.Context> context) {
             // TODO Actually do something useful with the data
-            context.get().enqueueWork(() -> VFXGenerator.LOGGER.info("Received: {}", message.map));
-            context.get().setPacketHandled(true);
+            VFXGenerator.LOGGER.info("Received: {}", message.map);
         }
     }
 }

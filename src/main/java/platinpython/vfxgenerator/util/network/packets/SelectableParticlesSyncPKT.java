@@ -27,11 +27,8 @@ public class SelectableParticlesSyncPKT {
 
     public static class Handler {
         public static void handle(SelectableParticlesSyncPKT message, Supplier<NetworkEvent.Context> context) {
-            context.get().enqueueWork(() -> {
-                DataManager.setSelectableParticles(message.map);
-                VFXGenerator.LOGGER.debug("Received Selectable Particles: {}", DataManager.selectableParticles());
-            });
-            context.get().setPacketHandled(true);
+            DataManager.setSelectableParticles(message.map);
+            VFXGenerator.LOGGER.debug("Received Selectable Particles: {}", DataManager.selectableParticles());
         }
     }
 }

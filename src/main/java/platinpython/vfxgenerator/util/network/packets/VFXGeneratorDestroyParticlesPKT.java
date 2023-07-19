@@ -33,26 +33,23 @@ public class VFXGeneratorDestroyParticlesPKT {
 
     public static class Handler {
         public static void handle(VFXGeneratorDestroyParticlesPKT message, Supplier<NetworkEvent.Context> context) {
-            context.get().enqueueWork(() -> {
-                Random random = new Random();
-                List<ResourceLocation> list = ImmutableList.of(
-                        new ResourceLocation(VFXGenerator.MOD_ID, "spark_small"),
-                        new ResourceLocation(VFXGenerator.MOD_ID, "spark_mid"),
-                        new ResourceLocation(VFXGenerator.MOD_ID, "spark_big")
+            Random random = new Random();
+            List<ResourceLocation> list = ImmutableList.of(
+                    new ResourceLocation(VFXGenerator.MOD_ID, "spark_small"),
+                    new ResourceLocation(VFXGenerator.MOD_ID, "spark_mid"),
+                    new ResourceLocation(VFXGenerator.MOD_ID, "spark_big")
+            );
+            for (int i = 0; i < 100; i++) {
+                double motionX = (random.nextFloat() * (.2F)) - .1F;
+                double motionY = (random.nextFloat() * (.2F)) - .1F;
+                double motionZ = (random.nextFloat() * (.2F)) - .1F;
+                Vec3 motion = new Vec3(motionX, motionY, motionZ);
+                ClientUtils.addParticle(list.get(random.nextInt(list.size())),
+                                        Color.HSBtoRGB(random.nextFloat(), 1F, 1F),
+                                        Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F,
+                                        false, false
                 );
-                for (int i = 0; i < 100; i++) {
-                    double motionX = (random.nextFloat() * (.2F)) - .1F;
-                    double motionY = (random.nextFloat() * (.2F)) - .1F;
-                    double motionZ = (random.nextFloat() * (.2F)) - .1F;
-                    Vec3 motion = new Vec3(motionX, motionY, motionZ);
-                    ClientUtils.addParticle(list.get(random.nextInt(list.size())),
-                                            Color.HSBtoRGB(random.nextFloat(), 1F, 1F),
-                                            Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion,
-                                            0F, false, false
-                    );
-                }
-            });
-            context.get().setPacketHandled(true);
+            }
         }
     }
 }
