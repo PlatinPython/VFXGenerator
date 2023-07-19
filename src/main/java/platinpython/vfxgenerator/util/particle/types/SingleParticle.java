@@ -9,6 +9,8 @@ import platinpython.vfxgenerator.util.particle.ParticleTypes;
 import platinpython.vfxgenerator.util.resources.ResourceCodec;
 import platinpython.vfxgenerator.util.resources.ResourceUtil;
 
+import java.util.stream.Stream;
+
 public class SingleParticle extends ParticleType {
     public static final Codec<SingleParticle> FILE_DECODER = RecordCodecBuilder.create(
             instance -> instance.group(
@@ -40,5 +42,10 @@ public class SingleParticle extends ParticleType {
     @Override
     public ParticleTypes type() {
         return ParticleTypes.SINGLE;
+    }
+
+    @Override
+    public Stream<ResourceLocation> imageLocations() {
+        return Stream.of(this.value());
     }
 }

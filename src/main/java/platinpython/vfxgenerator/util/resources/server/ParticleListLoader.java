@@ -25,6 +25,7 @@ import platinpython.vfxgenerator.util.resources.ResourceOps;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +110,24 @@ public class ParticleListLoader extends
                                                        Map.Entry::getValue
                                                )));
         VFXGenerator.LOGGER.debug("Loaded Selectable VFXGenerator Particles: {}", DataManager.selectableParticles());
+        FileToIdConverter imageFileToIdConverter = new FileToIdConverter(
+                VFXGenerator.MOD_ID + "/particle/textures", ".png");
+        DataManager.setRequiredImages(data.values()
+                                          .stream()
+                                          .map(Pair::getSecond)
+                                          .map(Pair::getSecond)
+                                          .map(Map::values)
+                                          .flatMap(Collection::stream)
+                                          .flatMap(ParticleType::imageLocations)
+                                          .map(resourceLocation -> Pair.of(
+                                                  resourceLocation,
+                                                  resourceManager.getResource(
+                                                          imageFileToIdConverter.idToFile(
+                                                                  resourceLocation))
+                                          ))
+                                          .filter(pair -> pair.getSecond().isPresent())
+                                          .map(pair -> Pair.of(pair.getFirst(), pair.getSecond().get()))
+                                          .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond)));
     }
 
     private <T> void parseJsonResource(

@@ -4,6 +4,7 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import platinpython.vfxgenerator.util.Util;
+import platinpython.vfxgenerator.util.network.packets.RequiredImagesSyncPKT;
 import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDataSyncPKT;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDestroyParticlesPKT;
@@ -31,6 +32,11 @@ public class NetworkHandler {
                 .encoder(SelectableParticlesSyncPKT::encode)
                 .decoder(SelectableParticlesSyncPKT::decode)
                 .consumerMainThread(SelectableParticlesSyncPKT.Handler::handle)
+                .add();
+        INSTANCE.messageBuilder(RequiredImagesSyncPKT.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(RequiredImagesSyncPKT::encode)
+                .decoder(RequiredImagesSyncPKT::decode)
+                .consumerMainThread(RequiredImagesSyncPKT.Handler::handle)
                 .add();
     }
 }

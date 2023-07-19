@@ -1,14 +1,25 @@
 package platinpython.vfxgenerator.util.resources;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import org.apache.commons.io.IOUtils;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
+import platinpython.vfxgenerator.util.network.packets.RequiredImagesSyncPKT;
 import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
 import platinpython.vfxgenerator.util.resources.server.ParticleListLoader;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EventHandling {
@@ -19,19 +30,35 @@ public class EventHandling {
 
     @SubscribeEvent
     public static void onDatapackSync(OnDatapackSyncEvent event) {
-        VFXGenerator.LOGGER.info("OnDatapackSyncEvent received");
-        VFXGenerator.LOGGER.info("Player: {}", event.getPlayer());
-        VFXGenerator.LOGGER.info("PlayerList: {}", event.getPlayerList().getPlayers());
         if (event.getPlayer() == null) {
-            event.getPlayerList().getPlayers().forEach(player -> NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(() -> player),
-                    new SelectableParticlesSyncPKT(DataManager.selectableParticles())
-            ));
+            event.getPlayerList().getPlayers().forEach(EventHandling::syncDatapackData);
         } else {
-            NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(event::getPlayer),
-                    new SelectableParticlesSyncPKT(DataManager.selectableParticles())
-            );
+            syncDatapackData(event.getPlayer());
         }
+    }
+
+    private static void syncDatapackData(ServerPlayer player) {
+        NetworkHandler.INSTANCE.send(
+                PacketDistributor.PLAYER.with(() -> player),
+                new SelectableParticlesSyncPKT(DataManager.selectableParticles())
+        );
+        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new RequiredImagesSyncPKT(
+                DataManager.requiredImages()
+                           .entrySet()
+                           .stream()
+                           .map(entry -> {
+                               try {
+                                   return Optional.of(Pair.of(entry.getKey(), Hashing.crc32c()
+                                                                                     .hashBytes(IOUtils.toByteArray(
+                                                                                             entry.getValue()
+                                                                                                  .open()))));
+                               } catch (IOException e) {
+                                   VFXGenerator.LOGGER.error("Failed to hash image for syncing: {}", e.getMessage());
+                                   return Optional.<Pair<ResourceLocation, HashCode>>empty();
+                               }
+                           })
+                           .filter(Optional::isPresent)
+                           .map(Optional::get)
+                           .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond))));
     }
 }

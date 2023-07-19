@@ -3,6 +3,7 @@ package platinpython.vfxgenerator.util.resources;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
 import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.resources.server.ParticleListLoader;
@@ -12,10 +13,11 @@ import java.util.function.Function;
 public class DataManager {
     private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
-    public static Codec<ImmutableMap<ResourceLocation, ParticleType>> SELECTABLE_PARTICLES_CODEC = Codec.unboundedMap(
+    public static final Codec<ImmutableMap<ResourceLocation, ParticleType>> SELECTABLE_PARTICLES_CODEC = Codec.unboundedMap(
             ResourceLocation.CODEC, ParticleType.CODEC).xmap(ImmutableMap::copyOf, Function.identity());
 
     private static ImmutableMap<ResourceLocation, ParticleType> SELECTABLE_PARTICLES = ImmutableMap.of();
+    private static ImmutableMap<ResourceLocation, Resource> REQUIRED_IMAGES = ImmutableMap.of();
 
     public static ImmutableMap<ResourceLocation, ParticleType> selectableParticles() {
         return SELECTABLE_PARTICLES;
@@ -26,5 +28,16 @@ public class DataManager {
             throw new IllegalCallerException("Illegal caller:  " + STACK_WALKER.getCallerClass());
         }
         SELECTABLE_PARTICLES = selectableParticles;
+    }
+
+    public static ImmutableMap<ResourceLocation, Resource> requiredImages() {
+        return REQUIRED_IMAGES;
+    }
+
+    public static void setRequiredImages(ImmutableMap<ResourceLocation, Resource> requiredImages) {
+        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class) {
+            throw new IllegalCallerException("Illegal caller:  " + STACK_WALKER.getCallerClass());
+        }
+        REQUIRED_IMAGES = requiredImages;
     }
 }

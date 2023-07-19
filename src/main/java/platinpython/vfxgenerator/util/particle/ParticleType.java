@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.MultilineRecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import platinpython.vfxgenerator.VFXGenerator;
 
+import java.util.stream.Stream;
+
 public abstract class ParticleType {
     public static final Decoder<ParticleType> FILE_DECODER = ParticleTypes.CODEC.dispatch(
             ParticleType::type, ParticleTypes::fileDecoder);
@@ -25,6 +27,8 @@ public abstract class ParticleType {
     }
 
     public abstract ParticleTypes type();
+
+    public abstract Stream<ResourceLocation> imageLocations();
 
     // TODO Remove once no longer needed
     @Override
