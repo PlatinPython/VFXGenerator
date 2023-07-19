@@ -98,15 +98,17 @@ public class ParticleListLoader extends
                                               sourceOptionsTypesPairPair.getFirst()
                                       ));
         });
-        DataManager.SELECTABLE_PARTICLES = data.values()
+        DataManager.setSelectableParticles(data.values()
                                                .stream()
                                                .flatMap(stringPairPair -> stringPairPair.getSecond()
-                                                                                    .getSecond()
-                                                                                    .entrySet()
-                                                                                    .stream())
-                                               .collect(
-                                                   ImmutableMap.toImmutableMap(Map.Entry::getKey, Map.Entry::getValue));
-        VFXGenerator.LOGGER.debug("Loaded Selectable VFXGenerator Particles: {}", DataManager.SELECTABLE_PARTICLES);
+                                                                                        .getSecond()
+                                                                                        .entrySet()
+                                                                                        .stream())
+                                               .collect(ImmutableMap.toImmutableMap(
+                                                       Map.Entry::getKey,
+                                                       Map.Entry::getValue
+                                               )));
+        VFXGenerator.LOGGER.debug("Loaded Selectable VFXGenerator Particles: {}", DataManager.selectableParticles());
     }
 
     private <T> void parseJsonResource(
