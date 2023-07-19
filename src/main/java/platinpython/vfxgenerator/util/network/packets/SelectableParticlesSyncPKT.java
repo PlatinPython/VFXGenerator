@@ -18,20 +18,16 @@ public class SelectableParticlesSyncPKT {
     }
 
     public static void encode(SelectableParticlesSyncPKT message, FriendlyByteBuf buffer) {
-        VFXGenerator.LOGGER.debug("SelectableParticlesSyncPKT#encode called");
         buffer.writeJsonWithCodec(DataManager.SELECTABLE_PARTICLES_CODEC, message.map);
     }
 
     public static SelectableParticlesSyncPKT decode(FriendlyByteBuf buffer) {
-        VFXGenerator.LOGGER.debug("SelectableParticlesSyncPKT#decode called");
         return new SelectableParticlesSyncPKT(buffer.readJsonWithCodec(DataManager.SELECTABLE_PARTICLES_CODEC));
     }
 
     public static class Handler {
         public static void handle(SelectableParticlesSyncPKT message, Supplier<NetworkEvent.Context> context) {
-            VFXGenerator.LOGGER.debug("SelectableParticlesSyncPKT$Handler#handle called");
             context.get().enqueueWork(() -> {
-                VFXGenerator.LOGGER.debug("SelectableParticlesSyncPKT$Handler#handle work called");
                 DataManager.setSelectableParticles(message.map);
                 VFXGenerator.LOGGER.debug("Received Selectable Particles: {}", DataManager.selectableParticles());
             });
