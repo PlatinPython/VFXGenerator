@@ -3,6 +3,7 @@ package platinpython.vfxgenerator.util.resources;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
+import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
 import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.resources.server.ParticleListLoader;
 
@@ -21,10 +22,8 @@ public class DataManager {
     }
 
     public static void setSelectableParticles(ImmutableMap<ResourceLocation, ParticleType> selectableParticles) {
-        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class) {
-            throw new IllegalCallerException(
-                    "This method is only allowed to be called by " + ParticleListLoader.class.getName() + ", was instead called by " + STACK_WALKER.getCallerClass()
-                                                                                                                                                   .getName());
+        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class && STACK_WALKER.getCallerClass() != SelectableParticlesSyncPKT.Handler.class) {
+            throw new IllegalCallerException("Illegal caller:  " + STACK_WALKER.getCallerClass());
         }
         SELECTABLE_PARTICLES = selectableParticles;
     }
