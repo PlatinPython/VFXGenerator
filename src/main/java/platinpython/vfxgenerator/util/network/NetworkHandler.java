@@ -4,8 +4,10 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import platinpython.vfxgenerator.util.Util;
-import platinpython.vfxgenerator.util.network.packets.RequiredImagesSyncPKT;
+import platinpython.vfxgenerator.util.network.packets.MissingImagesDataPKT;
+import platinpython.vfxgenerator.util.network.packets.RequiredImageHashesPKT;
 import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
+import platinpython.vfxgenerator.util.network.packets.MissingImagesPKT;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDataSyncPKT;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDestroyParticlesPKT;
 
@@ -33,10 +35,20 @@ public class NetworkHandler {
                 .decoder(SelectableParticlesSyncPKT::decode)
                 .consumerMainThread(SelectableParticlesSyncPKT.Handler::handle)
                 .add();
-        INSTANCE.messageBuilder(RequiredImagesSyncPKT.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(RequiredImagesSyncPKT::encode)
-                .decoder(RequiredImagesSyncPKT::decode)
-                .consumerMainThread(RequiredImagesSyncPKT.Handler::handle)
+        INSTANCE.messageBuilder(RequiredImageHashesPKT.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(RequiredImageHashesPKT::encode)
+                .decoder(RequiredImageHashesPKT::decode)
+                .consumerMainThread(RequiredImageHashesPKT.Handler::handle)
+                .add();
+        INSTANCE.messageBuilder(MissingImagesPKT.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(MissingImagesPKT::encode)
+                .decoder(MissingImagesPKT::decode)
+                .consumerMainThread(MissingImagesPKT.Handler::handle)
+                .add();
+        INSTANCE.messageBuilder(MissingImagesDataPKT.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(MissingImagesDataPKT::encode)
+                .decoder(MissingImagesDataPKT::decode)
+                .consumerMainThread(MissingImagesDataPKT.Handler::handle)
                 .add();
     }
 }

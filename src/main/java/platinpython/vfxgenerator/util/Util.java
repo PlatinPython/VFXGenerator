@@ -10,12 +10,15 @@ import java.util.Objects;
 import java.util.TreeSet;
 
 public class Util {
+    public static final int MAX_PAYLOAD_SIZE = 1024 * 1024;
+
     public static ResourceLocation createNamespacedResourceLocation(String path) {
         return new ResourceLocation(VFXGenerator.MOD_ID, path);
     }
 
-    public static <E> TreeSet<E> createTreeSetFromCollectionWithComparator(Collection<? extends E> collection,
-                                                                           Comparator<? super E> comparator) {
+    public static <E> TreeSet<E> createTreeSetFromCollectionWithComparator(
+            Collection<? extends E> collection, Comparator<? super E> comparator
+    ) {
         TreeSet<E> set = new TreeSet<>(comparator);
         set.addAll(collection);
         return set;

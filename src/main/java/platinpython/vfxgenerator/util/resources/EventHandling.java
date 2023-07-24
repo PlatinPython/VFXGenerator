@@ -14,7 +14,7 @@ import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.io.IOUtils;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
-import platinpython.vfxgenerator.util.network.packets.RequiredImagesSyncPKT;
+import platinpython.vfxgenerator.util.network.packets.RequiredImageHashesPKT;
 import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
 import platinpython.vfxgenerator.util.resources.server.ParticleListLoader;
 
@@ -42,7 +42,7 @@ public class EventHandling {
                 PacketDistributor.PLAYER.with(() -> player),
                 new SelectableParticlesSyncPKT(DataManager.selectableParticles())
         );
-        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new RequiredImagesSyncPKT(
+        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new RequiredImageHashesPKT(
                 DataManager.requiredImages()
                            .entrySet()
                            .stream()

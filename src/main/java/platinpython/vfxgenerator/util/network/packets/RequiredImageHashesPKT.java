@@ -6,13 +6,14 @@ import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
-import platinpython.vfxgenerator.VFXGenerator;
+import platinpython.vfxgenerator.util.ClientUtils;
+import platinpython.vfxgenerator.util.network.NetworkHandler;
 
 import java.nio.ByteBuffer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class RequiredImagesSyncPKT {
+public class RequiredImageHashesPKT {
     private static final Codec<ImmutableMap<ResourceLocation, HashCode>> CODEC = Codec.unboundedMap(
             ResourceLocation.CODEC, Codec.BYTE_BUFFER.xmap(
                     byteBuffer -> HashCode.fromBytes(byteBuffer.array()),
@@ -21,22 +22,22 @@ public class RequiredImagesSyncPKT {
 
     private final ImmutableMap<ResourceLocation, HashCode> map;
 
-    public RequiredImagesSyncPKT(ImmutableMap<ResourceLocation, HashCode> map) {
+    public RequiredImageHashesPKT(ImmutableMap<ResourceLocation, HashCode> map) {
         this.map = map;
     }
 
-    public static void encode(RequiredImagesSyncPKT message, FriendlyByteBuf buffer) {
+    public static void encode(RequiredImageHashesPKT message, FriendlyByteBuf buffer) {
         buffer.writeJsonWithCodec(CODEC, message.map);
     }
 
-    public static RequiredImagesSyncPKT decode(FriendlyByteBuf buffer) {
-        return new RequiredImagesSyncPKT(buffer.readJsonWithCodec(CODEC));
+    public static RequiredImageHashesPKT decode(FriendlyByteBuf buffer) {
+        return new RequiredImageHashesPKT(buffer.readJsonWithCodec(CODEC));
     }
 
     public static class Handler {
-        public static void handle(RequiredImagesSyncPKT message, Supplier<NetworkEvent.Context> context) {
-            // TODO Actually do something useful with the data
-            VFXGenerator.LOGGER.info("Received: {}", message.map);
+        public static void handle(RequiredImageHashesPKT message, Supplier<NetworkEvent.Context> context) {
+            NetworkHandler.INSTANCE.sendToServer(
+                    new MissingImagesPKT(ClientUtils.getMissingTextures(message.map)));
         }
     }
 }
