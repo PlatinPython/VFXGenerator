@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.io.IOUtils;
 import platinpython.vfxgenerator.VFXGenerator;
+import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.RequiredImageHashesPKT;
 import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
@@ -48,10 +49,8 @@ public class EventHandling {
                            .stream()
                            .map(entry -> {
                                try {
-                                   return Optional.of(Pair.of(entry.getKey(), Hashing.crc32c()
-                                                                                     .hashBytes(IOUtils.toByteArray(
-                                                                                             entry.getValue()
-                                                                                                  .open()))));
+                                   return Optional.of(Pair.of(entry.getKey(), Util.HASH_FUNCTION.hashBytes(
+                                           IOUtils.toByteArray(entry.getValue().open()))));
                                } catch (IOException e) {
                                    VFXGenerator.LOGGER.error("Failed to hash image for syncing: {}", e.getMessage());
                                    return Optional.<Pair<ResourceLocation, HashCode>>empty();

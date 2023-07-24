@@ -3,7 +3,6 @@ package platinpython.vfxgenerator.util;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
-import com.google.common.hash.Hashing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
@@ -81,7 +80,7 @@ public class ClientUtils {
                     }
                     byte[] bytes = file.readAllBytes();
                     //noinspection UnstableApiUsage
-                    HashCode hash = Hashing.crc32c().newHasher().putBytes(signature).putBytes(bytes).hash();
+                    HashCode hash = Util.HASH_FUNCTION.newHasher().putBytes(signature).putBytes(bytes).hash();
                     HASH_CACHE.put(resourceLocation, hash);
                 } catch (IOException e) {
                     VFXGenerator.LOGGER.error("Failed to hash file {}", path.getFileName(), e);
@@ -112,7 +111,7 @@ public class ClientUtils {
         }
         try (OutputStream file = Files.newOutputStream(path)) {
             file.write(image);
-            HASH_CACHE.put(resourceLocation, Hashing.crc32c().hashBytes(image));
+            HASH_CACHE.put(resourceLocation, Util.HASH_FUNCTION.hashBytes(image));
         } catch (IOException e) {
             VFXGenerator.LOGGER.error("Failed to write image {}", path, e);
         }

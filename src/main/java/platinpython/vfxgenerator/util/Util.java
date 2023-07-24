@@ -1,5 +1,7 @@
 package platinpython.vfxgenerator.util;
 
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import platinpython.vfxgenerator.VFXGenerator;
@@ -11,6 +13,7 @@ import java.util.TreeSet;
 
 public class Util {
     public static final int MAX_PAYLOAD_SIZE = 1024 * 1024;
+    public static final HashFunction HASH_FUNCTION = Hashing.crc32c();
 
     public static ResourceLocation createNamespacedResourceLocation(String path) {
         return new ResourceLocation(VFXGenerator.MOD_ID, path);
