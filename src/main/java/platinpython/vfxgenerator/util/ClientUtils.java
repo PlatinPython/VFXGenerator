@@ -69,9 +69,13 @@ public class ClientUtils {
                     return;
                 }
                 String namespace = relativePath.getName(0).toString();
-                String location = relativePath.subpath(1, relativePath.getNameCount()).toString().replace('\\', '/');
-                location = location.substring(0, location.length() - 4);
-                ResourceLocation resourceLocation = new ResourceLocation(namespace, location);
+                StringBuilder stringBuilder = new StringBuilder();
+                relativePath.subpath(1, relativePath.getNameCount()).forEach(pathComponent -> {
+                    stringBuilder.append(pathComponent);
+                    stringBuilder.append('/');
+                });
+                stringBuilder.setLength(stringBuilder.length() - 5);
+                ResourceLocation resourceLocation = new ResourceLocation(namespace, stringBuilder.toString());
                 try (InputStream file = Files.newInputStream(path)) {
                     byte[] signature = file.readNBytes(8);
                     if (!Arrays.equals(signature, PNG_SIGNATURE)) {
