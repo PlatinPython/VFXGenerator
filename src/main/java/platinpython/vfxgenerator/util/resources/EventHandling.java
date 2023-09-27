@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -35,18 +34,13 @@ public class EventHandling {
     @SubscribeEvent
     public static void onDatapackSync(OnDatapackSyncEvent event) {
         if (event.getPlayer() == null) {
-            event.getPlayerList().getPlayers().forEach(EventHandling::syncDatapackData);
-        } else {
-            syncDatapackData(event.getPlayer());
+            return;
         }
-    }
-
-    private static void syncDatapackData(ServerPlayer player) {
         NetworkHandler.INSTANCE.send(
-                PacketDistributor.PLAYER.with(() -> player),
+                PacketDistributor.PLAYER.with(event::getPlayer),
                 new SelectableParticlesSyncPKT(DataManager.selectableParticles())
         );
-        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new RequiredImageHashesPKT(
+        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(event::getPlayer), new RequiredImageHashesPKT(
                 DataManager.requiredImages()
                            .entrySet()
                            .stream()
