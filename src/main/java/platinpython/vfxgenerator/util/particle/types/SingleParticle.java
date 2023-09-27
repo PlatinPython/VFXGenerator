@@ -45,7 +45,7 @@ public class SingleParticle extends ParticleType {
     }
 
     @Override
-    public Stream<ResourceLocation> imageLocations() {
+    public Stream<ResourceLocation> images() {
         return Stream.of(this.value());
     }
 }

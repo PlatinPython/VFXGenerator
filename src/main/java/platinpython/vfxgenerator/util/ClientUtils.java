@@ -1,10 +1,10 @@
 package platinpython.vfxgenerator.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,6 +16,7 @@ import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.client.gui.screen.ParticleOptionsScreen;
 import platinpython.vfxgenerator.client.particle.VFXParticle;
+import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.registries.BlockRegistry;
 
 @EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
@@ -34,7 +35,8 @@ public class ClientUtils {
     }
 
     public static void addParticle(
-            ResourceLocation spriteLocation,
+            ClientLevel level,
+            ParticleType particleType,
             int color,
             int lifetime,
             float size,
@@ -44,12 +46,10 @@ public class ClientUtils {
             boolean collision,
             boolean fullBright
     ) {
-        Minecraft minecraft = Minecraft.getInstance();
-        VFXParticle particle = new VFXParticle(minecraft.level,
-                                               minecraft.particleEngine.textureAtlas.getSprite(spriteLocation), color,
-                                               lifetime, size, pos, motion, gravity, collision, fullBright
+        VFXParticle particle = new VFXParticle(level, particleType, color, lifetime, size, pos, motion, gravity,
+                                               collision, fullBright
         );
-        minecraft.particleEngine.add(particle);
+        Minecraft.getInstance().particleEngine.add(particle);
     }
 
     public static void openVFXGeneratorScreen(VFXGeneratorBlockEntity tileEntity) {

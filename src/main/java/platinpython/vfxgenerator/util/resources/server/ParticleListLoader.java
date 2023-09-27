@@ -123,7 +123,7 @@ public class ParticleListLoader extends
                                           .map(Pair::getSecond)
                                           .map(Map::values)
                                           .flatMap(Collection::stream)
-                                          .flatMap(ParticleType::imageLocations)
+                                          .flatMap(ParticleType::images)
                                           .map(resourceLocation -> Pair.of(
                                                   resourceLocation,
                                                   resourceManager.getResource(

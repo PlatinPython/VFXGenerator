@@ -1,5 +1,6 @@
 package platinpython.vfxgenerator.block.entity;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -13,6 +14,7 @@ import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
 import platinpython.vfxgenerator.util.data.ParticleData;
+import platinpython.vfxgenerator.util.particle.types.SingleParticle;
 import platinpython.vfxgenerator.util.registries.BlockEntityRegistry;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        if (!(blockEntity instanceof VFXGeneratorBlockEntity generatorBlockEntity)) {
+        if (!(blockEntity instanceof VFXGeneratorBlockEntity generatorBlockEntity) || !(generatorBlockEntity.level instanceof ClientLevel clientLevel)) {
             return;
         }
         if ((state.getValue(VFXGeneratorBlock.INVERTED) && !state.getValue(
@@ -67,7 +69,7 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
                     double motionZ = generatorBlockEntity.particleData.getMotionZBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionZTop() - generatorBlockEntity.particleData.getMotionZBot()));
                     Vec3 motion = new Vec3(motionX, motionY, motionZ);
 
-                    ClientUtils.addParticle(particle, color, lifetime, size, center, motion,
+                    ClientUtils.addParticle(clientLevel, new SingleParticle(particle, true), color, lifetime, size, center, motion,
                                             generatorBlockEntity.particleData.getGravity(),
                                             generatorBlockEntity.particleData.hasCollision(),
                                             generatorBlockEntity.particleData.isFullBright()

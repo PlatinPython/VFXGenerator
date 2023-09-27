@@ -28,7 +28,7 @@ public abstract class ParticleType {
 
     public abstract ParticleTypes type();
 
-    public abstract Stream<ResourceLocation> imageLocations();
+    public abstract Stream<ResourceLocation> images();
 
     // TODO Remove once no longer needed
     @Override
