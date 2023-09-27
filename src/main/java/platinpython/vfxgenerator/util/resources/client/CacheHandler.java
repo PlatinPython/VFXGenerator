@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -99,5 +101,14 @@ public class CacheHandler {
         } catch (IOException e) {
             VFXGenerator.LOGGER.error("Failed to write image {}", path, e);
         }
+    }
+
+    public static Optional<IoSupplier<InputStream>> getIoSupplier(ResourceLocation resourceLocation) {
+        if (!HASH_CACHE.containsKey(resourceLocation)) {
+            return Optional.empty();
+        }
+        Path relativePath = Path.of(resourceLocation.getNamespace()).resolve(resourceLocation.getPath() + ".png");
+        Path path = CACHE_DIRECTORY.resolve(relativePath);
+        return Optional.of(IoSupplier.create(path));
     }
 }

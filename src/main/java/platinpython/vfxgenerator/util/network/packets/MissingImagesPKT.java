@@ -7,7 +7,7 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import platinpython.vfxgenerator.VFXGenerator;
@@ -48,14 +48,14 @@ public class MissingImagesPKT {
         public static void handle(MissingImagesPKT message, Supplier<NetworkEvent.Context> context) {
             // TODO look into improving memory footprint
             FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-            ImmutableMap<ResourceLocation, Resource> requiredImages = DataManager.requiredImages();
+            ImmutableMap<ResourceLocation, IoSupplier<InputStream>> requiredImages = DataManager.requiredImages();
             List<Pair<ResourceLocation, byte[]>> list = message.list.stream()
                                                                     .map(key -> Pair.of(key, requiredImages.get(key)))
                                                                     .filter(pair -> Objects.nonNull(pair.getSecond()))
                                                                     .map(pair -> {
                                                                         try (
                                                                                 InputStream image = pair.getSecond()
-                                                                                                        .open()
+                                                                                                        .get()
                                                                         ) {
                                                                             return Optional.of(Pair.of(
                                                                                     pair.getFirst(),
@@ -88,6 +88,10 @@ public class MissingImagesPKT {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(context.get()::getSender),
                     new MissingImagesDataPKT(true, data)
+            );
+            NetworkHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(context.get()::getSender),
+                    new UpdateRequiredImagesPKT(DataManager.requiredImages().keySet())
             );
         }
     }

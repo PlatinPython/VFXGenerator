@@ -7,17 +7,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.slf4j.Logger;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.resources.DataManager;
@@ -26,6 +25,7 @@ import platinpython.vfxgenerator.util.resources.ResourceOps;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -34,8 +34,6 @@ import java.util.function.Consumer;
 
 public class ParticleListLoader extends
                                 SimplePreparableReloadListener<Multimap<ResourceLocation, Pair<String, Pair<ParticleListFile, Map<ResourceLocation, ParticleType>>>>> {
-    public static final Logger LOGGER = LogUtils.getLogger();
-
     public ParticleListLoader() {
     }
 
@@ -53,7 +51,7 @@ public class ParticleListLoader extends
                                                                          .equals(VFXGenerator.MOD_ID + "/particle.json"));
         resourceStacks.forEach((key, value) -> value.forEach(
                 resource -> parseJsonResource(JsonOps.INSTANCE, ParticleListFile.FILE_DECODER, key, resource,
-                                              LOGGER::error,
+                                              VFXGenerator.LOGGER::error,
                                               options -> optionsMap.put(
                                                       particleListConverter.fileToId(key),
                                                       Pair.of(resource.sourcePackId(), options)
@@ -74,8 +72,8 @@ public class ParticleListLoader extends
                                                                                )
                                                              ), ParticleType.FILE_DECODER,
                                                              particleConverter.idToFile(location), resource,
-                                                             LOGGER::error, type -> map.put(location, type)
-                                                     ), () -> LOGGER.error(
+                                                             VFXGenerator.LOGGER::error, type -> map.put(location, type)
+                                                     ), () -> VFXGenerator.LOGGER.error(
                                                              "Failed to load resource {}, specified in {} from {}",
                                                              particleConverter.idToFile(location),
                                                              particleListConverter.idToFile(key), value.getFirst()
@@ -133,7 +131,8 @@ public class ParticleListLoader extends
                                                                   resourceLocation))
                                           ))
                                           .filter(pair -> pair.getSecond().isPresent())
-                                          .map(pair -> Pair.of(pair.getFirst(), pair.getSecond().get()))
+                                          .<Pair<ResourceLocation, IoSupplier<InputStream>>>map(
+                                                  pair -> Pair.of(pair.getFirst(), pair.getSecond().get()::open))
                                           .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond)));
     }
 
@@ -149,7 +148,7 @@ public class ParticleListLoader extends
             JsonElement jsonElement = JsonParser.parseReader(reader);
             codec.parse(ops, jsonElement).resultOrPartial(failureAction).ifPresent(successfulAction);
         } catch (IOException | JsonParseException e) {
-            LOGGER.error("Failed to parse data file {} from {}", origin, resource.sourcePackId(), e);
+            VFXGenerator.LOGGER.error("Failed to parse data file {} from {}", origin, resource.sourcePackId(), e);
         }
     }
 }

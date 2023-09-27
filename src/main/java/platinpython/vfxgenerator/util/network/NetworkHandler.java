@@ -5,9 +5,10 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.network.packets.MissingImagesDataPKT;
+import platinpython.vfxgenerator.util.network.packets.MissingImagesPKT;
 import platinpython.vfxgenerator.util.network.packets.RequiredImageHashesPKT;
 import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
-import platinpython.vfxgenerator.util.network.packets.MissingImagesPKT;
+import platinpython.vfxgenerator.util.network.packets.UpdateRequiredImagesPKT;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDataSyncPKT;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDestroyParticlesPKT;
 
@@ -49,6 +50,11 @@ public class NetworkHandler {
                 .encoder(MissingImagesDataPKT::encode)
                 .decoder(MissingImagesDataPKT::decode)
                 .consumerMainThread(MissingImagesDataPKT.Handler::handle)
+                .add();
+        INSTANCE.messageBuilder(UpdateRequiredImagesPKT.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(UpdateRequiredImagesPKT::encode)
+                .decoder(UpdateRequiredImagesPKT::decode)
+                .consumerMainThread(UpdateRequiredImagesPKT.Handler::handle)
                 .add();
     }
 }

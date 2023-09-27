@@ -3,11 +3,13 @@ package platinpython.vfxgenerator.util.resources;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.IoSupplier;
 import platinpython.vfxgenerator.util.network.packets.SelectableParticlesSyncPKT;
+import platinpython.vfxgenerator.util.network.packets.UpdateRequiredImagesPKT;
 import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.resources.server.ParticleListLoader;
 
+import java.io.InputStream;
 import java.util.function.Function;
 
 public class DataManager {
@@ -17,7 +19,7 @@ public class DataManager {
             ResourceLocation.CODEC, ParticleType.CODEC).xmap(ImmutableMap::copyOf, Function.identity());
 
     private static ImmutableMap<ResourceLocation, ParticleType> SELECTABLE_PARTICLES = ImmutableMap.of();
-    private static ImmutableMap<ResourceLocation, Resource> REQUIRED_IMAGES = ImmutableMap.of();
+    private static ImmutableMap<ResourceLocation, IoSupplier<InputStream>> REQUIRED_IMAGES = ImmutableMap.of();
 
     public static ImmutableMap<ResourceLocation, ParticleType> selectableParticles() {
         return SELECTABLE_PARTICLES;
@@ -25,18 +27,18 @@ public class DataManager {
 
     public static void setSelectableParticles(ImmutableMap<ResourceLocation, ParticleType> selectableParticles) {
         if (STACK_WALKER.getCallerClass() != ParticleListLoader.class && STACK_WALKER.getCallerClass() != SelectableParticlesSyncPKT.Handler.class) {
-            throw new IllegalCallerException("Illegal caller:  " + STACK_WALKER.getCallerClass());
+            throw new IllegalCallerException("Illegal caller: " + STACK_WALKER.getCallerClass());
         }
         SELECTABLE_PARTICLES = selectableParticles;
     }
 
-    public static ImmutableMap<ResourceLocation, Resource> requiredImages() {
+    public static ImmutableMap<ResourceLocation, IoSupplier<InputStream>> requiredImages() {
         return REQUIRED_IMAGES;
     }
 
-    public static void setRequiredImages(ImmutableMap<ResourceLocation, Resource> requiredImages) {
-        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class) {
-            throw new IllegalCallerException("Illegal caller:  " + STACK_WALKER.getCallerClass());
+    public static void setRequiredImages(ImmutableMap<ResourceLocation, IoSupplier<InputStream>> requiredImages) {
+        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class && STACK_WALKER.getCallerClass() != UpdateRequiredImagesPKT.Handler.class) {
+            throw new IllegalCallerException("Illegal caller: " + STACK_WALKER.getCallerClass());
         }
         REQUIRED_IMAGES = requiredImages;
     }

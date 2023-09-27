@@ -13,6 +13,9 @@ public class ModLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        add(VFXGenerator.MOD_ID + ".pack_title", "VFXGenerator Textures");
+        add(VFXGenerator.MOD_ID + ".pack_description", "Textures to make VFXGenerator work correctly");
+
         add(ItemRegistry.VFX_GENERATOR_CORE.get(), "VFX Generator Core");
 
         add(BlockRegistry.VFX_GENERATOR.get(), "VFX Generator");

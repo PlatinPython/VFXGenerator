@@ -47,7 +47,7 @@ public class EventHandling {
                            .map(entry -> {
                                try {
                                    return Optional.of(Pair.of(entry.getKey(), Util.HASH_FUNCTION.hashBytes(
-                                           IOUtils.toByteArray(entry.getValue().open()))));
+                                           IOUtils.toByteArray(entry.getValue().get()))));
                                } catch (IOException e) {
                                    VFXGenerator.LOGGER.error("Failed to hash image for syncing: {}", e.getMessage());
                                    return Optional.<Pair<ResourceLocation, HashCode>>empty();
