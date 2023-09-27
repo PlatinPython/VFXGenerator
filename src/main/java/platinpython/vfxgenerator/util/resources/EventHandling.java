@@ -2,12 +2,13 @@ package platinpython.vfxgenerator.util.resources;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
-import com.google.common.hash.Hashing;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
@@ -24,6 +25,8 @@ import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EventHandling {
+    private static boolean loadingDisabled = false;
+
     @SubscribeEvent
     public static void addReloadListener(AddReloadListenerEvent event) {
         event.addListener(new ParticleListLoader());
@@ -59,5 +62,19 @@ public class EventHandling {
                            .filter(Optional::isPresent)
                            .map(Optional::get)
                            .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond))));
+    }
+
+    public static boolean loadingDisabled() {
+        return loadingDisabled;
+    }
+
+    @SubscribeEvent
+    public static void onServerStarting(ServerStartingEvent event) {
+        loadingDisabled = true;
+    }
+
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
+        loadingDisabled = false;
     }
 }

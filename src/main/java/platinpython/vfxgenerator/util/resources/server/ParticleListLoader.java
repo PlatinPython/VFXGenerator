@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.resources.DataManager;
+import platinpython.vfxgenerator.util.resources.EventHandling;
 import platinpython.vfxgenerator.util.resources.ResourceOps;
 
 import java.io.BufferedReader;
@@ -42,6 +43,9 @@ public class ParticleListLoader extends
     protected Multimap<ResourceLocation, Pair<String, Pair<ParticleListFile, Map<ResourceLocation, ParticleType>>>> prepare(
             ResourceManager resourceManager, ProfilerFiller profiler
     ) {
+        if (EventHandling.loadingDisabled()) {
+            return ArrayListMultimap.create();
+        }
         FileToIdConverter particleListConverter = FileToIdConverter.json(VFXGenerator.MOD_ID);
         Multimap<ResourceLocation, Pair<String, ParticleListFile>> optionsMap = ArrayListMultimap.create();
         Map<ResourceLocation, List<Resource>> resourceStacks = resourceManager.listResourceStacks(
@@ -87,6 +91,9 @@ public class ParticleListLoader extends
             ResourceManager resourceManager,
             ProfilerFiller profiler
     ) {
+        if (EventHandling.loadingDisabled()) {
+            return;
+        }
         data.forEach((optionsLocation, sourceOptionsTypesPairPair) -> {
             sourceOptionsTypesPairPair.getSecond()
                                       .getFirst()
