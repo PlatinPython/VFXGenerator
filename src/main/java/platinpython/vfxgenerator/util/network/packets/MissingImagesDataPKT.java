@@ -3,7 +3,7 @@ package platinpython.vfxgenerator.util.network.packets;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
-import platinpython.vfxgenerator.util.ClientUtils;
+import platinpython.vfxgenerator.util.resources.client.CacheHandler;
 
 import java.util.ArrayList;
 import java.util.function.Supplier;
@@ -38,7 +38,7 @@ public class MissingImagesDataPKT {
             MESSAGES.forEach(packet -> buffer.writeBytes(packet.data));
             int numberOfElements = buffer.readInt();
             for (int i = 0; i < numberOfElements; i++) {
-                ClientUtils.addToCache(buffer.readResourceLocation(), buffer.readByteArray());
+                CacheHandler.addToCache(buffer.readResourceLocation(), buffer.readByteArray());
             }
             MESSAGES.clear();
         }

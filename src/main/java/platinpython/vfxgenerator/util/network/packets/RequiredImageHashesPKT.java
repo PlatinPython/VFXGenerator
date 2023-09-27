@@ -6,8 +6,8 @@ import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
-import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
+import platinpython.vfxgenerator.util.resources.client.CacheHandler;
 
 import java.nio.ByteBuffer;
 import java.util.function.Function;
@@ -36,8 +36,7 @@ public class RequiredImageHashesPKT {
 
     public static class Handler {
         public static void handle(RequiredImageHashesPKT message, Supplier<NetworkEvent.Context> context) {
-            NetworkHandler.INSTANCE.sendToServer(
-                    new MissingImagesPKT(ClientUtils.getMissingTextures(message.map)));
+            NetworkHandler.INSTANCE.sendToServer(new MissingImagesPKT(CacheHandler.getMissingTextures(message.map)));
         }
     }
 }
