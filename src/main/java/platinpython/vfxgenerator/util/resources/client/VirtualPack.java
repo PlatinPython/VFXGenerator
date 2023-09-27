@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.PackType;
@@ -31,6 +32,8 @@ import java.util.Set;
 public class VirtualPack extends AbstractPackResources {
     public static final VirtualPack VIRTUAL_PACK = new VirtualPack();
 
+    private static final FileToIdConverter FILE_TO_ID_CONVERTER = new FileToIdConverter("textures/particle", ".png");
+
     private final PackMetadataSection packInfo;
     private final Map<ResourceLocation, IoSupplier<InputStream>> resources = new HashMap<>();
     private final Set<String> namespaces = new HashSet<>();
@@ -49,8 +52,7 @@ public class VirtualPack extends AbstractPackResources {
         this.namespaces.clear();
         DataManager.requiredImages().forEach((resourceLocation, resource) -> {
             this.namespaces.add(resourceLocation.getNamespace());
-            this.resources.put(resourceLocation.withPath(path -> "textures/particle/" + path), resource);
-            VFXGenerator.LOGGER.info("Texture {}", resourceLocation.withPath(path -> "textures/particle/" + path));
+            this.resources.put(FILE_TO_ID_CONVERTER.idToFile(resourceLocation), resource);
         });
         Minecraft.getInstance().reloadResourcePacks();
     }
