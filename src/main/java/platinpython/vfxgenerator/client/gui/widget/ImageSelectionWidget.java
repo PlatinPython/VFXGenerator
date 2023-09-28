@@ -12,11 +12,17 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
+import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Util;
+import platinpython.vfxgenerator.util.particle.ParticleType;
+import platinpython.vfxgenerator.util.particle.ParticleTypes;
+import platinpython.vfxgenerator.util.particle.types.SingleParticle;
+import platinpython.vfxgenerator.util.resources.DataManager;
 
 import java.util.Collections;
 import java.util.TreeSet;
@@ -24,17 +30,17 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ImageSelectionWidget extends UpdateableWidget {
-    private final ResourceLocation imageLocation;
+    private final ResourceLocation particleId;
     private final Consumer<TreeSet<ResourceLocation>> setValueFunction;
     private final Supplier<TreeSet<ResourceLocation>> valueSupplier;
 
     private boolean selected;
 
-    public ImageSelectionWidget(int x, int y, int width, int height, ResourceLocation imageLocation,
+    public ImageSelectionWidget(int x, int y, int width, int height, ResourceLocation particleId,
                                 Consumer<TreeSet<ResourceLocation>> setValueFunction,
                                 Supplier<TreeSet<ResourceLocation>> valueSupplier, Runnable applyValueFunction) {
         super(x, y, width, height, applyValueFunction);
-        this.imageLocation = imageLocation;
+        this.particleId = particleId;
         this.setValueFunction = setValueFunction;
         this.valueSupplier = valueSupplier;
         this.updateValue();
@@ -68,7 +74,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        TextureAtlasSprite sprite = minecraft.particleEngine.textureAtlas.getSprite(imageLocation);
+        TextureAtlasSprite sprite = selectTextureAtlasSprite();
 
         float u0 = sprite.getU0();
         float u1 = sprite.getU1();
@@ -82,6 +88,16 @@ public class ImageSelectionWidget extends UpdateableWidget {
         RenderSystem.disableBlend();
     }
 
+    private TextureAtlasSprite selectTextureAtlasSprite() {
+        ParticleType particleType = DataManager.selectableParticles().get(this.particleId);
+        if (particleType != null) {
+            if (particleType.type() == ParticleTypes.SINGLE) {
+                return ClientUtils.getTextureAtlasSprite(((SingleParticle) particleType).value());
+            }
+        }
+        return ClientUtils.getTextureAtlasSprite(MissingTextureAtlasSprite.getLocation());
+    }
+
     @Override
     public void onClick(double mouseX, double mouseY) {
         if (Screen.hasControlDown()) {
@@ -91,15 +107,15 @@ public class ImageSelectionWidget extends UpdateableWidget {
             }
             TreeSet<ResourceLocation> set = this.valueSupplier.get();
             if (this.selected) {
-                set.add(this.imageLocation);
+                set.add(this.particleId);
             } else {
-                set.remove(this.imageLocation);
+                set.remove(this.particleId);
             }
             this.setValueFunction.accept(set);
             this.applyValue();
         } else {
             TreeSet<ResourceLocation> list = Util.createTreeSetFromCollectionWithComparator(
-                    Collections.singletonList(this.imageLocation), ResourceLocation::compareNamespaced);
+                    Collections.singletonList(this.particleId), ResourceLocation::compareNamespaced);
             this.setValueFunction.accept(list);
             this.selected = true;
             this.applyValue();
@@ -108,7 +124,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
 
     @Override
     public void updateValue() {
-        this.selected = this.valueSupplier.get().contains(imageLocation);
+        this.selected = this.valueSupplier.get().contains(particleId);
     }
 
     @Override

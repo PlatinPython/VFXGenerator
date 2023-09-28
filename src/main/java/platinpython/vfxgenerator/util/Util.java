@@ -6,7 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import platinpython.vfxgenerator.VFXGenerator;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.TreeSet;
@@ -24,6 +26,21 @@ public class Util {
     ) {
         TreeSet<E> set = new TreeSet<>(comparator);
         set.addAll(collection);
+        return set;
+    }
+
+    public static <E> TreeSet<E> getThreeRandomElements(
+            Collection<? extends E> collection, Comparator<? super E> comparator
+    ) {
+        if (collection.size() <= 3) {
+            return createTreeSetFromCollectionWithComparator(collection, comparator);
+        }
+        ArrayList<? extends E> list = new ArrayList<>(collection);
+        Collections.shuffle(list);
+        TreeSet<E> set = new TreeSet<>(comparator);
+        set.add(list.get(0));
+        set.add(list.get(1));
+        set.add(list.get(2));
         return set;
     }
 

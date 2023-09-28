@@ -3,8 +3,10 @@ package platinpython.vfxgenerator.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,5 +60,9 @@ public class ClientUtils {
 
     public static MutableComponent getGuiTranslationTextComponent(String suffix) {
         return Component.translatable("gui." + VFXGenerator.MOD_ID + "." + suffix);
+    }
+
+    public static TextureAtlasSprite getTextureAtlasSprite(ResourceLocation resourceLocation) {
+        return Minecraft.getInstance().particleEngine.textureAtlas.getSprite(resourceLocation);
     }
 }

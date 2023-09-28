@@ -1,14 +1,12 @@
 package platinpython.vfxgenerator.client.particle;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.particle.ParticleTypes;
 import platinpython.vfxgenerator.util.particle.types.SingleParticle;
@@ -21,13 +19,29 @@ public class VFXParticle extends TextureSheetParticle {
 
     private boolean stoppedByCollision;
 
-    public VFXParticle(ClientLevel clientWorld, ParticleType particleType, int color, int lifetime, float size,
-                       Vec3 pos, Vec3 motion, float gravity, boolean collision, boolean fullbright) {
+    public VFXParticle(
+            ClientLevel clientWorld,
+            ParticleType particleType,
+            int color,
+            int lifetime,
+            float size,
+            Vec3 pos,
+            Vec3 motion,
+            float gravity,
+            boolean collision,
+            boolean fullbright
+    ) {
         super(clientWorld, pos.x, pos.y, pos.z);
         this.particleType = particleType;
-        this.rCol = (color >> 16 & 0xFF) / 255f;
-        this.gCol = (color >> 8 & 0xFF) / 255f;
-        this.bCol = (color >> 0 & 0xFF) / 255f;
+        if (particleType.supportsColor()) {
+            this.rCol = (color >> 16 & 0xFF) / 255f;
+            this.gCol = (color >> 8 & 0xFF) / 255f;
+            this.bCol = (color >> 0 & 0xFF) / 255f;
+        } else {
+            this.rCol = 1f;
+            this.gCol = 1f;
+            this.bCol = 1f;
+        }
         this.lifetime = lifetime;
         this.setSize(size);
         this.xd = motion.x;
@@ -110,14 +124,10 @@ public class VFXParticle extends TextureSheetParticle {
 
     private void initSprite() {
         if (this.particleType.type() == ParticleTypes.SINGLE) {
-            this.setSprite(getTextureAtlasSprite(((SingleParticle) this.particleType).value()));
+            this.setSprite(ClientUtils.getTextureAtlasSprite(((SingleParticle) this.particleType).value()));
         }
     }
 
     private void updateSprite() {
-    }
-
-    private static TextureAtlasSprite getTextureAtlasSprite(ResourceLocation resourceLocation) {
-        return Minecraft.getInstance().particleEngine.textureAtlas.getSprite(resourceLocation);
     }
 }

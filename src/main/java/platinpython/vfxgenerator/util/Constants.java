@@ -1,27 +1,8 @@
 package platinpython.vfxgenerator.util;
 
-import com.google.common.collect.ImmutableSet;
-import net.minecraft.resources.ResourceLocation;
-
 public final class Constants {
     public static final class ParticleConstants {
         public static final class Values {
-            public static final ImmutableSet<ResourceLocation> PARTICLE_OPTIONS = ImmutableSet.of(
-                    Util.createNamespacedResourceLocation("circle"),
-                    Util.createNamespacedResourceLocation("square"),
-                    Util.createNamespacedResourceLocation("spark_small"),
-                    Util.createNamespacedResourceLocation("spark_mid"),
-                    Util.createNamespacedResourceLocation("spark_big"),
-                    Util.createNamespacedResourceLocation("spark_cross"),
-                    Util.createNamespacedResourceLocation("heart"),
-                    Util.createNamespacedResourceLocation("big_heart"),
-                    Util.createNamespacedResourceLocation("bubble"),
-                    Util.createNamespacedResourceLocation("bubble_big"),
-                    Util.createNamespacedResourceLocation("drop_1"),
-                    Util.createNamespacedResourceLocation("drop_2"),
-                    Util.createNamespacedResourceLocation("drop_3"),
-                    Util.createNamespacedResourceLocation("totem_otter")
-            );
             public static final int MIN_LIFETIME = 0;
             public static final int MAX_LIFETIME = 200;
             public static final float MIN_SIZE = 0F;

@@ -14,8 +14,9 @@ import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.Color;
 import platinpython.vfxgenerator.util.data.ParticleData;
-import platinpython.vfxgenerator.util.particle.types.SingleParticle;
+import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.registries.BlockEntityRegistry;
+import platinpython.vfxgenerator.util.resources.DataManager;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -40,15 +41,27 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
                 if (level.getGameTime() % generatorBlockEntity.particleData.getDelay() == 0) {
                     ThreadLocalRandom random = ThreadLocalRandom.current();
 
+                    if (generatorBlockEntity.particleData.getSelected().isEmpty()) {
+                        return;
+                    }
                     ResourceLocation particle = new ArrayList<>(generatorBlockEntity.particleData.getSelected()).get(
                             random.nextInt(generatorBlockEntity.particleData.getSelected().size()));
+                    ParticleType particleType = DataManager.selectableParticles().get(particle);
+                    if (particleType == null) {
+                        return;
+                    }
 
                     int color;
                     if (generatorBlockEntity.particleData.useHSB()) {
-                        color = Color.getRandomHSBColor(random,
-                                                        new float[]{generatorBlockEntity.particleData.getHueBot(), generatorBlockEntity.particleData.getSaturationBot(), generatorBlockEntity.particleData.getBrightnessBot()},
-                                                        new float[]{generatorBlockEntity.particleData.getHueTop(), generatorBlockEntity.particleData.getSaturationTop(), generatorBlockEntity.particleData.getBrightnessTop()}
-                        );
+                        color = Color.getRandomHSBColor(random, new float[]{
+                                generatorBlockEntity.particleData.getHueBot(),
+                                generatorBlockEntity.particleData.getSaturationBot(),
+                                generatorBlockEntity.particleData.getBrightnessBot()
+                        }, new float[]{
+                                generatorBlockEntity.particleData.getHueTop(),
+                                generatorBlockEntity.particleData.getSaturationTop(),
+                                generatorBlockEntity.particleData.getBrightnessTop()
+                        });
                     } else {
                         color = Color.getRandomRGBColor(random, generatorBlockEntity.particleData.getRGBColorBot(),
                                                         generatorBlockEntity.particleData.getRGBColorTop()
@@ -69,7 +82,7 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
                     double motionZ = generatorBlockEntity.particleData.getMotionZBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionZTop() - generatorBlockEntity.particleData.getMotionZBot()));
                     Vec3 motion = new Vec3(motionX, motionY, motionZ);
 
-                    ClientUtils.addParticle(clientLevel, new SingleParticle(particle, true), color, lifetime, size, center, motion,
+                    ClientUtils.addParticle(clientLevel, particleType, color, lifetime, size, center, motion,
                                             generatorBlockEntity.particleData.getGravity(),
                                             generatorBlockEntity.particleData.hasCollision(),
                                             generatorBlockEntity.particleData.isFullBright()
