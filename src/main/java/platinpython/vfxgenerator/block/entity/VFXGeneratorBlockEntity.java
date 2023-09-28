@@ -44,9 +44,8 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
                     if (generatorBlockEntity.particleData.getSelected().isEmpty()) {
                         return;
                     }
-                    ResourceLocation particle = new ArrayList<>(generatorBlockEntity.particleData.getSelected()).get(
-                            random.nextInt(generatorBlockEntity.particleData.getSelected().size()));
-                    ParticleType particleType = DataManager.selectableParticles().get(particle);
+                    ParticleType particleType = DataManager.selectableParticles()
+                                                           .get(generatorBlockEntity.particleData.getRandomSelected());
                     if (particleType == null) {
                         return;
                     }

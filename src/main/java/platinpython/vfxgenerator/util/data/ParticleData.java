@@ -1,5 +1,6 @@
 package platinpython.vfxgenerator.util.data;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -13,6 +14,7 @@ import platinpython.vfxgenerator.util.resources.DataManager;
 
 import java.util.Collections;
 import java.util.TreeSet;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class ParticleData {
@@ -22,6 +24,7 @@ public class ParticleData {
     private TreeSet<ResourceLocation> allSelected = Util.getThreeRandomElements(
             DataManager.selectableParticles().keySet(), ResourceLocation::compareNamespaced);
     private TreeSet<ResourceLocation> activeSelected = new TreeSet<>(allSelected);
+    private ImmutableList<ResourceLocation> activeSelectedListView = ImmutableList.copyOf(activeSelected);
     private boolean useHSB = false;
     private int RGBColorBot = 0xFF000000;
     private int RGBColorTop = 0xFFFFFFFF;
@@ -113,6 +116,7 @@ public class ParticleData {
                                     .filter(DataManager.selectableParticles()::containsKey)
                                     .collect(Collectors.toCollection(
                                             () -> new TreeSet<>(ResourceLocation::compareNamespaced)));
+        activeSelectedListView = ImmutableList.copyOf(activeSelected);
         useHSB = particleTag.getBoolean(Constants.ParticleConstants.Keys.USE_HSB);
         RGBColorBot = Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_BOT), 0xFF000000,
                                 0xFFFFFFFF
@@ -250,8 +254,13 @@ public class ParticleData {
                 selected.stream().filter(DataManager.selectableParticles()::containsKey).collect(Collectors.toList()),
                 ResourceLocation::compareNamespaced
         );
+        this.activeSelectedListView = ImmutableList.copyOf(this.activeSelected);
         this.allSelected.addAll(this.activeSelected);
         owner.setChanged();
+    }
+
+    public ResourceLocation getRandomSelected() {
+        return activeSelectedListView.get(ThreadLocalRandom.current().nextInt(activeSelectedListView.size()));
     }
 
     public boolean useHSB() {
