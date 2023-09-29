@@ -19,6 +19,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.resource.PathPackResources;
+import net.minecraftforge.resource.ResourcePackLoader;
 import org.jetbrains.annotations.Nullable;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.util.resources.DataManager;
@@ -27,6 +29,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class VirtualPack extends AbstractPackResources {
@@ -60,6 +63,13 @@ public class VirtualPack extends AbstractPackResources {
     @Nullable
     @Override
     public IoSupplier<InputStream> getRootResource(String... elements) {
+        for (String name : elements) {
+            if (!name.equals("pack.png")) {
+                continue;
+            }
+            Optional<PathPackResources> modPack = ResourcePackLoader.getPackFor(VFXGenerator.MOD_ID);
+            return modPack.map(modResources -> modResources.getRootResource("logo.png")).orElse(null);
+        }
         return null;
     }
 
@@ -101,6 +111,9 @@ public class VirtualPack extends AbstractPackResources {
     public static class EventHandler {
         @SubscribeEvent
         public static void addPackFinders(AddPackFindersEvent event) {
+            if (event.getPackType() != PackType.CLIENT_RESOURCES) {
+                return;
+            }
             event.addRepositorySource(infoConsumer -> {
                 infoConsumer.accept(Pack.create(VFXGenerator.MOD_ID + "_textures",
                                                 Component.translatable(VFXGenerator.MOD_ID + ".pack_title"), true,
