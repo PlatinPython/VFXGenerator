@@ -3,9 +3,6 @@ package platinpython.vfxgenerator.util.particle;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Decoder;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.builder.MultilineRecursiveToStringStyle;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import platinpython.vfxgenerator.VFXGenerator;
 
 import java.util.stream.Stream;
 
@@ -29,27 +26,4 @@ public abstract class ParticleType {
     public abstract ParticleTypes type();
 
     public abstract Stream<ResourceLocation> images();
-
-    // TODO Remove once no longer needed
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, new MultilineRecursiveToStringStyle() {
-            {
-                this.setUseShortClassName(true);
-                this.setUseIdentityHashCode(false);
-            }
-        });
-    }
-
-    // TODO Remove once no longer needed
-    public void debug(ResourceLocation location, ResourceLocation optionsLocation, String sourcePackId) {
-        VFXGenerator.LOGGER.debug("Loaded VFXGenerator Particle Type: {} from {} from {} in {}",
-                                  ToStringBuilder.reflectionToString(this, new MultilineRecursiveToStringStyle() {
-                                      {
-                                          this.setUseShortClassName(true);
-                                          this.setUseIdentityHashCode(false);
-                                      }
-                                  }), location, optionsLocation, sourcePackId
-        );
-    }
 }

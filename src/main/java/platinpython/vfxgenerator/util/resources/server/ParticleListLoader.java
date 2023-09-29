@@ -26,103 +26,77 @@ import platinpython.vfxgenerator.util.resources.ResourceOps;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class ParticleListLoader extends
-                                SimplePreparableReloadListener<Multimap<ResourceLocation, Pair<String, Pair<ParticleListFile, Map<ResourceLocation, ParticleType>>>>> {
-    public ParticleListLoader() {
-    }
-
+public class ParticleListLoader extends SimplePreparableReloadListener<Map<ResourceLocation, ParticleType>> {
     @Override
-    protected Multimap<ResourceLocation, Pair<String, Pair<ParticleListFile, Map<ResourceLocation, ParticleType>>>> prepare(
+    protected Map<ResourceLocation, ParticleType> prepare(
             ResourceManager resourceManager, ProfilerFiller profiler
     ) {
         if (EventHandling.loadingDisabled()) {
-            return ArrayListMultimap.create();
+            return Map.of();
         }
         FileToIdConverter particleListConverter = FileToIdConverter.json(VFXGenerator.MOD_ID);
-        Multimap<ResourceLocation, Pair<String, ParticleListFile>> optionsMap = ArrayListMultimap.create();
+        Multimap<ResourceLocation, ParticleListFile> optionsMap = ArrayListMultimap.create();
         Map<ResourceLocation, List<Resource>> resourceStacks = resourceManager.listResourceStacks(
                 VFXGenerator.MOD_ID, resourceLocation -> resourceLocation.getPath()
                                                                          .equals(VFXGenerator.MOD_ID + "/particle.json"));
         resourceStacks.forEach((key, value) -> value.forEach(
                 resource -> parseJsonResource(JsonOps.INSTANCE, ParticleListFile.FILE_DECODER, key, resource,
                                               VFXGenerator.LOGGER::error,
-                                              options -> optionsMap.put(
-                                                      particleListConverter.fileToId(key),
-                                                      Pair.of(resource.sourcePackId(), options)
-                                              )
+                                              options -> optionsMap.put(particleListConverter.fileToId(key), options)
                 )));
         FileToIdConverter particleConverter = FileToIdConverter.json(VFXGenerator.MOD_ID + "/particle");
-        Multimap<ResourceLocation, Pair<String, Pair<ParticleListFile, Map<ResourceLocation, ParticleType>>>> particleTypeMap = ArrayListMultimap.create();
-        optionsMap.forEach((key, value) -> {
-            Map<ResourceLocation, ParticleType> map = new HashMap<>();
-            value.getSecond()
-                 .particles()
-                 .forEach(location -> resourceManager.getResource(particleConverter.idToFile(location))
-                                                     .ifPresentOrElse(resource -> parseJsonResource(
-                                                             new ResourceOps<>(JsonOps.INSTANCE, resourceManager,
-                                                                               new FileToIdConverter(
-                                                                                       VFXGenerator.MOD_ID + "/particle/textures",
-                                                                                       ".png"
-                                                                               )
-                                                             ), ParticleType.FILE_DECODER,
-                                                             particleConverter.idToFile(location), resource,
-                                                             VFXGenerator.LOGGER::error, type -> map.put(location, type)
-                                                     ), () -> VFXGenerator.LOGGER.error(
-                                                             "Failed to load resource {}, specified in {} from {}",
-                                                             particleConverter.idToFile(location),
-                                                             particleListConverter.idToFile(key), value.getFirst()
-                                                     )));
-            particleTypeMap.put(key, Pair.of(value.getFirst(), Pair.of(value.getSecond(), map)));
-        });
+        Map<ResourceLocation, ParticleType> particleTypeMap = new HashMap<>();
+        optionsMap.forEach((key, value) -> value.particles()
+                                                .forEach(location -> resourceManager.getResource(
+                                                                                            particleConverter.idToFile(location))
+                                                                                    .ifPresentOrElse(
+                                                                                            resource -> parseJsonResource(
+                                                                                                    new ResourceOps<>(
+                                                                                                            JsonOps.INSTANCE,
+                                                                                                            resourceManager,
+                                                                                                            new FileToIdConverter(
+                                                                                                                    VFXGenerator.MOD_ID + "/particle/textures",
+                                                                                                                    ".png"
+                                                                                                            )
+                                                                                                    ),
+                                                                                                    ParticleType.FILE_DECODER,
+                                                                                                    particleConverter.idToFile(
+                                                                                                            location),
+                                                                                                    resource,
+                                                                                                    VFXGenerator.LOGGER::error,
+                                                                                                    type -> particleTypeMap.put(
+                                                                                                            location,
+                                                                                                            type
+                                                                                                    )
+                                                                                            ),
+                                                                                            () -> VFXGenerator.LOGGER.error(
+                                                                                                    "Failed to load resource {}, specified in {}",
+                                                                                                    particleConverter.idToFile(
+                                                                                                            location),
+                                                                                                    particleListConverter.idToFile(
+                                                                                                            key)
+                                                                                            )
+                                                                                    )));
         return particleTypeMap;
     }
 
     @Override
     protected void apply(
-            Multimap<ResourceLocation, Pair<String, Pair<ParticleListFile, Map<ResourceLocation, ParticleType>>>> data,
-            ResourceManager resourceManager,
-            ProfilerFiller profiler
+            Map<ResourceLocation, ParticleType> data, ResourceManager resourceManager, ProfilerFiller profiler
     ) {
         if (EventHandling.loadingDisabled()) {
             return;
         }
-        data.forEach((optionsLocation, sourceOptionsTypesPairPair) -> {
-            sourceOptionsTypesPairPair.getSecond()
-                                      .getFirst()
-                                      .debug(optionsLocation, sourceOptionsTypesPairPair.getFirst());
-            sourceOptionsTypesPairPair.getSecond()
-                                      .getSecond()
-                                      .forEach((typeLocation, particleType) -> particleType.debug(
-                                              typeLocation,
-                                              optionsLocation,
-                                              sourceOptionsTypesPairPair.getFirst()
-                                      ));
-        });
-        DataManager.setSelectableParticles(data.values()
-                                               .stream()
-                                               .flatMap(stringPairPair -> stringPairPair.getSecond()
-                                                                                        .getSecond()
-                                                                                        .entrySet()
-                                                                                        .stream())
-                                               .collect(ImmutableMap.toImmutableMap(
-                                                       Map.Entry::getKey,
-                                                       Map.Entry::getValue
-                                               )));
-        VFXGenerator.LOGGER.debug("Loaded Selectable VFXGenerator Particles: {}", DataManager.selectableParticles());
+        DataManager.setSelectableParticles(ImmutableMap.copyOf(data));
         FileToIdConverter imageFileToIdConverter = new FileToIdConverter(
                 VFXGenerator.MOD_ID + "/particle/textures", ".png");
         DataManager.setRequiredImages(data.values()
                                           .stream()
-                                          .map(Pair::getSecond)
-                                          .map(Pair::getSecond)
-                                          .map(Map::values)
-                                          .flatMap(Collection::stream)
                                           .flatMap(ParticleType::images)
                                           .map(resourceLocation -> Pair.of(
                                                   resourceLocation,
