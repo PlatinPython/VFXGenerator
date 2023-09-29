@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,7 +38,7 @@ public class ClientUtils {
     }
 
     public static void addParticle(
-            ClientLevel level,
+            Level level,
             ParticleType particleType,
             int color,
             int lifetime,
@@ -48,7 +49,10 @@ public class ClientUtils {
             boolean collision,
             boolean fullBright
     ) {
-        VFXParticle particle = new VFXParticle(level, particleType, color, lifetime, size, pos, motion, gravity,
+        if (!(level instanceof ClientLevel clientLevel)) {
+            return;
+        }
+        VFXParticle particle = new VFXParticle(clientLevel, particleType, color, lifetime, size, pos, motion, gravity,
                                                collision, fullBright
         );
         Minecraft.getInstance().particleEngine.add(particle);

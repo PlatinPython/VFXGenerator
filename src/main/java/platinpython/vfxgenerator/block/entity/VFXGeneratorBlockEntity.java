@@ -1,11 +1,9 @@
 package platinpython.vfxgenerator.block.entity;
 
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +16,6 @@ import platinpython.vfxgenerator.util.particle.ParticleType;
 import platinpython.vfxgenerator.util.registries.BlockEntityRegistry;
 import platinpython.vfxgenerator.util.resources.DataManager;
 
-import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class VFXGeneratorBlockEntity extends BlockEntity {
@@ -31,7 +28,7 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        if (!(blockEntity instanceof VFXGeneratorBlockEntity generatorBlockEntity) || !(generatorBlockEntity.level instanceof ClientLevel clientLevel)) {
+        if (!(blockEntity instanceof VFXGeneratorBlockEntity generatorBlockEntity)) {
             return;
         }
         if ((state.getValue(VFXGeneratorBlock.INVERTED) && !state.getValue(
@@ -81,7 +78,7 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
                     double motionZ = generatorBlockEntity.particleData.getMotionZBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionZTop() - generatorBlockEntity.particleData.getMotionZBot()));
                     Vec3 motion = new Vec3(motionX, motionY, motionZ);
 
-                    ClientUtils.addParticle(clientLevel, particleType, color, lifetime, size, center, motion,
+                    ClientUtils.addParticle(level, particleType, color, lifetime, size, center, motion,
                                             generatorBlockEntity.particleData.getGravity(),
                                             generatorBlockEntity.particleData.hasCollision(),
                                             generatorBlockEntity.particleData.isFullBright()
