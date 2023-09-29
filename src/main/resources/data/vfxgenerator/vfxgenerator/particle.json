@@ -1,0 +1,18 @@
+{
+  "values": [
+    "vfxgenerator:circle",
+    "vfxgenerator:square",
+    "vfxgenerator:spark_small",
+    "vfxgenerator:spark_mid",
+    "vfxgenerator:spark_big",
+    "vfxgenerator:spark_cross",
+    "vfxgenerator:heart",
+    "vfxgenerator:big_heart",
+    "vfxgenerator:bubble",
+    "vfxgenerator:bubble_big",
+    "vfxgenerator:drop_1",
+    "vfxgenerator:drop_2",
+    "vfxgenerator:drop_3",
+    "vfxgenerator:totem_otter"
+  ]
+}
