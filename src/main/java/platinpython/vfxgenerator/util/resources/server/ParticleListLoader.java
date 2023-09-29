@@ -46,8 +46,12 @@ public class ParticleListLoader extends SimplePreparableReloadListener<Map<Resou
                                                                          .equals(VFXGenerator.MOD_ID + "/particle.json"));
         resourceStacks.forEach((key, value) -> value.forEach(
                 resource -> parseJsonResource(JsonOps.INSTANCE, ParticleListFile.FILE_DECODER, key, resource,
-                                              VFXGenerator.LOGGER::error,
-                                              options -> optionsMap.put(particleListConverter.fileToId(key), options)
+                                              VFXGenerator.LOGGER::error, options -> {
+                            if (options.replace()) {
+                                optionsMap.removeAll(particleListConverter.fileToId(key));
+                            }
+                            optionsMap.put(particleListConverter.fileToId(key), options);
+                        }
                 )));
         FileToIdConverter particleConverter = FileToIdConverter.json(VFXGenerator.MOD_ID + "/particle");
         Map<ResourceLocation, ParticleType> particleTypeMap = new HashMap<>();
