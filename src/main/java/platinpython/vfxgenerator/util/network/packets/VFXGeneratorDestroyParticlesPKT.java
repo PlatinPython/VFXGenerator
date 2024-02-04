@@ -1,7 +1,6 @@
 package platinpython.vfxgenerator.util.network.packets;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
@@ -47,7 +46,7 @@ public class VFXGeneratorDestroyParticlesPKT {
                 double motionY = (random.nextFloat() * (.2F)) - .1F;
                 double motionZ = (random.nextFloat() * (.2F)) - .1F;
                 Vec3 motion = new Vec3(motionX, motionY, motionZ);
-                ClientUtils.addParticle(Minecraft.getInstance().level, LIST.get(random.nextInt(LIST.size())),
+                ClientUtils.addParticle(null, LIST.get(random.nextInt(LIST.size())),
                                         Color.HSBtoRGB(random.nextFloat(), 1F, 1F),
                                         Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F,
                                         false, false

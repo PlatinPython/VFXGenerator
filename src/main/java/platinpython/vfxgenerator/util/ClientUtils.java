@@ -49,6 +49,9 @@ public class ClientUtils {
             boolean collision,
             boolean fullBright
     ) {
+        if (level == null) {
+            level = Minecraft.getInstance().level;
+        }
         if (!(level instanceof ClientLevel clientLevel)) {
             return;
         }
