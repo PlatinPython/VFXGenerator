@@ -18,7 +18,6 @@ import platinpython.vfxgenerator.util.resources.DataManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -46,8 +45,8 @@ public class MissingImagesPKT {
             // TODO look into improving memory footprint
             FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
             ImmutableMap<ResourceLocation, IoSupplier<InputStream>> requiredImages = DataManager.requiredImages();
-            List<Pair<ResourceLocation, byte[]>> list = message.list.stream().map(
-                key -> Pair.of(key, requiredImages.get(key))).filter(pair -> Objects.nonNull(pair.getSecond())).map(
+            List<Pair<ResourceLocation, byte[]>> list = message.list.stream().filter(key -> requiredImages.get(key) != null).map(
+                key -> Pair.of(key, requiredImages.get(key))).map(
                 pair -> {
                     try (InputStream image = pair.getSecond().get()) {
                         return Optional.of(Pair.of(pair.getFirst(), image.readAllBytes()));

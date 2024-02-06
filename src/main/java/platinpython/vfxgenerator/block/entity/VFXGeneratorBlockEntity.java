@@ -136,7 +136,9 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        loadFromTag(pkt.getTag());
+        if (pkt.getTag() != null) {
+            loadFromTag(pkt.getTag());
+        }
     }
 
     public ParticleData getParticleData() {

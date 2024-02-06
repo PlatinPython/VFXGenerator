@@ -239,7 +239,7 @@ public class VFXGeneratorOptionsList
             UpdateableWidget secondChild,
             Util.BooleanSupplier toggleValueSupplier
         ) {
-            super(null);
+            super(firstChild);
             this.firstChild = firstChild;
             this.secondChild = secondChild;
             this.toggleValueSupplier = toggleValueSupplier;

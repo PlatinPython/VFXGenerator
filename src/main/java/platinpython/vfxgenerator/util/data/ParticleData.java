@@ -13,6 +13,7 @@ import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.resources.DataManager;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.TreeSet;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -104,6 +105,7 @@ public class ParticleData {
                     Constants.ParticleConstants.Keys.SELECTED, Tag.TAG_STRING)
                 .stream()
                 .map(nbt -> ResourceLocation.tryParse(nbt.getAsString().replace(":particle/", ":")))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList()), ResourceLocation::compareNamespaced);
         } else {
             allSelected = Util.createTreeSetFromCollectionWithComparator(

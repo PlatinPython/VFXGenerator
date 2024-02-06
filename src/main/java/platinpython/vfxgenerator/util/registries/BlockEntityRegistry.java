@@ -6,6 +6,7 @@ import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.util.RegistryHandler;
 
 public class BlockEntityRegistry {
+    @SuppressWarnings("DataFlowIssue")
     public static final RegistryObject<BlockEntityType<VFXGeneratorBlockEntity>> VFX_GENERATOR =
         RegistryHandler.BLOCK_ENTITY_TYPES.register(
         "vfx_generator",

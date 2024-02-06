@@ -11,9 +11,10 @@ public class VFXGeneratorCoreItem extends Item {
         super(properties);
     }
 
-    @SuppressWarnings("resource")
+    @SuppressWarnings("deprecation")
     @Override
     public void onDestroyed(ItemEntity itemEntity) {
+        //noinspection resource
         if (!itemEntity.level().isClientSide) {
             NetworkHandler.INSTANCE.send(
                 PacketDistributor.TRACKING_ENTITY.with(() -> itemEntity),

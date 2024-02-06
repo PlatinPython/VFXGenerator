@@ -14,6 +14,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.jspecify.annotations.Nullable;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.block.VFXGeneratorBlock;
 import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
@@ -34,7 +35,7 @@ public class ClientUtils {
     }
 
     public static void addParticle(
-        Level level,
+        @Nullable Level level,
         ParticleType particleType,
         int color,
         int lifetime,

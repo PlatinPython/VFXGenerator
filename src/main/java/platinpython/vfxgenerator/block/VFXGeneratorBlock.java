@@ -33,13 +33,13 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.PacketDistributor;
+import org.jspecify.annotations.Nullable;
 import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.util.ClientUtils;
 import platinpython.vfxgenerator.util.network.NetworkHandler;
 import platinpython.vfxgenerator.util.network.packets.VFXGeneratorDestroyParticlesPKT;
 import platinpython.vfxgenerator.util.registries.BlockEntityRegistry;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class VFXGeneratorBlock extends BaseEntityBlock {
@@ -60,12 +60,13 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
         if (stack.getTagElement("particleData") != null) {
             tooltip.add(ClientUtils.getGuiTranslationTextComponent("dataSaved"));
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getBlockSupportShape(BlockState state, BlockGetter reader, BlockPos pos) {
         return Shapes.empty();
@@ -99,11 +100,13 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
             blockEntityType, BlockEntityRegistry.VFX_GENERATOR.get(), VFXGeneratorBlockEntity::tick) : null;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(
         BlockState state,
@@ -120,6 +123,7 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(POWERED) && !level.hasNeighborSignal(pos)) {
@@ -127,6 +131,7 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(
         BlockState state,
@@ -154,7 +159,7 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         if (stack.getTagElement("particleData") != null) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof VFXGeneratorBlockEntity) {

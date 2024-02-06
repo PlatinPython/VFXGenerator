@@ -18,12 +18,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 import platinpython.vfxgenerator.VFXGenerator;
 import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.util.data.ParticleData;
 
 @Mod.EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class BoxRendering {
+    @Nullable
     public static BlockPos currentRenderPos;
 
     @SubscribeEvent
@@ -352,7 +354,7 @@ public class BoxRendering {
                 .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
                 .createCompositeState(false)
         );
-        public static RenderType LINES_LIGHTMAP = RenderType.create(
+        public static final RenderType LINES_LIGHTMAP = RenderType.create(
             Util.createNamespacedResourceLocation("lines_lightmap").toString(),
             DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.DEBUG_LINES, 256, false, false,
             RenderType.CompositeState.builder()

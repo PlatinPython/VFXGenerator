@@ -36,7 +36,7 @@ public class VFXParticle extends TextureSheetParticle {
         if (particleType.supportsColor()) {
             this.rCol = (color >> 16 & 0xFF) / 255f;
             this.gCol = (color >> 8 & 0xFF) / 255f;
-            this.bCol = (color >> 0 & 0xFF) / 255f;
+            this.bCol = (color & 0xFF) / 255f;
         } else {
             this.rCol = 1f;
             this.gCol = 1f;

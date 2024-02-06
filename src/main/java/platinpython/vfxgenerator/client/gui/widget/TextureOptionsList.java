@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.resources.ResourceLocation;
+import org.jspecify.annotations.Nullable;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.resources.DataManager;
 
@@ -69,12 +70,16 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
     }
 
     public static class TextureOptionsListEntry extends ContainerObjectSelectionList.Entry<TextureOptionsListEntry> {
-        private final ImageSelectionWidget child1, child2, child3;
+        private final ImageSelectionWidget child1;
+        @Nullable
+        private final ImageSelectionWidget child2;
+        @Nullable
+        private final ImageSelectionWidget child3;
 
         private TextureOptionsListEntry(
             ImageSelectionWidget child1,
-            ImageSelectionWidget child2,
-            ImageSelectionWidget child3
+            @Nullable ImageSelectionWidget child2,
+            @Nullable ImageSelectionWidget child3
         ) {
             this.child1 = child1;
             this.child2 = child2;
@@ -154,10 +159,8 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
             boolean isMouseOver,
             float partialTicks
         ) {
-            if (child1 != null) {
-                this.child1.setY(top);
-                this.child1.render(guiGraphics, mouseX, mouseY, partialTicks);
-            }
+            this.child1.setY(top);
+            this.child1.render(guiGraphics, mouseX, mouseY, partialTicks);
             if (child2 != null) {
                 this.child2.setY(top);
                 this.child2.render(guiGraphics, mouseX, mouseY, partialTicks);

@@ -3,12 +3,13 @@ package platinpython.vfxgenerator.client.gui.screen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.Container;
 import platinpython.vfxgenerator.client.gui.widget.TextureOptionsList;
 
 public class ParticleTextureSelectionScreen extends Screen {
     private final ParticleOptionsScreen parent;
 
+    @SuppressWarnings("NotNullFieldNotInitialized")
     private TextureOptionsList textureOptionsList;
 
     protected ParticleTextureSelectionScreen(ParticleOptionsScreen parent) {
@@ -18,6 +19,10 @@ public class ParticleTextureSelectionScreen extends Screen {
 
     @Override
     protected void init() {
+        if (this.minecraft == null) {
+            return;
+        }
+
         this.textureOptionsList = new TextureOptionsList(
             this.minecraft, this.width, this.height, 32, this.height - 32, 50, this.parent.particleData::setSelected,
             this.parent.particleData::getSelected, this.parent::sendToServer
@@ -34,7 +39,10 @@ public class ParticleTextureSelectionScreen extends Screen {
 
     @Override
     public void tick() {
-        if (minecraft.player.distanceToSqr(Vec3.atCenterOf(this.parent.tileEntity.getBlockPos())) > 64.0D) {
+        if (this.minecraft == null || this.minecraft.player == null) {
+            return;
+        }
+        if (Container.stillValidBlockEntity(this.parent.tileEntity, this.minecraft.player)) {
             this.parent.onClose();
         }
         this.textureOptionsList.children().forEach(TextureOptionsList.TextureOptionsListEntry::updateValue);
@@ -47,6 +55,10 @@ public class ParticleTextureSelectionScreen extends Screen {
 
     @Override
     public void onClose() {
+        if (this.minecraft == null) {
+            return;
+        }
+
         this.minecraft.setScreen(this.parent);
     }
 }

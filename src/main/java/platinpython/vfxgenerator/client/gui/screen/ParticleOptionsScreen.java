@@ -5,7 +5,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.Container;
 import platinpython.vfxgenerator.block.entity.VFXGeneratorBlockEntity;
 import platinpython.vfxgenerator.client.gui.widget.ToggleButton;
 import platinpython.vfxgenerator.client.gui.widget.VFXGeneratorOptionsList;
@@ -21,6 +21,7 @@ public class ParticleOptionsScreen extends Screen {
     protected final VFXGeneratorBlockEntity tileEntity;
     protected final ParticleData particleData;
 
+    @SuppressWarnings("NotNullFieldNotInitialized")
     private VFXGeneratorOptionsList optionsList;
 
     public ParticleOptionsScreen(VFXGeneratorBlockEntity tileEntity) {
@@ -29,8 +30,13 @@ public class ParticleOptionsScreen extends Screen {
         this.particleData = tileEntity.getParticleData();
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     @Override
     protected void init() {
+        if (this.minecraft == null) {
+            return;
+        }
+
         addRenderableWidget(Button.builder(ClientUtils.getGuiTranslationTextComponent("areaBox"), button -> {
             if (tileEntity.getBlockPos().equals(BoxRendering.currentRenderPos)) {
                 BoxRendering.currentRenderPos = null;
@@ -249,7 +255,10 @@ public class ParticleOptionsScreen extends Screen {
 
     @Override
     public void tick() {
-        if (minecraft.player.distanceToSqr(Vec3.atCenterOf(tileEntity.getBlockPos())) > 64.0D) {
+        if (this.minecraft == null || this.minecraft.player == null) {
+            return;
+        }
+        if (Container.stillValidBlockEntity(this.tileEntity, this.minecraft.player)) {
             this.onClose();
         }
         this.optionsList.children().forEach((entry) -> {
