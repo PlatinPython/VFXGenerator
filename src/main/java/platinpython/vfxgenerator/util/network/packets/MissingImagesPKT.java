@@ -24,11 +24,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MissingImagesPKT {
-    private static final Codec<ImmutableList<ResourceLocation>> CODEC = ResourceLocation.CODEC.listOf()
-                                                                                              .xmap(
-                                                                                                      ImmutableList::copyOf,
-                                                                                                      Function.identity()
-                                                                                              );
+    private static final Codec<ImmutableList<ResourceLocation>> CODEC = ResourceLocation.CODEC.listOf().xmap(
+        ImmutableList::copyOf, Function.identity());
 
     private final ImmutableList<ResourceLocation> list;
 
@@ -49,27 +46,16 @@ public class MissingImagesPKT {
             // TODO look into improving memory footprint
             FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
             ImmutableMap<ResourceLocation, IoSupplier<InputStream>> requiredImages = DataManager.requiredImages();
-            List<Pair<ResourceLocation, byte[]>> list = message.list.stream()
-                                                                    .map(key -> Pair.of(key, requiredImages.get(key)))
-                                                                    .filter(pair -> Objects.nonNull(pair.getSecond()))
-                                                                    .map(pair -> {
-                                                                        try (
-                                                                                InputStream image = pair.getSecond()
-                                                                                                        .get()
-                                                                        ) {
-                                                                            return Optional.of(Pair.of(
-                                                                                    pair.getFirst(),
-                                                                                    image.readAllBytes()
-                                                                            ));
-                                                                        } catch (IOException e) {
-                                                                            VFXGenerator.LOGGER.error(
-                                                                                    "Failed to open resource", e);
-                                                                            return Optional.<Pair<ResourceLocation, byte[]>>empty();
-                                                                        }
-                                                                    })
-                                                                    .filter(Optional::isPresent)
-                                                                    .map(Optional::get)
-                                                                    .toList();
+            List<Pair<ResourceLocation, byte[]>> list = message.list.stream().map(
+                key -> Pair.of(key, requiredImages.get(key))).filter(pair -> Objects.nonNull(pair.getSecond())).map(
+                pair -> {
+                    try (InputStream image = pair.getSecond().get()) {
+                        return Optional.of(Pair.of(pair.getFirst(), image.readAllBytes()));
+                    } catch (IOException e) {
+                        VFXGenerator.LOGGER.error("Failed to open resource", e);
+                        return Optional.<Pair<ResourceLocation, byte[]>>empty();
+                    }
+                }).filter(Optional::isPresent).map(Optional::get).toList();
             buffer.writeInt(list.size());
             list.forEach(pair -> {
                 buffer.writeResourceLocation(pair.getFirst());
@@ -79,19 +65,15 @@ public class MissingImagesPKT {
                 byte[] data = new byte[Util.MAX_PAYLOAD_SIZE - 6];
                 buffer.readBytes(data);
                 NetworkHandler.INSTANCE.send(
-                        PacketDistributor.PLAYER.with(context.get()::getSender),
-                        new MissingImagesDataPKT(false, data)
-                );
+                    PacketDistributor.PLAYER.with(context.get()::getSender), new MissingImagesDataPKT(false, data));
             }
             byte[] data = new byte[buffer.readableBytes()];
             buffer.readBytes(data);
             NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(context.get()::getSender),
-                    new MissingImagesDataPKT(true, data)
-            );
+                PacketDistributor.PLAYER.with(context.get()::getSender), new MissingImagesDataPKT(true, data));
             NetworkHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(context.get()::getSender),
-                    new UpdateRequiredImagesPKT(DataManager.requiredImages().keySet())
+                PacketDistributor.PLAYER.with(context.get()::getSender),
+                new UpdateRequiredImagesPKT(DataManager.requiredImages().keySet())
             );
         }
     }

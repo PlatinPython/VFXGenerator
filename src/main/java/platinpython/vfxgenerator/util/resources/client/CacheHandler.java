@@ -78,12 +78,10 @@ public class CacheHandler {
     }
 
     public static ImmutableList<ResourceLocation> getMissingTextures(ImmutableMap<ResourceLocation, HashCode> requiredTextures) {
-        return requiredTextures.entrySet()
-                               .stream()
-                               .filter(entry -> !HASH_CACHE.containsKey(entry.getKey()) || !Objects.equals(
-                                       HASH_CACHE.get(entry.getKey()), entry.getValue()))
-                               .map(Map.Entry::getKey)
-                               .collect(ImmutableList.toImmutableList());
+        return requiredTextures.entrySet().stream().filter(
+            entry -> !HASH_CACHE.containsKey(entry.getKey()) || !Objects.equals(HASH_CACHE.get(entry.getKey()),
+                entry.getValue()
+            )).map(Map.Entry::getKey).collect(ImmutableList.toImmutableList());
     }
 
     public static void addToCache(ResourceLocation resourceLocation, byte[] image) {

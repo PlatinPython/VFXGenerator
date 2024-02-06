@@ -44,9 +44,8 @@ public class VirtualPack extends AbstractPackResources {
     public VirtualPack() {
         super(VFXGenerator.MOD_ID + "_virtual_pack", true);
         this.packInfo = new PackMetadataSection(
-                Component.translatable(VFXGenerator.MOD_ID + ".pack_description"),
-                SharedConstants.getCurrentVersion()
-                               .getPackVersion(PackType.CLIENT_RESOURCES)
+            Component.translatable(VFXGenerator.MOD_ID + ".pack_description"),
+            SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES)
         );
     }
 
@@ -116,13 +115,12 @@ public class VirtualPack extends AbstractPackResources {
             }
             event.addRepositorySource(infoConsumer -> {
                 infoConsumer.accept(Pack.create(VFXGenerator.MOD_ID + "_textures",
-                                                Component.translatable(VFXGenerator.MOD_ID + ".pack_title"), true,
-                                                id -> VIRTUAL_PACK, new Pack.Info(
-                                Component.translatable(VFXGenerator.MOD_ID + ".pack_description"),
-                                SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA),
-                                SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES),
-                                FeatureFlagSet.of(), false
-                        ), PackType.CLIENT_RESOURCES, Pack.Position.TOP, false, PackSource.BUILT_IN
+                    Component.translatable(VFXGenerator.MOD_ID + ".pack_title"), true, id -> VIRTUAL_PACK,
+                    new Pack.Info(Component.translatable(VFXGenerator.MOD_ID + ".pack_description"),
+                        SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA),
+                        SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES),
+                        FeatureFlagSet.of(), false
+                    ), PackType.CLIENT_RESOURCES, Pack.Position.TOP, false, PackSource.BUILT_IN
                 ));
             });
         }

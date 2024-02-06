@@ -19,8 +19,9 @@ import java.util.List;
 
 public class ModLootTableProvider extends LootTableProvider {
     public ModLootTableProvider(PackOutput output) {
-        super(output, Collections.emptySet(),
-              List.of(new LootTableProvider.SubProviderEntry(Blocks::new, LootContextParamSets.BLOCK))
+        super(
+            output, Collections.emptySet(),
+            List.of(new LootTableProvider.SubProviderEntry(Blocks::new, LootContextParamSets.BLOCK))
         );
     }
 
@@ -32,12 +33,8 @@ public class ModLootTableProvider extends LootTableProvider {
         @Override
         protected void generate() {
             this.add(BlockRegistry.VFX_GENERATOR.get(), createSingleItemTable(BlockRegistry.VFX_GENERATOR.get()).apply(
-                                                                                                                        CopyBlockState.copyState(BlockRegistry.VFX_GENERATOR.get()).copy(VFXGeneratorBlock.INVERTED))
-                                                                                                                .apply(CopyNbtFunction.copyData(
-                                                                                                                                              ContextNbtProvider.BLOCK_ENTITY)
-                                                                                                                                      .copy("particleData",
-                                                                                                                                            "particleData"
-                                                                                                                                      )));
+                    CopyBlockState.copyState(BlockRegistry.VFX_GENERATOR.get()).copy(VFXGeneratorBlock.INVERTED))
+                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("particleData", "particleData")));
         }
 
         @Override

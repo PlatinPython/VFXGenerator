@@ -26,28 +26,24 @@ import platinpython.vfxgenerator.util.registries.BlockRegistry;
 public class ClientUtils {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> ItemProperties.register(
-                BlockRegistry.VFX_GENERATOR.get().asItem(),
-                Util.createNamespacedResourceLocation(
-                        VFXGeneratorBlock.INVERTED_KEY),
-                (stack, world, entity, seed) -> Boolean.parseBoolean(
-                        stack.getOrCreateTagElement("BlockStateTag")
-                             .getString(VFXGeneratorBlock.INVERTED_KEY)) ? 1F
-                                                                         : 0F
+        event.enqueueWork(() -> ItemProperties.register(BlockRegistry.VFX_GENERATOR.get().asItem(),
+            Util.createNamespacedResourceLocation(VFXGeneratorBlock.INVERTED_KEY),
+            (stack, world, entity, seed) -> Boolean.parseBoolean(
+                stack.getOrCreateTagElement("BlockStateTag").getString(VFXGeneratorBlock.INVERTED_KEY)) ? 1F : 0F
         ));
     }
 
     public static void addParticle(
-            Level level,
-            ParticleType particleType,
-            int color,
-            int lifetime,
-            float size,
-            Vec3 pos,
-            Vec3 motion,
-            float gravity,
-            boolean collision,
-            boolean fullBright
+        Level level,
+        ParticleType particleType,
+        int color,
+        int lifetime,
+        float size,
+        Vec3 pos,
+        Vec3 motion,
+        float gravity,
+        boolean collision,
+        boolean fullBright
     ) {
         if (level == null) {
             level = Minecraft.getInstance().level;
@@ -55,9 +51,8 @@ public class ClientUtils {
         if (!(level instanceof ClientLevel clientLevel)) {
             return;
         }
-        VFXParticle particle = new VFXParticle(clientLevel, particleType, color, lifetime, size, pos, motion, gravity,
-                                               collision, fullBright
-        );
+        VFXParticle particle = new VFXParticle(
+            clientLevel, particleType, color, lifetime, size, pos, motion, gravity, collision, fullBright);
         Minecraft.getInstance().particleEngine.add(particle);
     }
 

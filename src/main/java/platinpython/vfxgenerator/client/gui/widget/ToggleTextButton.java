@@ -15,9 +15,17 @@ public class ToggleTextButton extends UpdateableWidget {
     private final Util.BooleanConsumer setValueFunction;
     private final Util.BooleanSupplier valueSupplier;
 
-    public ToggleTextButton(int x, int y, int width, int height, Component displayTextFalse, Component displayTextTrue,
-                            Util.BooleanConsumer setValueFunction, Util.BooleanSupplier valueSupplier,
-                            Runnable applyValueFunction) {
+    public ToggleTextButton(
+        int x,
+        int y,
+        int width,
+        int height,
+        Component displayTextFalse,
+        Component displayTextTrue,
+        Util.BooleanConsumer setValueFunction,
+        Util.BooleanSupplier valueSupplier,
+        Runnable applyValueFunction
+    ) {
         super(x, y, width, height, applyValueFunction);
         this.displayTextFalse = displayTextFalse;
         this.displayTextTrue = displayTextTrue;
@@ -32,8 +40,9 @@ public class ToggleTextButton extends UpdateableWidget {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        guiGraphics.blitNineSliced(WIDGETS_LOCATION, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4,
-                                   200, 20, 0, this.getTextureY()
+        guiGraphics.blitNineSliced(
+            WIDGETS_LOCATION, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0,
+            this.getTextureY()
         );
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.renderScrollingString(guiGraphics, minecraft.font, 2, getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24);

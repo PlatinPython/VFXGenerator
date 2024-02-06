@@ -29,14 +29,14 @@ public class VFXGeneratorDestroyParticlesPKT {
 
     public static VFXGeneratorDestroyParticlesPKT decode(FriendlyByteBuf buffer) {
         return new VFXGeneratorDestroyParticlesPKT(
-                new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
+            new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
     }
 
     public static class Handler {
         private static final ImmutableList<ParticleType> LIST = ImmutableList.of(
-                new SingleParticle(new ResourceLocation(VFXGenerator.MOD_ID, "spark_small"), true),
-                new SingleParticle(new ResourceLocation(VFXGenerator.MOD_ID, "spark_mid"), true),
-                new SingleParticle(new ResourceLocation(VFXGenerator.MOD_ID, "spark_big"), true)
+            new SingleParticle(new ResourceLocation(VFXGenerator.MOD_ID, "spark_small"), true),
+            new SingleParticle(new ResourceLocation(VFXGenerator.MOD_ID, "spark_mid"), true),
+            new SingleParticle(new ResourceLocation(VFXGenerator.MOD_ID, "spark_big"), true)
         );
 
         public static void handle(VFXGeneratorDestroyParticlesPKT message, Supplier<NetworkEvent.Context> context) {
@@ -46,10 +46,9 @@ public class VFXGeneratorDestroyParticlesPKT {
                 double motionY = (random.nextFloat() * (.2F)) - .1F;
                 double motionZ = (random.nextFloat() * (.2F)) - .1F;
                 Vec3 motion = new Vec3(motionX, motionY, motionZ);
-                ClientUtils.addParticle(null, LIST.get(random.nextInt(LIST.size())),
-                                        Color.HSBtoRGB(random.nextFloat(), 1F, 1F),
-                                        Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F,
-                                        false, false
+                ClientUtils.addParticle(
+                    null, LIST.get(random.nextInt(LIST.size())), Color.HSBtoRGB(random.nextFloat(), 1F, 1F),
+                    Math.round(5 + (random.nextFloat() * (15 - 5))), .3F, message.pos, motion, 0F, false, false
                 );
             }
         }

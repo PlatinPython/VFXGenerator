@@ -13,20 +13,19 @@ import java.util.stream.Stream;
 
 public class SingleParticle extends ParticleType {
     public static final Codec<SingleParticle> FILE_DECODER = RecordCodecBuilder.create(
-            instance -> instance.group(
-                                        ResourceLocation.CODEC.fieldOf("value").forGetter(SingleParticle::value),
-                                        new ResourceCodec().flatXmap(ResourceUtil::supportsColor, i -> DataResult.error(
-                                                                   () -> "Serializing not supported"))
-                                                           .fieldOf("value")
-                                                           .forGetter(i -> null)
-                                )
-                                .apply(instance, SingleParticle::new));
+        instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("value").forGetter(SingleParticle::value),
+            new ResourceCodec().flatXmap(
+                    ResourceUtil::supportsColor, i -> DataResult.error(() -> "Serializing not supported"))
+                .fieldOf("value")
+                .forGetter(i -> null)
+        ).apply(instance, SingleParticle::new));
 
     public static final Codec<SingleParticle> CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                    ResourceLocation.CODEC.fieldOf("value").forGetter(SingleParticle::value),
-                    Codec.BOOL.fieldOf("supportsColor").forGetter(SingleParticle::supportsColor)
-            ).apply(instance, SingleParticle::new));
+        instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("value").forGetter(SingleParticle::value),
+            Codec.BOOL.fieldOf("supportsColor").forGetter(SingleParticle::supportsColor)
+        ).apply(instance, SingleParticle::new));
 
     private final ResourceLocation value;
 

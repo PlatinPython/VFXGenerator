@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.resources.ResourceLocation;
-import platinpython.vfxgenerator.util.Constants;
 import platinpython.vfxgenerator.util.Util;
 import platinpython.vfxgenerator.util.resources.DataManager;
 
@@ -18,15 +17,15 @@ import java.util.function.Supplier;
 
 public class TextureOptionsList extends ContainerObjectSelectionList<TextureOptionsList.TextureOptionsListEntry> {
     public TextureOptionsList(
-            Minecraft minecraft,
-            int width,
-            int height,
-            int top,
-            int bottom,
-            int itemHeight,
-            Consumer<TreeSet<ResourceLocation>> setValueFunction,
-            Supplier<TreeSet<ResourceLocation>> valueSupplier,
-            Runnable applyValueFunction
+        Minecraft minecraft,
+        int width,
+        int height,
+        int top,
+        int bottom,
+        int itemHeight,
+        Consumer<TreeSet<ResourceLocation>> setValueFunction,
+        Supplier<TreeSet<ResourceLocation>> valueSupplier,
+        Runnable applyValueFunction
     ) {
         super(minecraft, width, height, top, bottom, itemHeight);
         this.init(setValueFunction, valueSupplier, applyValueFunction);
@@ -34,29 +33,28 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
     }
 
     private void init(
-            Consumer<TreeSet<ResourceLocation>> setValueFunction,
-            Supplier<TreeSet<ResourceLocation>> valueSupplier,
-            Runnable applyValueFunction
+        Consumer<TreeSet<ResourceLocation>> setValueFunction,
+        Supplier<TreeSet<ResourceLocation>> valueSupplier,
+        Runnable applyValueFunction
     ) {
         List<ResourceLocation> list = new ArrayList<>(
-                Util.createTreeSetFromCollectionWithComparator(
-                        DataManager.selectableParticles().keySet(),
-                        ResourceLocation::compareNamespaced
-                ));
+            Util.createTreeSetFromCollectionWithComparator(DataManager.selectableParticles().keySet(),
+                ResourceLocation::compareNamespaced
+            ));
         for (int i = 0; i < list.size() - list.size() % 3; i += 3) {
             addEntry(TextureOptionsListEntry.addThreeTextures(this.width, list.get(i), list.get(i + 1), list.get(i + 2),
-                                                              setValueFunction, valueSupplier, applyValueFunction
+                setValueFunction, valueSupplier, applyValueFunction
             ));
         }
         switch (list.size() % 3) {
             case 1 -> addEntry(
-                    TextureOptionsListEntry.addOneTexture(this.width, list.get(list.size() - 1), setValueFunction,
-                                                          valueSupplier, applyValueFunction
-                    ));
-            case 2 -> addEntry(TextureOptionsListEntry.addTwoTextures(this.width, list.get(list.size() - 2),
-                                                                      list.get(list.size() - 1), setValueFunction,
-                                                                      valueSupplier, applyValueFunction
-            ));
+                TextureOptionsListEntry.addOneTexture(this.width, list.get(list.size() - 1), setValueFunction,
+                    valueSupplier, applyValueFunction
+                ));
+            case 2 -> addEntry(
+                TextureOptionsListEntry.addTwoTextures(this.width, list.get(list.size() - 2), list.get(list.size() - 1),
+                    setValueFunction, valueSupplier, applyValueFunction
+                ));
         }
     }
 
@@ -74,7 +72,9 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
         private final ImageSelectionWidget child1, child2, child3;
 
         private TextureOptionsListEntry(
-                ImageSelectionWidget child1, ImageSelectionWidget child2, ImageSelectionWidget child3
+            ImageSelectionWidget child1,
+            ImageSelectionWidget child2,
+            ImageSelectionWidget child3
         ) {
             this.child1 = child1;
             this.child2 = child2;
@@ -82,53 +82,47 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
         }
 
         public static TextureOptionsListEntry addOneTexture(
-                int guiWidth,
-                ResourceLocation particleId1,
-                Consumer<TreeSet<ResourceLocation>> setValueFunction,
-                Supplier<TreeSet<ResourceLocation>> valueSupplier,
-                Runnable applyValueFunction
+            int guiWidth,
+            ResourceLocation particleId1,
+            Consumer<TreeSet<ResourceLocation>> setValueFunction,
+            Supplier<TreeSet<ResourceLocation>> valueSupplier,
+            Runnable applyValueFunction
         ) {
-            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 25, 0, 50, 50, particleId1,
-                                                                   setValueFunction, valueSupplier, applyValueFunction
-            );
+            ImageSelectionWidget child1 = new ImageSelectionWidget(
+                guiWidth / 2 - 25, 0, 50, 50, particleId1, setValueFunction, valueSupplier, applyValueFunction);
             return new TextureOptionsListEntry(child1, null, null);
         }
 
         public static TextureOptionsListEntry addTwoTextures(
-                int guiWidth,
-                ResourceLocation particleId1,
-                ResourceLocation particleId2,
-                Consumer<TreeSet<ResourceLocation>> setValueFunction,
-                Supplier<TreeSet<ResourceLocation>> valueSupplier,
-                Runnable applyValueFunction
+            int guiWidth,
+            ResourceLocation particleId1,
+            ResourceLocation particleId2,
+            Consumer<TreeSet<ResourceLocation>> setValueFunction,
+            Supplier<TreeSet<ResourceLocation>> valueSupplier,
+            Runnable applyValueFunction
         ) {
-            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 50, 0, 50, 50, particleId1,
-                                                                   setValueFunction, valueSupplier, applyValueFunction
-            );
-            ImageSelectionWidget child2 = new ImageSelectionWidget(guiWidth / 2, 0, 50, 50, particleId2,
-                                                                   setValueFunction, valueSupplier, applyValueFunction
-            );
+            ImageSelectionWidget child1 = new ImageSelectionWidget(
+                guiWidth / 2 - 50, 0, 50, 50, particleId1, setValueFunction, valueSupplier, applyValueFunction);
+            ImageSelectionWidget child2 = new ImageSelectionWidget(
+                guiWidth / 2, 0, 50, 50, particleId2, setValueFunction, valueSupplier, applyValueFunction);
             return new TextureOptionsListEntry(child1, child2, null);
         }
 
         public static TextureOptionsListEntry addThreeTextures(
-                int guiWidth,
-                ResourceLocation particleId1,
-                ResourceLocation particleId2,
-                ResourceLocation particleId3,
-                Consumer<TreeSet<ResourceLocation>> setValueFunction,
-                Supplier<TreeSet<ResourceLocation>> valueSupplier,
-                Runnable applyValueFunction
+            int guiWidth,
+            ResourceLocation particleId1,
+            ResourceLocation particleId2,
+            ResourceLocation particleId3,
+            Consumer<TreeSet<ResourceLocation>> setValueFunction,
+            Supplier<TreeSet<ResourceLocation>> valueSupplier,
+            Runnable applyValueFunction
         ) {
-            ImageSelectionWidget child1 = new ImageSelectionWidget(guiWidth / 2 - 75, 0, 50, 50, particleId1,
-                                                                   setValueFunction, valueSupplier, applyValueFunction
-            );
-            ImageSelectionWidget child2 = new ImageSelectionWidget(guiWidth / 2 - 25, 0, 50, 50, particleId2,
-                                                                   setValueFunction, valueSupplier, applyValueFunction
-            );
-            ImageSelectionWidget child3 = new ImageSelectionWidget(guiWidth / 2 + 25, 0, 50, 50, particleId3,
-                                                                   setValueFunction, valueSupplier, applyValueFunction
-            );
+            ImageSelectionWidget child1 = new ImageSelectionWidget(
+                guiWidth / 2 - 75, 0, 50, 50, particleId1, setValueFunction, valueSupplier, applyValueFunction);
+            ImageSelectionWidget child2 = new ImageSelectionWidget(
+                guiWidth / 2 - 25, 0, 50, 50, particleId2, setValueFunction, valueSupplier, applyValueFunction);
+            ImageSelectionWidget child3 = new ImageSelectionWidget(
+                guiWidth / 2 + 25, 0, 50, 50, particleId3, setValueFunction, valueSupplier, applyValueFunction);
             return new TextureOptionsListEntry(child1, child2, child3);
         }
 
@@ -149,16 +143,16 @@ public class TextureOptionsList extends ContainerObjectSelectionList<TextureOpti
 
         @Override
         public void render(
-                GuiGraphics guiGraphics,
-                int index,
-                int top,
-                int left,
-                int width,
-                int height,
-                int mouseX,
-                int mouseY,
-                boolean isMouseOver,
-                float partialTicks
+            GuiGraphics guiGraphics,
+            int index,
+            int top,
+            int left,
+            int width,
+            int height,
+            int mouseX,
+            int mouseY,
+            boolean isMouseOver,
+            float partialTicks
         ) {
             if (child1 != null) {
                 this.child1.setY(top);

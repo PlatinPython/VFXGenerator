@@ -12,16 +12,14 @@ import platinpython.vfxgenerator.util.registries.BlockRegistry;
 import platinpython.vfxgenerator.util.registries.ItemRegistry;
 
 public class RegistryHandler {
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS,
-                                                                                 VFXGenerator.MOD_ID
-    );
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(
+        ForgeRegistries.BLOCKS, VFXGenerator.MOD_ID);
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,
-                                                                               VFXGenerator.MOD_ID
-    );
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(
+        ForgeRegistries.ITEMS, VFXGenerator.MOD_ID);
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(
-            ForgeRegistries.BLOCK_ENTITY_TYPES, VFXGenerator.MOD_ID);
+        ForgeRegistries.BLOCK_ENTITY_TYPES, VFXGenerator.MOD_ID);
 
     public static void register() {
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());

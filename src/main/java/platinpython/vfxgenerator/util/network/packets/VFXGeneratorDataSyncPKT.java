@@ -36,12 +36,10 @@ public class VFXGeneratorDataSyncPKT {
                 ((VFXGeneratorBlockEntity) tileEntity).loadFromTag(message.tag);
                 tileEntity.setChanged();
             }
-            context.get()
-                   .getSender()
-                   .level()
-                   .sendBlockUpdated(message.pos, context.get().getSender().level().getBlockState(message.pos),
-                                     context.get().getSender().level().getBlockState(message.pos), Block.UPDATE_ALL
-                   );
+            context.get().getSender().level().sendBlockUpdated(
+                message.pos, context.get().getSender().level().getBlockState(message.pos),
+                context.get().getSender().level().getBlockState(message.pos), Block.UPDATE_ALL
+            );
         }
     }
 }

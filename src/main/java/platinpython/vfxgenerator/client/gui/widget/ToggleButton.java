@@ -8,8 +8,15 @@ public class ToggleButton extends UpdateableWidget {
     private final Util.BooleanConsumer setValueFunction;
     private final Util.BooleanSupplier valueSupplier;
 
-    public ToggleButton(int x, int y, int width, int height, Util.BooleanConsumer setValueFunction,
-                        Util.BooleanSupplier valueSupplier, Runnable applyValueFunction) {
+    public ToggleButton(
+        int x,
+        int y,
+        int width,
+        int height,
+        Util.BooleanConsumer setValueFunction,
+        Util.BooleanSupplier valueSupplier,
+        Runnable applyValueFunction
+    ) {
         super(x, y, width, height, applyValueFunction);
         this.setValueFunction = setValueFunction;
         this.valueSupplier = valueSupplier;
@@ -19,18 +26,22 @@ public class ToggleButton extends UpdateableWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         guiGraphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0xFF000000);
         if (this.valueSupplier.get()) {
-            guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
-                             this.getY() + this.height - 1, 0xFF00FF00
+            guiGraphics.fill(
+                this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1,
+                0xFF00FF00
             );
-            guiGraphics.blitWithBorder(WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 0,
-                                       this.getTextureY(), this.width / 2, this.height, 200, 20, 2
+            guiGraphics.blitWithBorder(
+                WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 0, this.getTextureY(), this.width / 2,
+                this.height, 200, 20, 2
             );
         } else {
-            guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1,
-                             this.getY() + this.height - 1, 0xFFFF0000
+            guiGraphics.fill(
+                this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1,
+                0xFFFF0000
             );
-            guiGraphics.blitWithBorder(WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.getTextureY(),
-                                       this.width / 2, this.height, 200, 20, 2
+            guiGraphics.blitWithBorder(
+                WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.getTextureY(), this.width / 2, this.height, 200, 20,
+                2
             );
         }
     }

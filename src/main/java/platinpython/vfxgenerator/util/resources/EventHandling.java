@@ -37,25 +37,26 @@ public class EventHandling {
             return;
         }
         NetworkHandler.INSTANCE.send(
-                PacketDistributor.PLAYER.with(event::getPlayer),
-                new SelectableParticlesSyncPKT(DataManager.selectableParticles())
+            PacketDistributor.PLAYER.with(event::getPlayer),
+            new SelectableParticlesSyncPKT(DataManager.selectableParticles())
         );
-        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(event::getPlayer), new RequiredImageHashesPKT(
-                DataManager.requiredImages()
-                           .entrySet()
-                           .stream()
-                           .map(entry -> {
-                               try {
-                                   return Optional.of(Pair.of(entry.getKey(), Util.HASH_FUNCTION.hashBytes(
-                                           IOUtils.toByteArray(entry.getValue().get()))));
-                               } catch (IOException e) {
-                                   VFXGenerator.LOGGER.error("Failed to hash image for syncing: {}", e.getMessage());
-                                   return Optional.<Pair<ResourceLocation, HashCode>>empty();
-                               }
-                           })
-                           .filter(Optional::isPresent)
-                           .map(Optional::get)
-                           .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond))));
+        NetworkHandler.INSTANCE.send(
+            PacketDistributor.PLAYER.with(event::getPlayer), new RequiredImageHashesPKT(DataManager.requiredImages()
+                .entrySet()
+                .stream()
+                .map(entry -> {
+                    try {
+                        return Optional.of(Pair.of(entry.getKey(),
+                            Util.HASH_FUNCTION.hashBytes(IOUtils.toByteArray(entry.getValue().get()))
+                        ));
+                    } catch (IOException e) {
+                        VFXGenerator.LOGGER.error("Failed to hash image for syncing: {}", e.getMessage());
+                        return Optional.<Pair<ResourceLocation, HashCode>>empty();
+                    }
+                })
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond))));
     }
 
     public static boolean loadingDisabled() {

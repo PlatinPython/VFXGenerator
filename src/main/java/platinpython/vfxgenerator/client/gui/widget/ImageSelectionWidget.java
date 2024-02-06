@@ -36,9 +36,16 @@ public class ImageSelectionWidget extends UpdateableWidget {
 
     private boolean selected;
 
-    public ImageSelectionWidget(int x, int y, int width, int height, ResourceLocation particleId,
-                                Consumer<TreeSet<ResourceLocation>> setValueFunction,
-                                Supplier<TreeSet<ResourceLocation>> valueSupplier, Runnable applyValueFunction) {
+    public ImageSelectionWidget(
+        int x,
+        int y,
+        int width,
+        int height,
+        ResourceLocation particleId,
+        Consumer<TreeSet<ResourceLocation>> setValueFunction,
+        Supplier<TreeSet<ResourceLocation>> valueSupplier,
+        Runnable applyValueFunction
+    ) {
         super(x, y, width, height, applyValueFunction);
         this.particleId = particleId;
         this.setValueFunction = setValueFunction;
@@ -48,17 +55,19 @@ public class ImageSelectionWidget extends UpdateableWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        guiGraphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height,
-                         this.selected ? 0xFFFFFFFF : 0xFF000000
+        guiGraphics.fill(
+            this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height,
+            this.selected ? 0xFFFFFFFF : 0xFF000000
         );
-        guiGraphics.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1,
-                         0xFF000000
+        guiGraphics.fill(
+            this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, 0xFF000000);
+        guiGraphics.blitWithBorder(
+            WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.selected ? 86 : 66, this.width, this.height, 200, 20, 2,
+            3, 2, 2
         );
-        guiGraphics.blitWithBorder(WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.selected ? 86 : 66, this.width,
-                                   this.height, 200, 20, 2, 3, 2, 2
-        );
-        this.renderImage(guiGraphics.pose().last().pose(), this.getX() + 5, this.getY() + 5,
-                         this.getX() + this.width - 5, this.getY() + this.height - 5
+        this.renderImage(
+            guiGraphics.pose().last().pose(), this.getX() + 5, this.getY() + 5, this.getX() + this.width - 5,
+            this.getY() + this.height - 5
         );
     }
 
@@ -68,9 +77,8 @@ public class ImageSelectionWidget extends UpdateableWidget {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO,
-                                       DestFactor.ZERO
-        );
+        RenderSystem.blendFuncSeparate(
+            SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ZERO);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -115,7 +123,7 @@ public class ImageSelectionWidget extends UpdateableWidget {
             this.applyValue();
         } else {
             TreeSet<ResourceLocation> list = Util.createTreeSetFromCollectionWithComparator(
-                    Collections.singletonList(this.particleId), ResourceLocation::compareNamespaced);
+                Collections.singletonList(this.particleId), ResourceLocation::compareNamespaced);
             this.setValueFunction.accept(list);
             this.selected = true;
             this.applyValue();

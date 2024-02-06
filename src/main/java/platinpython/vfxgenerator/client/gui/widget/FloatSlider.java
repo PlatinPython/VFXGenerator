@@ -25,17 +25,27 @@ public class FloatSlider extends UpdateableWidget {
     private final Util.FloatSupplier valueSupplier;
     private double sliderValue;
 
-    public FloatSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue,
-                       double maxValue, float stepSize, Util.FloatConsumer setValueFunction,
-                       Util.FloatSupplier valueSupplier, Runnable applyValueFunction) {
+    public FloatSlider(
+        int x,
+        int y,
+        int width,
+        int height,
+        Component prefix,
+        Component suffix,
+        double minValue,
+        double maxValue,
+        float stepSize,
+        Util.FloatConsumer setValueFunction,
+        Util.FloatSupplier valueSupplier,
+        Runnable applyValueFunction
+    ) {
         super(x, y, width, height, applyValueFunction);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.stepSize = stepSize;
         this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 && Float.toString(this.stepSize)
-                                                                                          .split("\\.")[1].equals("0") ?
-                      new DecimalFormat("0") :
-                      new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
+            .split("\\.")[1].equals("0") ? new DecimalFormat("0") : new DecimalFormat(
+            Float.toString(this.stepSize).replaceAll("\\d", "0"));
         this.prefix = prefix;
         this.suffix = suffix;
         this.setValueFunction = setValueFunction;
@@ -58,12 +68,13 @@ public class FloatSlider extends UpdateableWidget {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        guiGraphics.blitNineSliced(AbstractSliderButton.SLIDER_LOCATION, this.getX(), this.getY(), this.getWidth(),
-                                   this.getHeight(), 20, 4, 200, 20, 0, this.isFocused() ? 20 : 0
+        guiGraphics.blitNineSliced(
+            AbstractSliderButton.SLIDER_LOCATION, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4,
+            200, 20, 0, this.isFocused() ? 20 : 0
         );
-        guiGraphics.blitNineSliced(AbstractSliderButton.SLIDER_LOCATION,
-                                   this.getX() + (int) (this.sliderValue * (double) (this.width - 8)), this.getY(), 8,
-                                   20, 20, 4, 200, 20, 0, this.isActive() && this.isHovered ? 60 : 40
+        guiGraphics.blitNineSliced(
+            AbstractSliderButton.SLIDER_LOCATION, this.getX() + (int) (this.sliderValue * (double) (this.width - 8)),
+            this.getY(), 8, 20, 20, 4, 200, 20, 0, this.isActive() && this.isHovered ? 60 : 40
         );
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = this.active ? 16777215 : 10526880;
@@ -99,17 +110,17 @@ public class FloatSlider extends UpdateableWidget {
             if (flag) {
                 if (this.sliderValue != 0D) {
                     this.setSliderValue(
-                            Util.clamp((this.getSliderValue() - this.stepSize), this.minValue, this.maxValue,
-                                       this.stepSize
-                            ));
+                        Util.clamp((this.getSliderValue() - this.stepSize), this.minValue, this.maxValue,
+                            this.stepSize
+                        ));
                 }
 
             } else {
                 if (this.sliderValue != 1D) {
                     this.setSliderValue(
-                            Util.clamp((this.getSliderValue() + this.stepSize), this.minValue, this.maxValue,
-                                       this.stepSize
-                            ));
+                        Util.clamp((this.getSliderValue() + this.stepSize), this.minValue, this.maxValue,
+                            this.stepSize
+                        ));
                 }
 
             }
@@ -144,11 +155,11 @@ public class FloatSlider extends UpdateableWidget {
     @Override
     protected void updateMessage() {
         setMessage(Component.empty()
-                            .append(prefix)
-                            .append(": ")
-                            .append(format.format(getSliderValue()))
-                            .append(suffix.getString().isEmpty() ? "" : " ")
-                            .append(suffix));
+            .append(prefix)
+            .append(": ")
+            .append(format.format(getSliderValue()))
+            .append(suffix.getString().isEmpty() ? "" : " ")
+            .append(suffix));
     }
 
     @Override
@@ -161,13 +172,11 @@ public class FloatSlider extends UpdateableWidget {
         narrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
         if (this.active) {
             if (this.isFocused()) {
-                narrationElementOutput.add(NarratedElementType.USAGE,
-                                           Component.translatable("narration.slider.usage.focused")
-                );
+                narrationElementOutput.add(
+                    NarratedElementType.USAGE, Component.translatable("narration.slider.usage.focused"));
             } else {
-                narrationElementOutput.add(NarratedElementType.USAGE,
-                                           Component.translatable("narration.slider.usage.hovered")
-                );
+                narrationElementOutput.add(
+                    NarratedElementType.USAGE, Component.translatable("narration.slider.usage.hovered"));
             }
         }
     }

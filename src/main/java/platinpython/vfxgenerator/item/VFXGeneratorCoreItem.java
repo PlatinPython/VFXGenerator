@@ -15,8 +15,9 @@ public class VFXGeneratorCoreItem extends Item {
     @Override
     public void onDestroyed(ItemEntity itemEntity) {
         if (!itemEntity.level().isClientSide) {
-            NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> itemEntity),
-                                         new VFXGeneratorDestroyParticlesPKT(itemEntity.position())
+            NetworkHandler.INSTANCE.send(
+                PacketDistributor.TRACKING_ENTITY.with(() -> itemEntity),
+                new VFXGeneratorDestroyParticlesPKT(itemEntity.position())
             );
         }
     }

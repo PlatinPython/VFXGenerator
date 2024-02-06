@@ -15,10 +15,10 @@ import java.util.function.Supplier;
 
 public class RequiredImageHashesPKT {
     private static final Codec<ImmutableMap<ResourceLocation, HashCode>> CODEC = Codec.unboundedMap(
-            ResourceLocation.CODEC, Codec.BYTE_BUFFER.xmap(
-                    byteBuffer -> HashCode.fromBytes(byteBuffer.array()),
-                    hashCode -> ByteBuffer.wrap(hashCode.asBytes())
-            )).xmap(ImmutableMap::copyOf, Function.identity());
+            ResourceLocation.CODEC, Codec.BYTE_BUFFER.xmap(byteBuffer -> HashCode.fromBytes(byteBuffer.array()),
+                hashCode -> ByteBuffer.wrap(hashCode.asBytes())
+            ))
+        .xmap(ImmutableMap::copyOf, Function.identity());
 
     private final ImmutableMap<ResourceLocation, HashCode> map;
 

@@ -22,7 +22,8 @@ public class Util {
     }
 
     public static <E> TreeSet<E> createTreeSetFromCollectionWithComparator(
-            Collection<? extends E> collection, Comparator<? super E> comparator
+        Collection<? extends E> collection,
+        Comparator<? super E> comparator
     ) {
         TreeSet<E> set = new TreeSet<>(comparator);
         set.addAll(collection);
@@ -30,7 +31,8 @@ public class Util {
     }
 
     public static <E> TreeSet<E> getThreeRandomElements(
-            Collection<? extends E> collection, Comparator<? super E> comparator
+        Collection<? extends E> collection,
+        Comparator<? super E> comparator
     ) {
         if (collection.size() <= 3) {
             return createTreeSetFromCollectionWithComparator(collection, comparator);

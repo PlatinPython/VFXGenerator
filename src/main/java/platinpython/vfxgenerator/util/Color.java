@@ -114,7 +114,7 @@ public class Color {
 
     public static int getRandomRGBColor(Random random, int color1, int color2) {
         int r = Math.round(
-                (random.nextFloat() * ((color2 >> 16 & 0xFF) - (color1 >> 16 & 0xFF))) + (color1 >> 16 & 0xFF));
+            (random.nextFloat() * ((color2 >> 16 & 0xFF) - (color1 >> 16 & 0xFF))) + (color1 >> 16 & 0xFF));
         int g = Math.round((random.nextFloat() * ((color2 >> 8 & 0xFF) - (color1 >> 8 & 0xFF))) + (color1 >> 8 & 0xFF));
         int b = Math.round((random.nextFloat() * ((color2 & 0xFF) - (color1 & 0xFF))) + (color1 & 0xFF));
         return 0xff000000 | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | b & 0xFF;
@@ -147,7 +147,7 @@ public class Color {
             rangeError = true;
             badComponentString = badComponentString + " Blue";
         }
-        if (rangeError == true) {
+        if (rangeError) {
             throw new IllegalArgumentException("Color parameter outside of expected range:" + badComponentString);
         }
     }

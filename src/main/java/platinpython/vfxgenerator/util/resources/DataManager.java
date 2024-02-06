@@ -15,8 +15,8 @@ import java.util.function.Function;
 public class DataManager {
     private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
-    public static final Codec<ImmutableMap<ResourceLocation, ParticleType>> SELECTABLE_PARTICLES_CODEC = Codec.unboundedMap(
-            ResourceLocation.CODEC, ParticleType.CODEC).xmap(ImmutableMap::copyOf, Function.identity());
+    public static final Codec<ImmutableMap<ResourceLocation, ParticleType>> SELECTABLE_PARTICLES_CODEC =
+        Codec.unboundedMap(ResourceLocation.CODEC, ParticleType.CODEC).xmap(ImmutableMap::copyOf, Function.identity());
 
     private static ImmutableMap<ResourceLocation, ParticleType> SELECTABLE_PARTICLES = ImmutableMap.of();
     private static ImmutableMap<ResourceLocation, IoSupplier<InputStream>> REQUIRED_IMAGES = ImmutableMap.of();

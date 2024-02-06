@@ -51,7 +51,7 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     public VFXGeneratorBlock() {
         super(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion());
         this.registerDefaultState(
-                this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE));
+            this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE));
     }
 
     @Override
@@ -73,8 +73,8 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState()
-                   .setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+        return this.defaultBlockState().setValue(
+            POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
     }
 
     @Override
@@ -90,13 +90,13 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-                                                                  BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ?
-               createTickerHelper(blockEntityType, BlockEntityRegistry.VFX_GENERATOR.get(),
-                                  VFXGeneratorBlockEntity::tick
-               ) :
-               null;
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+        Level level,
+        BlockState state,
+        BlockEntityType<T> blockEntityType
+    ) {
+        return level.isClientSide ? createTickerHelper(
+            blockEntityType, BlockEntityRegistry.VFX_GENERATOR.get(), VFXGeneratorBlockEntity::tick) : null;
     }
 
     @Override
@@ -105,8 +105,14 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos,
-                                boolean isMoving) {
+    public void neighborChanged(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Block block,
+        BlockPos fromPos,
+        boolean isMoving
+    ) {
         if (!level.isClientSide) {
             if (state.getValue(POWERED) != level.hasNeighborSignal(pos)) {
                 level.setBlock(pos, state.cycle(POWERED), Block.UPDATE_ALL);
@@ -122,8 +128,14 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-                                 BlockHitResult hit) {
+    public InteractionResult use(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hit
+    ) {
         if (player.getMainHandItem().isEmpty()) {
             if (player.isShiftKeyDown() && player.getOffhandItem().isEmpty()) {
                 level.setBlock(pos, state.cycle(INVERTED), 2);
@@ -152,8 +164,13 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-                                       Player player) {
+    public ItemStack getCloneItemStack(
+        BlockState state,
+        HitResult target,
+        BlockGetter world,
+        BlockPos pos,
+        Player player
+    ) {
         ItemStack stack = new ItemStack(this);
         CompoundTag tag = stack.getOrCreateTag();
         CompoundTag blockStateTag = new CompoundTag();
@@ -171,9 +188,8 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!level.isClientSide && !state.is(newState.getBlock())) {
-            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(),
-                                         new VFXGeneratorDestroyParticlesPKT(Vec3.atCenterOf(pos))
-            );
+            NetworkHandler.INSTANCE.send(
+                PacketDistributor.ALL.noArg(), new VFXGeneratorDestroyParticlesPKT(Vec3.atCenterOf(pos)));
         }
         super.onRemove(state, level, pos, newState, isMoving);
     }
