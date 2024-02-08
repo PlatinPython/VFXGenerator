@@ -51,7 +51,8 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     public VFXGeneratorBlock() {
         super(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion());
         this.registerDefaultState(
-            this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE));
+            this.stateDefinition.any().setValue(INVERTED, Boolean.FALSE).setValue(POWERED, Boolean.FALSE)
+        );
     }
 
     @Override
@@ -60,7 +61,12 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(
+        ItemStack stack,
+        @Nullable BlockGetter level,
+        List<Component> tooltip,
+        TooltipFlag flag
+    ) {
         if (stack.getTagElement("particleData") != null) {
             tooltip.add(ClientUtils.getGuiTranslationTextComponent("dataSaved"));
         }
@@ -74,8 +80,8 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(
-            POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
+        return this.defaultBlockState()
+            .setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
     }
 
     @Override
@@ -96,8 +102,11 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
         BlockState state,
         BlockEntityType<T> blockEntityType
     ) {
-        return level.isClientSide ? createTickerHelper(
-            blockEntityType, BlockEntityRegistry.VFX_GENERATOR.get(), VFXGeneratorBlockEntity::tick) : null;
+        return level.isClientSide
+            ? createTickerHelper(
+                blockEntityType, BlockEntityRegistry.VFX_GENERATOR.get(), VFXGeneratorBlockEntity::tick
+            )
+            : null;
     }
 
     @SuppressWarnings("deprecation")
@@ -159,7 +168,13 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(
+        Level level,
+        BlockPos pos,
+        BlockState state,
+        @Nullable LivingEntity placer,
+        ItemStack stack
+    ) {
         if (stack.getTagElement("particleData") != null) {
             BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof VFXGeneratorBlockEntity) {
@@ -193,8 +208,8 @@ public class VFXGeneratorBlock extends BaseEntityBlock {
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!level.isClientSide && !state.is(newState.getBlock())) {
-            NetworkHandler.INSTANCE.send(
-                PacketDistributor.ALL.noArg(), new VFXGeneratorDestroyParticlesPKT(Vec3.atCenterOf(pos)));
+            NetworkHandler.INSTANCE
+                .send(PacketDistributor.ALL.noArg(), new VFXGeneratorDestroyParticlesPKT(Vec3.atCenterOf(pos)));
         }
         super.onRemove(state, level, pos, newState, isMoving);
     }

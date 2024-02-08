@@ -40,15 +40,20 @@ public class EventHandling {
             PacketDistributor.PLAYER.with(event::getPlayer),
             new SelectableParticlesSyncPKT(DataManager.selectableParticles())
         );
+        // spotless:off
         NetworkHandler.INSTANCE.send(
-            PacketDistributor.PLAYER.with(event::getPlayer), new RequiredImageHashesPKT(DataManager.requiredImages()
+            PacketDistributor.PLAYER.with(event::getPlayer),
+            new RequiredImageHashesPKT(DataManager.requiredImages()
                 .entrySet()
                 .stream()
                 .map(entry -> {
                     try {
-                        return Optional.of(Pair.of(entry.getKey(),
-                            Util.HASH_FUNCTION.hashBytes(IOUtils.toByteArray(entry.getValue().get()))
-                        ));
+                        return Optional.of(
+                            Pair.of(
+                                entry.getKey(),
+                                Util.HASH_FUNCTION.hashBytes(IOUtils.toByteArray(entry.getValue().get()))
+                            )
+                        );
                     } catch (IOException e) {
                         VFXGenerator.LOGGER.error("Failed to hash image for syncing: {}", e.getMessage());
                         return Optional.<Pair<ResourceLocation, HashCode>>empty();
@@ -56,7 +61,10 @@ public class EventHandling {
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond))));
+                .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond))
+            )
+        );
+        // spotless:on
     }
 
     public static boolean loadingDisabled() {

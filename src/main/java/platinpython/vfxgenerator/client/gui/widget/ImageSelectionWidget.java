@@ -60,7 +60,8 @@ public class ImageSelectionWidget extends UpdateableWidget {
             this.selected ? 0xFFFFFFFF : 0xFF000000
         );
         guiGraphics.fill(
-            this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, 0xFF000000);
+            this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, 0xFF000000
+        );
         guiGraphics.blitWithBorder(
             WIDGETS_LOCATION, this.getX(), this.getY(), 0, this.selected ? 86 : 66, this.width, this.height, 200, 20, 2,
             3, 2, 2
@@ -78,7 +79,8 @@ public class ImageSelectionWidget extends UpdateableWidget {
         BufferBuilder bufferBuilder = tesselator.getBuilder();
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(
-            SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ZERO);
+            SourceFactor.SRC_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ZERO
+        );
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -123,7 +125,8 @@ public class ImageSelectionWidget extends UpdateableWidget {
             this.applyValue();
         } else {
             TreeSet<ResourceLocation> list = Util.createTreeSetFromCollectionWithComparator(
-                Collections.singletonList(this.particleId), ResourceLocation::compareNamespaced);
+                Collections.singletonList(this.particleId), ResourceLocation::compareNamespaced
+            );
             this.setValueFunction.accept(list);
             this.selected = true;
             this.applyValue();
@@ -136,10 +139,8 @@ public class ImageSelectionWidget extends UpdateableWidget {
     }
 
     @Override
-    protected void updateMessage() {
-    }
+    protected void updateMessage() {}
 
     @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-    }
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

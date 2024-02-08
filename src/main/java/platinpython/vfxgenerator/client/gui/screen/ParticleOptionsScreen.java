@@ -45,12 +45,15 @@ public class ParticleOptionsScreen extends Screen {
             }
         }).bounds(6, this.height - 26, 120, 20).build());
 
-        addRenderableWidget(new ToggleButton(this.width / 2 - 30, 20, 60, 10, this.particleData::setEnabled,
-            this.particleData::isEnabled, this::sendToServer
-        ));
+        addRenderableWidget(
+            new ToggleButton(
+                this.width / 2 - 30, 20, 60, 10, this.particleData::setEnabled, this.particleData::isEnabled,
+                this::sendToServer
+            )
+        );
 
-        this.optionsList = new VFXGeneratorOptionsList(
-            this.minecraft, this.width, this.height, 32, this.height - 32, 25);
+        this.optionsList =
+            new VFXGeneratorOptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
 
         this.optionsList.addButton(
             ClientUtils.getGuiTranslationTextComponent("selectTypes"),
@@ -222,8 +225,8 @@ public class ParticleOptionsScreen extends Screen {
                 .append(ClientUtils.getGuiTranslationTextComponent("disabled")),
             ClientUtils.getGuiTranslationTextComponent("collision")
                 .append(": ")
-                .append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.particleData::setCollision,
-            this.particleData::hasCollision, this::sendToServer
+                .append(ClientUtils.getGuiTranslationTextComponent("enabled")),
+            this.particleData::setCollision, this.particleData::hasCollision, this::sendToServer
         );
 
         this.optionsList.addToggleButton(
@@ -232,8 +235,8 @@ public class ParticleOptionsScreen extends Screen {
                 .append(ClientUtils.getGuiTranslationTextComponent("disabled")),
             ClientUtils.getGuiTranslationTextComponent("fullbright")
                 .append(": ")
-                .append(ClientUtils.getGuiTranslationTextComponent("enabled")), this.particleData::setFullBright,
-            this.particleData::isFullBright, this::sendToServer
+                .append(ClientUtils.getGuiTranslationTextComponent("enabled")),
+            this.particleData::setFullBright, this.particleData::isFullBright, this::sendToServer
         );
 
         this.optionsList.children().forEach((entry) -> entry.setActive(this.particleData.isEnabled()));
@@ -250,7 +253,8 @@ public class ParticleOptionsScreen extends Screen {
         }
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         guiGraphics.drawCenteredString(
-            this.font, ClientUtils.getGuiTranslationTextComponent("particle"), this.width / 2, 10, 0xFFFFFFFF);
+            this.font, ClientUtils.getGuiTranslationTextComponent("particle"), this.width / 2, 10, 0xFFFFFFFF
+        );
     }
 
     @Override
@@ -274,6 +278,7 @@ public class ParticleOptionsScreen extends Screen {
 
     protected final void sendToServer() {
         NetworkHandler.INSTANCE.sendToServer(
-            new VFXGeneratorDataSyncPKT(this.tileEntity.saveToTag(new CompoundTag()), this.tileEntity.getBlockPos()));
+            new VFXGeneratorDataSyncPKT(this.tileEntity.saveToTag(new CompoundTag()), this.tileEntity.getBlockPos())
+        );
     }
 }

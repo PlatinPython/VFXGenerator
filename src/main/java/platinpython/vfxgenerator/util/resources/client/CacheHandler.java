@@ -28,7 +28,9 @@ import java.util.stream.Stream;
 @Mod.EventBusSubscriber(modid = VFXGenerator.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class CacheHandler {
     private static final Path CACHE_DIRECTORY = FMLPaths.GAMEDIR.get().resolve(".cache").resolve(VFXGenerator.MOD_ID);
-    private static final byte[] PNG_SIGNATURE = {(byte) 137, 80, 78, 71, 13, 10, 26, 10};
+    private static final byte[] PNG_SIGNATURE = {
+        (byte) 137, 80, 78, 71, 13, 10, 26, 10
+    };
     private static final HashMap<ResourceLocation, HashCode> HASH_CACHE = new HashMap<>();
 
     @SubscribeEvent
@@ -65,7 +67,7 @@ public class CacheHandler {
                         return;
                     }
                     byte[] bytes = file.readAllBytes();
-                    //noinspection UnstableApiUsage
+                    // noinspection UnstableApiUsage
                     HashCode hash = Util.HASH_FUNCTION.newHasher().putBytes(signature).putBytes(bytes).hash();
                     HASH_CACHE.put(resourceLocation, hash);
                 } catch (IOException e) {
@@ -77,11 +79,17 @@ public class CacheHandler {
         }
     }
 
-    public static ImmutableList<ResourceLocation> getMissingTextures(ImmutableMap<ResourceLocation, HashCode> requiredTextures) {
-        return requiredTextures.entrySet().stream().filter(
-            entry -> !HASH_CACHE.containsKey(entry.getKey()) || !Objects.equals(HASH_CACHE.get(entry.getKey()),
-                entry.getValue()
-            )).map(Map.Entry::getKey).collect(ImmutableList.toImmutableList());
+    public static ImmutableList<ResourceLocation> getMissingTextures(
+        ImmutableMap<ResourceLocation, HashCode> requiredTextures
+    ) {
+        return requiredTextures.entrySet()
+            .stream()
+            .filter(
+                entry -> !HASH_CACHE.containsKey(entry.getKey())
+                    || !Objects.equals(HASH_CACHE.get(entry.getKey()), entry.getValue())
+            )
+            .map(Map.Entry::getKey)
+            .collect(ImmutableList.toImmutableList());
     }
 
     public static void addToCache(ResourceLocation resourceLocation, byte[] image) {

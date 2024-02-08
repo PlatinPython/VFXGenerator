@@ -32,9 +32,14 @@ public class ModLootTableProvider extends LootTableProvider {
 
         @Override
         protected void generate() {
-            this.add(BlockRegistry.VFX_GENERATOR.get(), createSingleItemTable(BlockRegistry.VFX_GENERATOR.get()).apply(
-                    CopyBlockState.copyState(BlockRegistry.VFX_GENERATOR.get()).copy(VFXGeneratorBlock.INVERTED))
-                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("particleData", "particleData")));
+            this.add(
+                BlockRegistry.VFX_GENERATOR.get(),
+                createSingleItemTable(BlockRegistry.VFX_GENERATOR.get())
+                    .apply(CopyBlockState.copyState(BlockRegistry.VFX_GENERATOR.get()).copy(VFXGeneratorBlock.INVERTED))
+                    .apply(
+                        CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("particleData", "particleData")
+                    )
+            );
         }
 
         @Override

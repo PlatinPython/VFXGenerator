@@ -31,9 +31,8 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
         if (!(blockEntity instanceof VFXGeneratorBlockEntity generatorBlockEntity)) {
             return;
         }
-        if ((state.getValue(VFXGeneratorBlock.INVERTED) && !state.getValue(
-            VFXGeneratorBlock.POWERED)) || (!state.getValue(VFXGeneratorBlock.INVERTED) && state.getValue(
-            VFXGeneratorBlock.POWERED))) {
+        if ((state.getValue(VFXGeneratorBlock.INVERTED) && !state.getValue(VFXGeneratorBlock.POWERED))
+            || (!state.getValue(VFXGeneratorBlock.INVERTED) && state.getValue(VFXGeneratorBlock.POWERED))) {
             if (generatorBlockEntity.particleData.isEnabled()) {
                 if (level.getGameTime() % generatorBlockEntity.particleData.getDelay() == 0) {
                     ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -41,50 +40,61 @@ public class VFXGeneratorBlockEntity extends BlockEntity {
                     if (generatorBlockEntity.particleData.getSelected().isEmpty()) {
                         return;
                     }
-                    ParticleType particleType = DataManager.selectableParticles().get(
-                        generatorBlockEntity.particleData.getRandomSelected());
+                    ParticleType particleType =
+                        DataManager.selectableParticles().get(generatorBlockEntity.particleData.getRandomSelected());
                     if (particleType == null) {
                         return;
                     }
 
                     int color;
                     if (generatorBlockEntity.particleData.useHSB()) {
-                        color = Color.getRandomHSBColor(
-                            random, new float[]{
-                                generatorBlockEntity.particleData.getHueBot(),
-                                generatorBlockEntity.particleData.getSaturationBot(),
-                                generatorBlockEntity.particleData.getBrightnessBot()
-                            }, new float[]{
-                                generatorBlockEntity.particleData.getHueTop(),
-                                generatorBlockEntity.particleData.getSaturationTop(),
-                                generatorBlockEntity.particleData.getBrightnessTop()
-                            });
+                        color = Color.getRandomHSBColor(random, new float[]{
+                            generatorBlockEntity.particleData.getHueBot(),
+                            generatorBlockEntity.particleData.getSaturationBot(),
+                            generatorBlockEntity.particleData.getBrightnessBot()
+                        }, new float[]{
+                            generatorBlockEntity.particleData.getHueTop(),
+                            generatorBlockEntity.particleData.getSaturationTop(),
+                            generatorBlockEntity.particleData.getBrightnessTop()
+                        });
                     } else {
                         color = Color.getRandomRGBColor(
                             random, generatorBlockEntity.particleData.getRGBColorBot(),
                             generatorBlockEntity.particleData.getRGBColorTop()
                         );
                     }
+
                     int lifetime = Math.round(
-                        (generatorBlockEntity.particleData.getLifetimeBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getLifetimeTop() - generatorBlockEntity.particleData.getLifetimeBot()))));
-                    float size =
-                        generatorBlockEntity.particleData.getSizeBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getSizeTop() - generatorBlockEntity.particleData.getSizeBot()));
+                        (generatorBlockEntity.particleData.getLifetimeBot()
+                            + (random.nextFloat() * (generatorBlockEntity.particleData.getLifetimeTop()
+                                - generatorBlockEntity.particleData.getLifetimeBot())))
+                    );
+
+                    float size = generatorBlockEntity.particleData.getSizeBot()
+                        + (random.nextFloat() * (generatorBlockEntity.particleData.getSizeTop()
+                            - generatorBlockEntity.particleData.getSizeBot()));
 
                     Vec3 center = Vec3.atCenterOf(pos);
-                    double spawnX =
-                        center.x + generatorBlockEntity.particleData.getSpawnXBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getSpawnXTop() - generatorBlockEntity.particleData.getSpawnXBot()));
-                    double spawnY =
-                        center.y + generatorBlockEntity.particleData.getSpawnYBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getSpawnYTop() - generatorBlockEntity.particleData.getSpawnYBot()));
-                    double spawnZ =
-                        center.z + generatorBlockEntity.particleData.getSpawnZBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getSpawnZTop() - generatorBlockEntity.particleData.getSpawnZBot()));
+                    double spawnX = center.x + generatorBlockEntity.particleData.getSpawnXBot()
+                        + (random.nextFloat() * (generatorBlockEntity.particleData.getSpawnXTop()
+                            - generatorBlockEntity.particleData.getSpawnXBot()));
+                    double spawnY = center.y + generatorBlockEntity.particleData.getSpawnYBot()
+                        + (random.nextFloat() * (generatorBlockEntity.particleData.getSpawnYTop()
+                            - generatorBlockEntity.particleData.getSpawnYBot()));
+                    double spawnZ = center.z + generatorBlockEntity.particleData.getSpawnZBot()
+                        + (random.nextFloat() * (generatorBlockEntity.particleData.getSpawnZTop()
+                            - generatorBlockEntity.particleData.getSpawnZBot()));
                     center = new Vec3(spawnX, spawnY, spawnZ);
 
-                    double motionX =
-                        generatorBlockEntity.particleData.getMotionXBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionXTop() - generatorBlockEntity.particleData.getMotionXBot()));
-                    double motionY =
-                        generatorBlockEntity.particleData.getMotionYBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionYTop() - generatorBlockEntity.particleData.getMotionYBot()));
-                    double motionZ =
-                        generatorBlockEntity.particleData.getMotionZBot() + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionZTop() - generatorBlockEntity.particleData.getMotionZBot()));
+                    double motionX = generatorBlockEntity.particleData.getMotionXBot()
+                        + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionXTop()
+                            - generatorBlockEntity.particleData.getMotionXBot()));
+                    double motionY = generatorBlockEntity.particleData.getMotionYBot()
+                        + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionYTop()
+                            - generatorBlockEntity.particleData.getMotionYBot()));
+                    double motionZ = generatorBlockEntity.particleData.getMotionZBot()
+                        + (random.nextFloat() * (generatorBlockEntity.particleData.getMotionZTop()
+                            - generatorBlockEntity.particleData.getMotionZBot()));
                     Vec3 motion = new Vec3(motionX, motionY, motionZ);
 
                     ClientUtils.addParticle(

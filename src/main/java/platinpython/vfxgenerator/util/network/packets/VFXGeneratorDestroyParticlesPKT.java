@@ -29,7 +29,8 @@ public class VFXGeneratorDestroyParticlesPKT {
 
     public static VFXGeneratorDestroyParticlesPKT decode(FriendlyByteBuf buffer) {
         return new VFXGeneratorDestroyParticlesPKT(
-            new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
+            new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble())
+        );
     }
 
     public static class Handler {

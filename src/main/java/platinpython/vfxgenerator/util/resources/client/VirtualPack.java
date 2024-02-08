@@ -96,8 +96,7 @@ public class VirtualPack extends AbstractPackResources {
     }
 
     @Override
-    public void close() {
-    }
+    public void close() {}
 
     @SuppressWarnings("unchecked")
     @Nullable
@@ -113,14 +112,20 @@ public class VirtualPack extends AbstractPackResources {
             if (event.getPackType() != PackType.CLIENT_RESOURCES) {
                 return;
             }
-            event.addRepositorySource(infoConsumer -> infoConsumer.accept(Pack.create(VFXGenerator.MOD_ID + "_textures",
-                Component.translatable(VFXGenerator.MOD_ID + ".pack_title"), true, id -> VIRTUAL_PACK,
-                new Pack.Info(Component.translatable(VFXGenerator.MOD_ID + ".pack_description"),
-                    SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA),
-                    SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES),
-                    FeatureFlagSet.of(), false
-                ), PackType.CLIENT_RESOURCES, Pack.Position.TOP, false, PackSource.BUILT_IN
-            )));
+            event.addRepositorySource(
+                infoConsumer -> infoConsumer.accept(
+                    Pack.create(
+                        VFXGenerator.MOD_ID + "_textures", Component.translatable(VFXGenerator.MOD_ID + ".pack_title"),
+                        true, id -> VIRTUAL_PACK,
+                        new Pack.Info(
+                            Component.translatable(VFXGenerator.MOD_ID + ".pack_description"),
+                            SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA),
+                            SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES),
+                            FeatureFlagSet.of(), false
+                        ), PackType.CLIENT_RESOURCES, Pack.Position.TOP, false, PackSource.BUILT_IN
+                    )
+                )
+            );
         }
     }
 }

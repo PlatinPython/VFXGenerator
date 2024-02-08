@@ -13,13 +13,12 @@ import java.util.function.Supplier;
 public class BlockRegistry {
     public static final RegistryObject<Block> VFX_GENERATOR = register("vfx_generator", VFXGeneratorBlock::new);
 
-    public static void register() {
-    }
+    public static void register() {}
 
     private static <T extends Block> RegistryObject<T> register(String name, Supplier<T> block) {
         RegistryObject<T> ret = registerNoItem(name, block);
-        RegistryHandler.ITEMS.register(
-            name, () -> new VFXGeneratorBlockItem(ret.get(), new Item.Properties().rarity(Rarity.RARE)));
+        RegistryHandler.ITEMS
+            .register(name, () -> new VFXGeneratorBlockItem(ret.get(), new Item.Properties().rarity(Rarity.RARE)));
         return ret;
     }
 

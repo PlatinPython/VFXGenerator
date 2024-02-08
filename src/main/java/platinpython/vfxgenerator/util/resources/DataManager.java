@@ -26,7 +26,8 @@ public class DataManager {
     }
 
     public static void setSelectableParticles(ImmutableMap<ResourceLocation, ParticleType> selectableParticles) {
-        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class && STACK_WALKER.getCallerClass() != SelectableParticlesSyncPKT.Handler.class) {
+        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class
+            && STACK_WALKER.getCallerClass() != SelectableParticlesSyncPKT.Handler.class) {
             throw new IllegalCallerException("Illegal caller: " + STACK_WALKER.getCallerClass());
         }
         SELECTABLE_PARTICLES = selectableParticles;
@@ -37,7 +38,8 @@ public class DataManager {
     }
 
     public static void setRequiredImages(ImmutableMap<ResourceLocation, IoSupplier<InputStream>> requiredImages) {
-        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class && STACK_WALKER.getCallerClass() != UpdateRequiredImagesPKT.Handler.class) {
+        if (STACK_WALKER.getCallerClass() != ParticleListLoader.class
+            && STACK_WALKER.getCallerClass() != UpdateRequiredImagesPKT.Handler.class) {
             throw new IllegalCallerException("Illegal caller: " + STACK_WALKER.getCallerClass());
         }
         REQUIRED_IMAGES = requiredImages;

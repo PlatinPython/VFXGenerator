@@ -22,8 +22,8 @@ public class ParticleData {
     private final BlockEntity owner;
 
     private boolean enabled = true;
-    private TreeSet<ResourceLocation> allSelected = Util.getThreeRandomElements(
-        DataManager.selectableParticles().keySet(), ResourceLocation::compareNamespaced);
+    private TreeSet<ResourceLocation> allSelected =
+        Util.getThreeRandomElements(DataManager.selectableParticles().keySet(), ResourceLocation::compareNamespaced);
     private TreeSet<ResourceLocation> activeSelected = new TreeSet<>(allSelected);
     private ImmutableList<ResourceLocation> activeSelectedListView = ImmutableList.copyOf(activeSelected);
     private boolean useHSB = false;
@@ -101,27 +101,32 @@ public class ParticleData {
     public void loadFromTag(CompoundTag particleTag) {
         enabled = particleTag.getBoolean(Constants.ParticleConstants.Keys.ENABLED);
         if (particleTag.getTagType(Constants.ParticleConstants.Keys.SELECTED) == Tag.TAG_LIST) {
-            allSelected = Util.createTreeSetFromCollectionWithComparator(particleTag.getList(
-                    Constants.ParticleConstants.Keys.SELECTED, Tag.TAG_STRING)
-                .stream()
-                .map(nbt -> ResourceLocation.tryParse(nbt.getAsString().replace(":particle/", ":")))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList()), ResourceLocation::compareNamespaced);
-        } else {
             allSelected = Util.createTreeSetFromCollectionWithComparator(
-                Collections.singletonList(Util.createNamespacedResourceLocation(
-                    particleTag.getString(Constants.ParticleConstants.Keys.SELECTED))),
+                particleTag.getList(Constants.ParticleConstants.Keys.SELECTED, Tag.TAG_STRING)
+                    .stream()
+                    .map(nbt -> ResourceLocation.tryParse(nbt.getAsString().replace(":particle/", ":")))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList()),
                 ResourceLocation::compareNamespaced
             );
+        } else {
+            allSelected = Util.createTreeSetFromCollectionWithComparator(
+                Collections.singletonList(
+                    Util.createNamespacedResourceLocation(
+                        particleTag.getString(Constants.ParticleConstants.Keys.SELECTED)
+                    )
+                ), ResourceLocation::compareNamespaced
+            );
         }
-        activeSelected = allSelected.stream().filter(DataManager.selectableParticles()::containsKey).collect(
-            Collectors.toCollection(() -> new TreeSet<>(ResourceLocation::compareNamespaced)));
+        activeSelected = allSelected.stream()
+            .filter(DataManager.selectableParticles()::containsKey)
+            .collect(Collectors.toCollection(() -> new TreeSet<>(ResourceLocation::compareNamespaced)));
         activeSelectedListView = ImmutableList.copyOf(activeSelected);
         useHSB = particleTag.getBoolean(Constants.ParticleConstants.Keys.USE_HSB);
-        RGBColorBot = Mth.clamp(
-            particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_BOT), 0xFF000000, 0xFFFFFFFF);
-        RGBColorTop = Mth.clamp(
-            particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_TOP), 0xFF000000, 0xFFFFFFFF);
+        RGBColorBot =
+            Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_BOT), 0xFF000000, 0xFFFFFFFF);
+        RGBColorTop =
+            Mth.clamp(particleTag.getInt(Constants.ParticleConstants.Keys.RGB_COLOR_TOP), 0xFF000000, 0xFFFFFFFF);
         hueBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.HUE_BOT), 0F, 1F);
         saturationBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.SATURATION_BOT), 0F, 1F);
         brightnessBot = Mth.clamp(particleTag.getFloat(Constants.ParticleConstants.Keys.BRIGHTNESS_BOT), 0F, 1F);
@@ -485,8 +490,8 @@ public class ParticleData {
     }
 
     public void setDelay(int delay) {
-        this.delay = Mth.clamp(
-            delay, Constants.ParticleConstants.Values.MIN_DELAY, Constants.ParticleConstants.Values.MAX_DELAY);
+        this.delay = Mth
+            .clamp(delay, Constants.ParticleConstants.Values.MIN_DELAY, Constants.ParticleConstants.Values.MAX_DELAY);
         owner.setChanged();
     }
 
@@ -496,7 +501,8 @@ public class ParticleData {
 
     public void setGravity(float gravity) {
         this.gravity = Mth.clamp(
-            gravity, Constants.ParticleConstants.Values.MIN_GRAVITY, Constants.ParticleConstants.Values.MAX_GRAVITY);
+            gravity, Constants.ParticleConstants.Values.MIN_GRAVITY, Constants.ParticleConstants.Values.MAX_GRAVITY
+        );
         owner.setChanged();
     }
 

@@ -43,9 +43,10 @@ public class FloatSlider extends UpdateableWidget {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.stepSize = stepSize;
-        this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 && Float.toString(this.stepSize)
-            .split("\\.")[1].equals("0") ? new DecimalFormat("0") : new DecimalFormat(
-            Float.toString(this.stepSize).replaceAll("\\d", "0"));
+        this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1
+            && Float.toString(this.stepSize).split("\\.")[1].equals("0")
+                ? new DecimalFormat("0")
+                : new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
         this.prefix = prefix;
         this.suffix = suffix;
         this.setValueFunction = setValueFunction;
@@ -110,19 +111,15 @@ public class FloatSlider extends UpdateableWidget {
             if (flag) {
                 if (this.sliderValue != 0D) {
                     this.setSliderValue(
-                        Util.clamp((this.getSliderValue() - this.stepSize), this.minValue, this.maxValue,
-                            this.stepSize
-                        ));
+                        Util.clamp((this.getSliderValue() - this.stepSize), this.minValue, this.maxValue, this.stepSize)
+                    );
                 }
-
             } else {
                 if (this.sliderValue != 1D) {
                     this.setSliderValue(
-                        Util.clamp((this.getSliderValue() + this.stepSize), this.minValue, this.maxValue,
-                            this.stepSize
-                        ));
+                        Util.clamp((this.getSliderValue() + this.stepSize), this.minValue, this.maxValue, this.stepSize)
+                    );
                 }
-
             }
         }
         return false;
@@ -144,8 +141,7 @@ public class FloatSlider extends UpdateableWidget {
     }
 
     @Override
-    public void playDownSound(SoundManager handler) {
-    }
+    public void playDownSound(SoundManager handler) {}
 
     @Override
     public void onRelease(double mouseX, double mouseY) {
@@ -154,12 +150,14 @@ public class FloatSlider extends UpdateableWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(Component.empty()
-            .append(prefix)
-            .append(": ")
-            .append(format.format(getSliderValue()))
-            .append(suffix.getString().isEmpty() ? "" : " ")
-            .append(suffix));
+        setMessage(
+            Component.empty()
+                .append(prefix)
+                .append(": ")
+                .append(format.format(getSliderValue()))
+                .append(suffix.getString().isEmpty() ? "" : " ")
+                .append(suffix)
+        );
     }
 
     @Override
@@ -172,11 +170,11 @@ public class FloatSlider extends UpdateableWidget {
         narrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
         if (this.active) {
             if (this.isFocused()) {
-                narrationElementOutput.add(
-                    NarratedElementType.USAGE, Component.translatable("narration.slider.usage.focused"));
+                narrationElementOutput
+                    .add(NarratedElementType.USAGE, Component.translatable("narration.slider.usage.focused"));
             } else {
-                narrationElementOutput.add(
-                    NarratedElementType.USAGE, Component.translatable("narration.slider.usage.hovered"));
+                narrationElementOutput
+                    .add(NarratedElementType.USAGE, Component.translatable("narration.slider.usage.hovered"));
             }
         }
     }

@@ -88,8 +88,8 @@ public class VFXParticle extends TextureSheetParticle {
             double dY = y;
             double dZ = z;
             if (this.hasPhysics && (x != 0.0D || y != 0.0D || z != 0.0D)) {
-                Vec3 vector3d = Entity.collideBoundingBox(
-                    null, new Vec3(x, y, z), this.getBoundingBox(), this.level, List.of());
+                Vec3 vector3d =
+                    Entity.collideBoundingBox(null, new Vec3(x, y, z), this.getBoundingBox(), this.level, List.of());
                 x = vector3d.x;
                 y = vector3d.y;
                 z = vector3d.z;
@@ -127,6 +127,5 @@ public class VFXParticle extends TextureSheetParticle {
         }
     }
 
-    private void updateSprite() {
-    }
+    private void updateSprite() {}
 }

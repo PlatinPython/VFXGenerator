@@ -43,28 +43,40 @@ public class ParticleListLoader extends SimplePreparableReloadListener<Map<Resou
             VFXGenerator.MOD_ID,
             resourceLocation -> resourceLocation.getPath().equals(VFXGenerator.MOD_ID + "/particle.json")
         );
-        resourceStacks.forEach((key, value) -> value.forEach(
-            resource -> parseJsonResource(JsonOps.INSTANCE, ParticleListFile.FILE_DECODER, key, resource,
-                VFXGenerator.LOGGER::error, options -> {
-                    if (options.replace()) {
-                        optionsMap.removeAll(particleListConverter.fileToId(key));
+        resourceStacks.forEach(
+            (key, value) -> value.forEach(
+                resource -> parseJsonResource(
+                    JsonOps.INSTANCE, ParticleListFile.FILE_DECODER, key, resource, VFXGenerator.LOGGER::error,
+                    options -> {
+                        if (options.replace()) {
+                            optionsMap.removeAll(particleListConverter.fileToId(key));
+                        }
+                        optionsMap.put(particleListConverter.fileToId(key), options);
                     }
-                    optionsMap.put(particleListConverter.fileToId(key), options);
-                }
-            )));
+                )
+            )
+        );
         FileToIdConverter particleConverter = FileToIdConverter.json(VFXGenerator.MOD_ID + "/particle");
         Map<ResourceLocation, ParticleType> particleTypeMap = new HashMap<>();
-        optionsMap.forEach((key, value) -> value.particles()
-            .forEach(location -> resourceManager.getResource(particleConverter.idToFile(location))
-                .ifPresentOrElse(
-                    resource -> parseJsonResource(
-                        new ResourceOps<>(JsonOps.INSTANCE, resourceManager,
-                            new FileToIdConverter(VFXGenerator.MOD_ID + "/particle/textures", ".png")
-                        ), ParticleType.FILE_DECODER, particleConverter.idToFile(location), resource,
-                        VFXGenerator.LOGGER::error, type -> particleTypeMap.put(location, type)
-                    ), () -> VFXGenerator.LOGGER.error("Failed to load resource {}, specified in {}",
-                        particleConverter.idToFile(location), particleListConverter.idToFile(key)
-                    ))));
+        optionsMap.forEach(
+            (key, value) -> value.particles()
+                .forEach(
+                    location -> resourceManager.getResource(particleConverter.idToFile(location))
+                        .ifPresentOrElse(
+                            resource -> parseJsonResource(
+                                new ResourceOps<>(
+                                    JsonOps.INSTANCE, resourceManager,
+                                    new FileToIdConverter(VFXGenerator.MOD_ID + "/particle/textures", ".png")
+                                ), ParticleType.FILE_DECODER, particleConverter.idToFile(location), resource,
+                                VFXGenerator.LOGGER::error, type -> particleTypeMap.put(location, type)
+                            ),
+                            () -> VFXGenerator.LOGGER.error(
+                                "Failed to load resource {}, specified in {}", particleConverter.idToFile(location),
+                                particleListConverter.idToFile(key)
+                            )
+                        )
+                )
+        );
         return particleTypeMap;
     }
 
@@ -78,18 +90,23 @@ public class ParticleListLoader extends SimplePreparableReloadListener<Map<Resou
             return;
         }
         DataManager.setSelectableParticles(ImmutableMap.copyOf(data));
-        FileToIdConverter imageFileToIdConverter = new FileToIdConverter(
-            VFXGenerator.MOD_ID + "/particle/textures", ".png");
-        DataManager.setRequiredImages(data.values()
-            .stream()
-            .flatMap(ParticleType::images)
-            .map(resourceLocation -> Pair.of(resourceLocation,
-                resourceManager.getResource(imageFileToIdConverter.idToFile(resourceLocation))
-            ))
-            .filter(pair -> pair.getSecond().isPresent())
-            .<Pair<ResourceLocation, IoSupplier<InputStream>>>map(
-                pair -> Pair.of(pair.getFirst(), pair.getSecond().get()::open))
-            .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond)));
+        FileToIdConverter imageFileToIdConverter =
+            new FileToIdConverter(VFXGenerator.MOD_ID + "/particle/textures", ".png");
+        DataManager.setRequiredImages(
+            data.values()
+                .stream()
+                .flatMap(ParticleType::images)
+                .map(
+                    resourceLocation -> Pair.of(
+                        resourceLocation, resourceManager.getResource(imageFileToIdConverter.idToFile(resourceLocation))
+                    )
+                )
+                .filter(pair -> pair.getSecond().isPresent())
+                .<Pair<ResourceLocation, IoSupplier<InputStream>>>map(
+                    pair -> Pair.of(pair.getFirst(), pair.getSecond().get()::open)
+                )
+                .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond))
+        );
     }
 
     private <T> void parseJsonResource(

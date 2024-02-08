@@ -53,14 +53,11 @@ public class ToggleButton extends UpdateableWidget {
     }
 
     @Override
-    public void updateValue() {
-    }
+    public void updateValue() {}
 
     @Override
-    protected void updateMessage() {
-    }
+    protected void updateMessage() {}
 
     @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-    }
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

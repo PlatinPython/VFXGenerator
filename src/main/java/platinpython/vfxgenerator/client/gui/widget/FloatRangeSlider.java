@@ -50,9 +50,10 @@ public class FloatRangeSlider extends UpdateableWidget {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.stepSize = stepSize;
-        this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1 && Float.toString(this.stepSize)
-            .split("\\.")[1].equals("0") ? new DecimalFormat("0") : new DecimalFormat(
-            Float.toString(this.stepSize).replaceAll("\\d", "0"));
+        this.format = Float.toString(this.stepSize).split("\\.")[1].length() == 1
+            && Float.toString(this.stepSize).split("\\.")[1].equals("0")
+                ? new DecimalFormat("0")
+                : new DecimalFormat(Float.toString(this.stepSize).replaceAll("\\d", "0"));
         this.prefix = prefix;
         this.suffix = suffix;
         this.setLeftValueFunction = setLeftValueFunction;
@@ -66,9 +67,11 @@ public class FloatRangeSlider extends UpdateableWidget {
         this.leftSliderValue = Util.clamp(leftValue, this.minValue, this.maxValue, this.stepSize);
         this.rightSliderValue = Util.clamp(rightValue, this.minValue, this.maxValue, this.stepSize);
         this.leftSliderValue = Util.toValue(
-            Mth.clamp(this.leftSliderValue, 0D, this.rightSliderValue), this.minValue, this.maxValue, this.stepSize);
+            Mth.clamp(this.leftSliderValue, 0D, this.rightSliderValue), this.minValue, this.maxValue, this.stepSize
+        );
         this.rightSliderValue = Util.toValue(
-            Mth.clamp(this.rightSliderValue, this.leftSliderValue, 1D), this.minValue, this.maxValue, this.stepSize);
+            Mth.clamp(this.rightSliderValue, this.leftSliderValue, 1D), this.minValue, this.maxValue, this.stepSize
+        );
         this.setLeftValueFunction.accept((float) this.getLeftSliderValue());
         this.setRightValueFunction.accept((float) this.getRightSliderValue());
         this.applyValue();
@@ -83,11 +86,13 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     public boolean isLeftHovered(int mouseX) {
-        return this.isHovered && mouseX < (this.getX() + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
+        return this.isHovered
+            && mouseX < (this.getX() + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
     }
 
     public boolean isRightHovered(int mouseX) {
-        return this.isHovered && mouseX > (this.getX() + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
+        return this.isHovered
+            && mouseX > (this.getX() + ((this.rightSliderValue + this.leftSliderValue) / 2) * this.width);
     }
 
     @Override
@@ -110,7 +115,8 @@ public class FloatRangeSlider extends UpdateableWidget {
         guiGraphics.blitWithBorder(
             AbstractSliderButton.SLIDER_LOCATION,
             this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 4, this.getY() + 3, 0, 40,
-            ((int) (this.rightSliderValue * (double) (this.width - 8))) - ((int) (this.leftSliderValue * (double) (this.width - 8))),
+            ((int) (this.rightSliderValue * (double) (this.width - 8)))
+                - ((int) (this.leftSliderValue * (double) (this.width - 8))),
             this.height - 6, 200, 20, 2
         );
         if (isLeftHovered(mouseX)) {
@@ -154,7 +160,9 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     private boolean getIsLeftClicked(double mouseX) {
-        return (mouseX < this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 8 || mouseX < ((this.getX() + this.leftSliderValue * this.width) + (this.getX() + this.rightSliderValue * this.width)) / 2);
+        return (mouseX < this.getX() + (int) (this.leftSliderValue * (double) (this.width - 8)) + 8 || mouseX
+            < ((this.getX() + this.leftSliderValue * this.width) + (this.getX() + this.rightSliderValue * this.width))
+                / 2);
     }
 
     @Override
@@ -188,24 +196,28 @@ public class FloatRangeSlider extends UpdateableWidget {
             if (flag) {
                 if (this.leftSliderValue != 0D) {
                     this.setLeftSliderValue(
-                        Util.clamp((this.getLeftSliderValue() - this.stepSize), this.minValue, this.maxValue,
-                            this.stepSize
-                        ));
+                        Util.clamp(
+                            (this.getLeftSliderValue() - this.stepSize), this.minValue, this.maxValue, this.stepSize
+                        )
+                    );
                     this.setRightSliderValue(
-                        Util.clamp((this.getRightSliderValue() - this.stepSize), this.minValue, this.maxValue,
-                            this.stepSize
-                        ));
+                        Util.clamp(
+                            (this.getRightSliderValue() - this.stepSize), this.minValue, this.maxValue, this.stepSize
+                        )
+                    );
                 }
             } else {
                 if (this.rightSliderValue != 1D) {
                     this.setRightSliderValue(
-                        Util.clamp((this.getRightSliderValue() + this.stepSize), this.minValue, this.maxValue,
-                            this.stepSize
-                        ));
+                        Util.clamp(
+                            (this.getRightSliderValue() + this.stepSize), this.minValue, this.maxValue, this.stepSize
+                        )
+                    );
                     this.setLeftSliderValue(
-                        Util.clamp((this.getLeftSliderValue() + this.stepSize), this.minValue, this.maxValue,
-                            this.stepSize
-                        ));
+                        Util.clamp(
+                            (this.getLeftSliderValue() + this.stepSize), this.minValue, this.maxValue, this.stepSize
+                        )
+                    );
                 }
             }
         }
@@ -215,12 +227,12 @@ public class FloatRangeSlider extends UpdateableWidget {
     @Override
     public void updateValue() {
         if (this.leftValueSupplier.get() != this.getLeftSliderValue()) {
-            this.leftSliderValue = Util.clamp(
-                this.leftValueSupplier.get(), this.minValue, this.maxValue, this.stepSize);
+            this.leftSliderValue =
+                Util.clamp(this.leftValueSupplier.get(), this.minValue, this.maxValue, this.stepSize);
         }
         if (this.rightValueSupplier.get() != this.getRightSliderValue()) {
-            this.rightSliderValue = Util.clamp(
-                this.rightValueSupplier.get(), this.minValue, this.maxValue, this.stepSize);
+            this.rightSliderValue =
+                Util.clamp(this.rightValueSupplier.get(), this.minValue, this.maxValue, this.stepSize);
         }
         this.updateMessage();
     }
@@ -231,8 +243,8 @@ public class FloatRangeSlider extends UpdateableWidget {
 
     private void setLeftSliderValue(double value) {
         double d0 = this.leftSliderValue;
-        this.leftSliderValue = Util.toValue(
-            Mth.clamp(value, 0.0D, this.rightSliderValue), this.minValue, this.maxValue, this.stepSize);
+        this.leftSliderValue =
+            Util.toValue(Mth.clamp(value, 0.0D, this.rightSliderValue), this.minValue, this.maxValue, this.stepSize);
         if (d0 != this.leftSliderValue) {
             this.setLeftValueFunction.accept((float) this.getLeftSliderValue());
             this.applyValue();
@@ -247,8 +259,8 @@ public class FloatRangeSlider extends UpdateableWidget {
 
     private void setRightSliderValue(double value) {
         double d0 = this.rightSliderValue;
-        this.rightSliderValue = Util.toValue(
-            Mth.clamp(value, this.leftSliderValue, 1.0D), this.minValue, this.maxValue, this.stepSize);
+        this.rightSliderValue =
+            Util.toValue(Mth.clamp(value, this.leftSliderValue, 1.0D), this.minValue, this.maxValue, this.stepSize);
         if (d0 != this.rightSliderValue) {
             this.setRightValueFunction.accept((float) this.getRightSliderValue());
             this.applyValue();
@@ -258,8 +270,7 @@ public class FloatRangeSlider extends UpdateableWidget {
     }
 
     @Override
-    public void playDownSound(SoundManager handler) {
-    }
+    public void playDownSound(SoundManager handler) {}
 
     @Override
     public void onRelease(double mouseX, double mouseY) {
@@ -268,20 +279,26 @@ public class FloatRangeSlider extends UpdateableWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(Component.empty()
-            .append(prefix)
-            .append(": ")
-            .append(format.format(getLeftSliderValue()))
-            .append(suffix.getString().isEmpty() || suffix.getString().equals("°") || suffix.getString().equals("%") ?
-                "" :
-                " ")
-            .append(suffix)
-            .append(" - ")
-            .append(format.format(getRightSliderValue()))
-            .append(suffix.getString().isEmpty() || suffix.getString().equals("°") || suffix.getString().equals("%") ?
-                "" :
-                " ")
-            .append(suffix));
+        setMessage(
+            Component.empty()
+                .append(prefix)
+                .append(": ")
+                .append(format.format(getLeftSliderValue()))
+                .append(
+                    suffix.getString().isEmpty() || suffix.getString().equals("°") || suffix.getString().equals("%")
+                        ? ""
+                        : " "
+                )
+                .append(suffix)
+                .append(" - ")
+                .append(format.format(getRightSliderValue()))
+                .append(
+                    suffix.getString().isEmpty() || suffix.getString().equals("°") || suffix.getString().equals("%")
+                        ? ""
+                        : " "
+                )
+                .append(suffix)
+        );
     }
 
     @Override
@@ -294,11 +311,11 @@ public class FloatRangeSlider extends UpdateableWidget {
         narrationElementOutput.add(NarratedElementType.TITLE, this.createNarrationMessage());
         if (this.active) {
             if (this.isFocused()) {
-                narrationElementOutput.add(
-                    NarratedElementType.USAGE, Component.translatable("narration.slider.usage.focused"));
+                narrationElementOutput
+                    .add(NarratedElementType.USAGE, Component.translatable("narration.slider.usage.focused"));
             } else {
-                narrationElementOutput.add(
-                    NarratedElementType.USAGE, Component.translatable("narration.slider.usage.hovered"));
+                narrationElementOutput
+                    .add(NarratedElementType.USAGE, Component.translatable("narration.slider.usage.hovered"));
             }
         }
     }

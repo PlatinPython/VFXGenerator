@@ -18,8 +18,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class UpdateRequiredImagesPKT {
-    private static final Codec<ImmutableSet<ResourceLocation>> CODEC = ResourceLocation.CODEC.listOf().xmap(
-        ImmutableSet::copyOf, ImmutableSet::asList);
+    private static final Codec<ImmutableSet<ResourceLocation>> CODEC =
+        ResourceLocation.CODEC.listOf().xmap(ImmutableSet::copyOf, ImmutableSet::asList);
 
     private final ImmutableSet<ResourceLocation> set;
 
@@ -37,19 +37,21 @@ public class UpdateRequiredImagesPKT {
 
     public static class Handler {
         public static void handle(UpdateRequiredImagesPKT message, Supplier<NetworkEvent.Context> context) {
-            //noinspection OptionalGetWithoutIsPresent
-            DataManager.setRequiredImages(message.set.stream()
-                .map(resourceLocation -> Pair.of(resourceLocation, CacheHandler.getIoSupplier(resourceLocation)))
-                .filter(pair -> {
-                    Optional<IoSupplier<InputStream>> second = pair.getSecond();
-                    if (second.isEmpty()) {
-                        VFXGenerator.LOGGER.warn(
-                            "Missing texture {} in cache, check earlier log for errors.", pair.getFirst());
-                    }
-                    return second.isPresent();
-                })
-                .map(pair -> Pair.of(pair.getFirst(), pair.getSecond().get()))
-                .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond)));
+            // noinspection OptionalGetWithoutIsPresent
+            DataManager.setRequiredImages(
+                message.set.stream()
+                    .map(resourceLocation -> Pair.of(resourceLocation, CacheHandler.getIoSupplier(resourceLocation)))
+                    .filter(pair -> {
+                        Optional<IoSupplier<InputStream>> second = pair.getSecond();
+                        if (second.isEmpty()) {
+                            VFXGenerator.LOGGER
+                                .warn("Missing texture {} in cache, check earlier log for errors.", pair.getFirst());
+                        }
+                        return second.isPresent();
+                    })
+                    .map(pair -> Pair.of(pair.getFirst(), pair.getSecond().get()))
+                    .collect(ImmutableMap.toImmutableMap(Pair::getFirst, Pair::getSecond))
+            );
             VirtualPack.VIRTUAL_PACK.reload();
         }
     }

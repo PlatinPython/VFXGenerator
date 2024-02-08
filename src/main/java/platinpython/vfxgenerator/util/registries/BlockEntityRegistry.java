@@ -9,10 +9,10 @@ public class BlockEntityRegistry {
     @SuppressWarnings("DataFlowIssue")
     public static final RegistryObject<BlockEntityType<VFXGeneratorBlockEntity>> VFX_GENERATOR =
         RegistryHandler.BLOCK_ENTITY_TYPES.register(
-        "vfx_generator",
-        () -> BlockEntityType.Builder.of(VFXGeneratorBlockEntity::new, BlockRegistry.VFX_GENERATOR.get()).build(null)
-    );
+            "vfx_generator",
+            () -> BlockEntityType.Builder.of(VFXGeneratorBlockEntity::new, BlockRegistry.VFX_GENERATOR.get())
+                .build(null)
+        );
 
-    public static void register() {
-    }
+    public static void register() {}
 }

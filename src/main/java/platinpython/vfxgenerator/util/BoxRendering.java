@@ -36,7 +36,7 @@ public class BoxRendering {
         if (currentRenderPos == null) {
             return;
         }
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         BlockEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(currentRenderPos);
         if (!(tileEntity instanceof VFXGeneratorBlockEntity)) {
             return;
@@ -327,7 +327,8 @@ public class BoxRendering {
 
         public static final RenderType TRANSLUCENT_NO_CULL = RenderType.create(
             Util.createNamespacedResourceLocation("translucent_no_cull").toString(), DefaultVertexFormat.POSITION_COLOR,
-            VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder()
+            VertexFormat.Mode.QUADS, 256, false, true,
+            RenderType.CompositeState.builder()
                 .setOutputState(RenderStateShard.TRANSLUCENT_TARGET)
                 .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
                 .setLayeringState(LayeringStateShard.VIEW_OFFSET_Z_LAYERING)
@@ -341,7 +342,8 @@ public class BoxRendering {
         );
         public static final RenderType LINES = RenderType.create(
             Util.createNamespacedResourceLocation("lines").toString(), DefaultVertexFormat.POSITION_COLOR,
-            VertexFormat.Mode.DEBUG_LINES, 256, false, false, RenderType.CompositeState.builder()
+            VertexFormat.Mode.DEBUG_LINES, 256, false, false,
+            RenderType.CompositeState.builder()
                 .setOutputState(RenderStateShard.MAIN_TARGET)
                 .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)
                 .setLineState(LineStateShard.DEFAULT_LINE)

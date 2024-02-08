@@ -8,9 +8,8 @@ import platinpython.vfxgenerator.item.VFXGeneratorCoreItem;
 import platinpython.vfxgenerator.util.RegistryHandler;
 
 public class ItemRegistry {
-    public static final RegistryObject<Item> VFX_GENERATOR_CORE = RegistryHandler.ITEMS.register(
-        "vfx_generator_core", () -> new VFXGeneratorCoreItem(new Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> VFX_GENERATOR_CORE = RegistryHandler.ITEMS
+        .register("vfx_generator_core", () -> new VFXGeneratorCoreItem(new Properties().rarity(Rarity.RARE)));
 
-    public static void register() {
-    }
+    public static void register() {}
 }
